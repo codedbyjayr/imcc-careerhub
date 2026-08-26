@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <title>IMCC Careers | Job Marketplace</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+
+<nav>
+
+    <div class="logo">
+        IMCC <span>Careers</span>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#jobs">Jobs</a></li>
+        <li><a href="#ai">AI Match</a></li>
+        <li><a href="#profile">Profile</a></li>
+    </ul>
+
+    <div class="nav-buttons" id="navButtons">
+
+        <button class="login-btn" id="loginNavBtn"
+                onclick="showLogin()">
+            Login
+        </button>
+
+        <button class="register-btn" id="registerNavBtn"
+                onclick="showRegister()">
+            Register
+        </button>
+
+        <button class="profile-chip" id="profileChip" style="display:none;" onclick="openUserDashboard()">
+            <span class="profile-chip-avatar" id="profileChipAvatar">U</span>
+            <span id="profileChipLabel">Profile</span>
+        </button>
+
+        <button onclick="toggleDarkMode()">
+            🌙
+        </button>
+
+    </div>
+
+</nav>
+
+
+<!-- HERO -->
+
+<section class="hero" id="home">
+
+    <div class="hero-content">
+
+        <h1>
+            Find Your Career Opportunity
+        </h1>
+
+        <p>
+            IMCC Careers connects graduating students
+            and alumni with job opportunities that match
+            their skills, course, and career goals.
+        </p>
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="jobSearch"
+                placeholder="Search title, company, or skill..."
+            >
+
+            <select id="jobCategory">
+
+                <option value="all">
+                    All Categories
+                </option>
+
+                <option value="IT">
+                    Information Technology
+                </option>
+
+                <option value="Healthcare">
+                    Healthcare
+                </option>
+
+                <option value="Business">
+                    Business
+                </option>
+
+                <option value="CCJE">
+                    CCJE
+                </option>
+
+                <option value="Social Work">
+                    Social Work
+                </option>
+
+                <option value="CHTM">
+                    CHTM
+                </option>
+
+                <option value="Education">
+                    Education
+                </option>
+
+            </select>
+
+            <button
+                class="search-btn"
+                onclick="searchJobs()">
+                Search Jobs
+            </button>
+
+            <button
+                class="clear-btn"
+                onclick="clearSearch()">
+                Clear
+            </button>
+
+            <div id="searchResultMessage" class="search-result-message"></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- STATISTICS -->
+
+<section class="statistics">
+
+    <div class="stat-card">
+
+        <h2>150+</h2>
+
+        <p>
+            Available Job Opportunities
+        </p>
+
+    </div>
+
+    <div class="stat-card">
+
+        <h2>500+</h2>
+
+        <p>
+            Students and Alumni
+        </p>
+
+    </div>
+
+    <div class="stat-card">
+
+        <h2>30+</h2>
+
+        <p>
+            Career Partners
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- JOB LIST -->
+
+<section class="jobs-section" id="jobs">
+
+    <div class="section-title">
+
+        <h2>
+            Latest Job Opportunities
+        </h2>
+
+        <p>
+            Explore jobs that match your
+            education and skills.
+        </p>
+
+    </div>
+
+
+    <div class="filters">
+
+        <button
+            class="filter-btn active"
+            onclick="filterJobs('all', event)">
+            All Jobs
+        </button>
+
+        <button
+            class="filter-btn"
+            onclick="filterJobs('IT', event)">
+            IT
+        </button>
+
+        <button
+            class="filter-btn"
+            onclick="filterJobs('Healthcare', event)">
+            Healthcare
+        </button>
+
+        <button
+            class="filter-btn"
+            onclick="filterJobs('Business', event)">
+            Business
+        </button>
+
+        <button
+            class="filter-btn"
+            onclick="filterJobs('CCJE', event)">
+            CCJE
+        </button>
+
+        <button
+            class="filter-btn"
+            onclick="filterJobs('Social Work', event)">
+            Social Work
+        </button>
+
+        <button
+            class="filter-btn"
+            onclick="filterJobs('CHTM', event)">
+            CHTM
+        </button>
+
+        <button
+            class="filter-btn"
+            onclick="filterJobs('Education', event)">
+            Education
+        </button>
+
+    </div>
+
+    <div class="job-container" id="jobContainer"></div>
+
+</section>
+
+
+<!-- AI JOB RECOMMENDATION -->
+
+<section class="ai-section" id="ai">
+
+    <div class="ai-container">
+
+        <div class="ai-content">
+
+            <h2>
+                🤖 AI Job Recommendation
+            </h2>
+
+            <p>
+                    Enter your course, skills, and experience.
+                    The system will suggest career pathways,
+                    roles, and the best entry-point job category.
+                </p>
+
+                <br>
+
+                <p>
+                    This recommendation uses common career
+                    matches for IMCC students and alumni.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <div class="ai-form">
+
+                    <input
+                        type="text"
+                        id="userCourse"
+                        placeholder="Enter your course or program"
+                    >
+
+                    <input
+                        type="text"
+                        id="userSkills"
+                        placeholder="Enter your top skills, tools, or interests"
+                    >
+
+                    <select id="userExperienceType">
+                        <option>Fresh Graduate</option>
+                        <option>Internship Experience</option>
+                        <option>Experienced Professional</option>
+                    </select>
+
+                    <input
+                        type="number"
+                        id="userYearsExperience"
+                        placeholder="Years of work experience"
+                        min="0"
+                        step="1"
+                    >
+
+                    <button
+                        class="recommend-btn"
+                        onclick="recommendJob()">
+
+                        Find My Best Match
+
+                    </button>
+
+                    <button
+                        class="clear-btn"
+                        onclick="clearRecommendation()">
+                        Clear
+                    </button>
+
+                </div>
+
+
+            <div id="recommendation-result">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section
+class="profile-section"
+id="profile">
+
+    <div class="profile-box">
+
+        <h2>
+            Create Your Career Profile
+        </h2>
+
+        <p>
+            Add your education, skills,
+            experience, and career goals
+            to receive better job recommendations.
+        </p>
+
+        <button
+        class="register-btn"
+        onclick="showRegister()">
+
+            Create Profile
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- DASHBOARD -->
+
+<section class="dashboard-section" id="dashboard" style="display:none;">
+
+    <div class="dashboard-box">
+
+        <h2>My Dashboard</h2>
+
+        <div id="dashboardProfile"></div>
+
+        <div id="dashboardRecommendations" style="margin-top:18px"></div>
+
+    </div>
+
+</section>
+
+<section class="dashboard-section admin-dashboard" id="adminDashboard" style="display:none;">
+    <div class="dashboard-box admin-box">
+        <h2>Admin Dashboard</h2>
+        <div class="admin-summary">
+            <div class="admin-stat">
+                <span>Total Jobs</span>
+                <strong id="adminTotalJobs">0</strong>
+            </div>
+            <div class="admin-stat">
+                <span>Registered Users</span>
+                <strong id="adminTotalUsers">0</strong>
+            </div>
+            <div class="admin-stat">
+                <span>Applicants</span>
+                <strong id="adminTotalApplicants">0</strong>
+            </div>
+            <div class="admin-stat">
+                <span>Admin</span>
+                <strong>Online</strong>
+            </div>
+        </div>
+
+        <div class="admin-panel">
+            <div class="admin-panel-heading">
+                <h3>Job Listings</h3>
+                <button class="register-btn" type="button" onclick="openJobEditor()">Add Job</button>
+            </div>
+            <ul id="adminJobsList" class="admin-list"></ul>
+        </div>
+
+        <div class="admin-panel">
+            <h3>Registered Accounts</h3>
+            <ul id="adminUsersList" class="admin-list"></ul>
+        </div>
+
+        <div class="admin-actions-row">
+            <button class="register-btn" onclick="logoutAdmin()">Logout Admin</button>
+        </div>
+    </div>
+</section>
+
+<div class="profile-edit-modal" id="jobEditorModal" aria-hidden="true">
+    <div class="profile-edit-card job-editor-card" role="dialog" aria-modal="true" aria-labelledby="jobEditorTitle">
+        <button class="close-btn" type="button" onclick="closeJobEditor()" aria-label="Close job editor">&times;</button>
+        <div class="profile-edit-heading">
+            <span class="profile-edit-kicker">Admin job management</span>
+            <h3 id="jobEditorTitle">Add Job</h3>
+            <p>Create or update a job listing, including its original application URL.</p>
+        </div>
+        <form class="auth-form profile-edit-form" onsubmit="saveJobFromEditor(event)">
+            <input id="jobEditorId" type="hidden">
+            <input id="jobEditorTitleInput" type="text" placeholder="Job title" required>
+            <input id="jobEditorCompany" type="text" placeholder="Company" required>
+            <select id="jobEditorCategory" required>
+                <option value="IT">IT</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Business">Business</option>
+                <option value="CCJE">CCJE</option>
+                <option value="Social Work">Social Work</option>
+                <option value="CHTM">CHTM</option>
+                <option value="Education">Education</option>
+            </select>
+            <input id="jobEditorLocation" type="text" placeholder="Location" required>
+            <input id="jobEditorEmploymentType" type="text" placeholder="Employment type" required>
+            <input id="jobEditorTag" type="text" placeholder="Job tag" required>
+            <input id="jobEditorUrl" type="url" placeholder="Original job URL" required>
+            <textarea id="jobEditorDescription" placeholder="Job description" rows="4" required></textarea>
+            <select id="jobEditorStatus" required>
+                <option value="published">Published</option>
+                <option value="closed">Closed</option>
+                <option value="draft">Draft</option>
+            </select>
+            <button class="submit-btn" type="submit">Save Job</button>
+            <p class="form-error" id="jobEditorError"></p>
+        </form>
+    </div>
+</div>
+
+
+<!-- AUTH MODAL -->
+
+<div class="auth-modal" id="authModal">
+
+    <div class="auth-card">
+
+        <button class="close-btn" onclick="closeAuthModal()">×</button>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="loginTab" onclick="showAuthView('login')">Login</button>
+            <button class="auth-tab" id="registerTab" onclick="showAuthView('register')">Register</button>
+        </div>
+
+        <div class="auth-view active" id="loginView">
+            <h3>Welcome Back</h3>
+            <p>Sign in to view jobs and manage your applications.</p>
+            <form class="auth-form" onsubmit="handleLoginSubmit(event)">
+                <input id="loginEmail" type="email" placeholder="Email address" required>
+                <input id="loginPassword" type="password" placeholder="Password" required>
+                <button class="submit-btn" type="submit">Log In</button>
+                <p class="form-error" id="loginError"></p>
+            </form>
+            <p class="auth-links">Need an account? <a href="#" onclick="showAuthView('register'); return false;">Create one</a></p>
+            <p class="auth-links admin-link"><a href="#" onclick="showAdminLogin(); return false;">Admin Login</a></p>
+        </div>
+
+        <div class="auth-view" id="registerView">
+            <h3>Create Your Account</h3>
+            <p>Join IMCC Careers to discover matching opportunities.</p>
+            <form class="auth-form" onsubmit="handleRegisterSubmit(event)">
+                <input id="registerName" type="text" placeholder="Full name" required>
+                <input id="registerEmail" type="email" placeholder="Email address" required>
+                <input id="registerPhone" type="text" placeholder="Phone number" required>
+                <input id="registerCourse" type="text" placeholder="Course or program" required>
+                <input id="registerSkills" type="text" placeholder="Skills (comma separated)" required>
+                <textarea id="registerExperienceSummary" placeholder="Brief experience summary" rows="3" required></textarea>
+                <label class="file-upload-label" for="registerPhoto">Upload profile photo</label>
+                <input id="registerPhoto" type="file" accept="image/*" onchange="previewProfilePhoto(event)">
+                <img id="registerPhotoPreview" class="photo-preview" alt="Photo preview" style="display:none; max-width:120px; margin-top:10px; border-radius:8px;" />
+                <input id="registerPassword" type="password" placeholder="Create password" required>
+                <button class="submit-btn" type="submit">Register</button>
+                <p class="form-error" id="registerError"></p>
+            </form>
+            <p class="auth-links">Already have an account? <a href="#" onclick="showAuthView('login'); return false;">Log in</a></p>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- PROFILE EDIT MODAL -->
+
+<div class="profile-edit-modal" id="profileEditModal" aria-hidden="true">
+    <div class="profile-edit-card" role="dialog" aria-modal="true" aria-labelledby="profileEditTitle">
+        <button class="close-btn" type="button" onclick="closeProfileEditModal()" aria-label="Close profile editor">&times;</button>
+        <div class="profile-edit-heading">
+            <span class="profile-edit-kicker">Account settings</span>
+            <h3 id="profileEditTitle">Edit Your Profile</h3>
+            <p>Update your career information and keep your profile current.</p>
+        </div>
+        <form class="auth-form profile-edit-form" onsubmit="handleProfileEditSubmit(event)">
+            <input id="editName" type="text" placeholder="Full name" required>
+            <input id="editEmail" type="email" placeholder="Email address" readonly>
+            <input id="editPhone" type="text" placeholder="Phone number" required>
+            <input id="editCourse" type="text" placeholder="Course or program" required>
+            <input id="editSkills" type="text" placeholder="Skills (comma separated)" required>
+            <textarea id="editExperienceSummary" placeholder="Brief experience summary" rows="4" required></textarea>
+            <label class="file-upload-label" for="editPhoto">Change profile photo</label>
+            <input id="editPhoto" type="file" accept="image/*" onchange="previewEditProfilePhoto(event)">
+            <img id="editPhotoPreview" class="photo-preview" alt="Photo preview" style="display:none; max-width:120px; margin-top:10px; border-radius:8px;" />
+            <button class="submit-btn" type="submit">Save Profile</button>
+            <p class="form-error" id="profileEditError"></p>
+        </form>
+    </div>
+</div>
+
+<!-- FOOTER -->
+
+<footer>
+
+    <h3>
+        IMCC Careers
+    </h3>
+
+    <p>
+        A Job Marketplace for
+        Graduating Students and Alumni
+    </p>
+
+    <p>
+        © 2026 IMCC Careers.
+        All Rights Reserved.
+    </p>
+
+</footer>
+
+
+<!-- JAVASCRIPT -->
+
+<script src="jobs-it.js"></script>
+    <script src="jobs-healthcare.js"></script>
+    <script src="jobs-business.js"></script>
+    <script src="jobs-education.js"></script>
+    <script src="jobs-ccje.js"></script>
+    <script src="jobs-socialwork.js"></script>
+    <script src="jobs-chtm.js"></script>
+    <script src="jobs-renderer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-E6Tr5bYFFa6toXs1Ffnxt+iwM2LKd3DXWv3dMHTiW2z8aIW4YDkk+DAGZ1tZlF5p7ZC1pF7S0d3tN5e80n1B9Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+
+const SUPABASE_URL = window.SUPABASE_URL || '';
+const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || '';
+window.supabaseClient = window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
+
+function hasSupabaseConfig() {
+    return !!(window.supabaseClient && SUPABASE_URL && SUPABASE_ANON_KEY && !SUPABASE_URL.includes('YOUR_PROJECT_REF') && !SUPABASE_ANON_KEY.includes('YOUR_SUPABASE'));
+}
+
+async function supabaseGetProfile(userId) {
+    if (!hasSupabaseConfig()) return null;
+
+    const { data, error } = await window.supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+
+    if (error) {
+        console.warn('Supabase user lookup failed:', error.message);
+        return null;
+    }
+
+    return data;
+}
+
+async function supabaseSaveProfile(profilePayload) {
+    if (!hasSupabaseConfig()) return null;
+
+    const { data, error } = await window.supabaseClient
+        .from('profiles')
+        .upsert(profilePayload)
+        .select()
+        .single();
+
+    if (error) {
+        console.warn('Supabase user insert failed:', error.message);
+        return null;
+    }
+
+    return data;
+}
+
+/* DARK MODE */
+
+function toggleDarkMode() {
+
+    document.body.classList.toggle(
+        "dark-mode"
+    );
+
+}
+
+
+/* AUTH MODAL */
+
+function openAuthModal() {
+
+    document.getElementById(
+        "authModal"
+    ).classList.add("show");
+
+}
+
+
+function closeAuthModal() {
+
+    document.getElementById(
+        "authModal"
+    ).classList.remove("show");
+
+}
+
+
+function showAuthView(view) {
+
+    let loginView = document.getElementById("loginView");
+    let registerView = document.getElementById("registerView");
+    let loginTab = document.getElementById("loginTab");
+    let registerTab = document.getElementById("registerTab");
+
+    if (view === "register") {
+        loginView.classList.remove("active");
+        registerView.classList.add("active");
+        loginTab.classList.remove("active");
+        registerTab.classList.add("active");
+    } else {
+        registerView.classList.remove("active");
+        loginView.classList.add("active");
+        registerTab.classList.remove("active");
+        loginTab.classList.add("active");
+    }
+
+}
+
+function updateNavAuthState() {
+    const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    const loginBtn = document.getElementById('loginNavBtn');
+    const registerBtn = document.getElementById('registerNavBtn');
+    const profileChip = document.getElementById('profileChip');
+    const profileLabel = document.getElementById('profileChipLabel');
+    const profileAvatar = document.getElementById('profileChipAvatar');
+    const isLoggedIn = !!(stored && stored.profile);
+
+    if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'inline-flex';
+    if (registerBtn) registerBtn.style.display = isLoggedIn ? 'none' : 'inline-flex';
+    if (profileChip) profileChip.style.display = isLoggedIn ? 'inline-flex' : 'none';
+
+    if (isLoggedIn) {
+        const fullName = stored.profile.fullname || 'Profile';
+        const firstName = fullName.split(' ')[0] || 'Profile';
+        if (profileLabel) profileLabel.textContent = firstName;
+        if (profileAvatar) {
+            profileAvatar.textContent = firstName.charAt(0).toUpperCase();
+        }
+    }
+}
+
+function openUserDashboard() {
+    const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    if (!stored || !stored.profile) {
+        showLogin();
+        return;
+    }
+    showDashboard();
+}
+
+function ensureAdminAccount() {
+    const users = JSON.parse(localStorage.getItem('imcc_users') || '[]');
+    const adminEmail = 'admin@imcc.edu';
+    const exists = users.some(function(user) {
+        return (user.email || '').toLowerCase() === adminEmail;
+    });
+
+    if (!exists) {
+        users.push({
+            email: adminEmail,
+            password: 'admin123',
+            role: 'admin',
+            profile: {
+                fullname: 'System Administrator',
+                phone: 'N/A',
+                course: 'Administration',
+                skills: 'System management, oversight, reporting',
+                experienceSummary: 'Admin account for IMCC Careers dashboard.'
+            }
+        });
+        localStorage.setItem('imcc_users', JSON.stringify(users));
+    }
+}
+
+function showAdminLogin() {
+    ensureAdminAccount();
+    showAuthView('login');
+    openAuthModal();
+    document.getElementById('loginEmail').value = 'admin@imcc.edu';
+    document.getElementById('loginPassword').value = 'admin123';
+    setAuthError('login', 'Use admin credentials to access the dashboard.');
+}
+
+const MANAGED_JOBS_STORAGE_KEY = 'imcc_managed_jobs';
+
+function escapeHtml(value) {
+    return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function getStaticJobs() {
+    if (!Array.isArray(window.jobCategories)) return [];
+    return window.jobCategories.flatMap(function(group, groupIndex) {
+        return (group.jobs || []).map(function(job, jobIndex) {
+            return Object.assign({}, job, {
+                id: 'seed-' + groupIndex + '-' + jobIndex,
+                category: group.category,
+                status: 'published',
+                description: job.description || ('This ' + (job.tag || group.label) + ' opportunity at ' + job.company + ' is a strong fit for students and alumni seeking practical experience and career growth.')
+            });
+        });
+    });
+}
+
+function getManagedJobs() {
+    const saved = localStorage.getItem(MANAGED_JOBS_STORAGE_KEY);
+    if (!saved) {
+        const seeded = getStaticJobs();
+        localStorage.setItem(MANAGED_JOBS_STORAGE_KEY, JSON.stringify(seeded));
+        return seeded;
+    }
+    try {
+        const jobs = JSON.parse(saved);
+        return Array.isArray(jobs) ? jobs : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function saveManagedJobs(jobs) {
+    localStorage.setItem(MANAGED_JOBS_STORAGE_KEY, JSON.stringify(jobs));
+}
+
+function getRenderableJobCategories() {
+    const jobs = getManagedJobs().filter(function(job) { return job.status === 'published'; });
+    const groups = {};
+    jobs.forEach(function(job) {
+        const category = job.category || 'Other';
+        if (!groups[category]) {
+            groups[category] = { category: category, label: category, jobs: [] };
+        }
+        groups[category].jobs.push(job);
+    });
+    return Object.keys(groups).map(function(key) { return groups[key]; });
+}
+
+function refreshPublicJobs() {
+    if (typeof renderJobs === 'function') renderJobs();
+    if (typeof clearSearch === 'function') clearSearch();
+}
+
+function openJobEditor(jobId) {
+    const jobs = getManagedJobs();
+    const job = jobId ? jobs.find(function(item) { return item.id === jobId; }) : null;
+    document.getElementById('jobEditorTitle').textContent = job ? 'Edit Job' : 'Add Job';
+    document.getElementById('jobEditorId').value = job ? job.id : '';
+    document.getElementById('jobEditorTitleInput').value = job ? job.title : '';
+    document.getElementById('jobEditorCompany').value = job ? job.company : '';
+    document.getElementById('jobEditorCategory').value = job ? job.category : 'IT';
+    document.getElementById('jobEditorLocation').value = job ? job.location : '';
+    document.getElementById('jobEditorEmploymentType').value = job ? job.employmentType : 'Full-Time';
+    document.getElementById('jobEditorTag').value = job ? job.tag : '';
+    document.getElementById('jobEditorUrl').value = job ? job.url : '';
+    document.getElementById('jobEditorDescription').value = job ? job.description : '';
+    document.getElementById('jobEditorStatus').value = job ? job.status : 'published';
+    document.getElementById('jobEditorError').textContent = '';
+    const modal = document.getElementById('jobEditorModal');
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden', 'false');
+    document.getElementById('jobEditorTitleInput').focus();
+}
+
+function closeJobEditor() {
+    const modal = document.getElementById('jobEditorModal');
+    if (!modal) return;
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+}
+
+function saveJobFromEditor(event) {
+    event.preventDefault();
+    const errorEl = document.getElementById('jobEditorError');
+    errorEl.textContent = '';
+    const fields = {
+        title: document.getElementById('jobEditorTitleInput').value.trim(),
+        company: document.getElementById('jobEditorCompany').value.trim(),
+        category: document.getElementById('jobEditorCategory').value,
+        location: document.getElementById('jobEditorLocation').value.trim(),
+        employmentType: document.getElementById('jobEditorEmploymentType').value.trim(),
+        tag: document.getElementById('jobEditorTag').value.trim(),
+        url: document.getElementById('jobEditorUrl').value.trim(),
+        description: document.getElementById('jobEditorDescription').value.trim(),
+        status: document.getElementById('jobEditorStatus').value
+    };
+    if (Object.keys(fields).some(function(key) { return !fields[key]; })) {
+        errorEl.textContent = 'Please complete all job fields.';
+        return;
+    }
+
+    const jobs = getManagedJobs();
+    const id = document.getElementById('jobEditorId').value;
+    const existingIndex = jobs.findIndex(function(job) { return job.id === id; });
+    const nextJob = Object.assign({ id: id || 'job-' + Date.now() }, fields);
+    if (existingIndex >= 0) jobs[existingIndex] = Object.assign({}, jobs[existingIndex], nextJob);
+    else jobs.push(nextJob);
+    saveManagedJobs(jobs);
+    closeJobEditor();
+    refreshPublicJobs();
+    refreshAdminJobList();
+}
+
+function setJobStatus(jobId, status) {
+    const jobs = getManagedJobs();
+    const job = jobs.find(function(item) { return item.id === jobId; });
+    if (!job) return;
+    job.status = status;
+    saveManagedJobs(jobs);
+    refreshPublicJobs();
+    refreshAdminJobList();
+}
+
+function removeJob(jobId) {
+    const jobs = getManagedJobs();
+    const job = jobs.find(function(item) { return item.id === jobId; });
+    if (!job || !confirm('Remove "' + job.title + '" from the job listings?')) return;
+    saveManagedJobs(jobs.filter(function(item) { return item.id !== jobId; }));
+    refreshPublicJobs();
+    refreshAdminJobList();
+}
+
+function refreshAdminJobList() {
+    const jobList = document.getElementById('adminJobsList');
+    if (!jobList) return;
+    const jobs = getManagedJobs();
+    if (!jobs.length) {
+        jobList.innerHTML = '<li>No jobs listed.</li>';
+        return;
+    }
+    jobList.innerHTML = jobs.map(function(job) {
+        const nextStatus = job.status === 'published' ? 'closed' : 'published';
+        const nextLabel = job.status === 'published' ? 'Close' : 'Publish';
+        return '<li class="admin-job-item">' +
+            '<div class="admin-job-details"><strong>' + escapeHtml(job.title) + '</strong>' +
+            '<small>' + escapeHtml(job.company) + ' · ' + escapeHtml(job.category) + '</small>' +
+            '<span class="admin-job-status">' + escapeHtml(job.status) + '</span></div>' +
+            '<div class="admin-job-actions">' +
+            '<button type="button" onclick="openJobEditor(\'' + escapeHtml(job.id) + '\')">Edit</button>' +
+            '<button type="button" onclick="setJobStatus(\'' + escapeHtml(job.id) + '\', \'' + nextStatus + '\')">' + nextLabel + '</button>' +
+            '<button class="admin-danger-btn" type="button" onclick="removeJob(\'' + escapeHtml(job.id) + '\')">Remove</button>' +
+            '</div></li>';
+    }).join('');
+}
+
+function showAdminDashboard() {
+    const dashboard = document.getElementById('dashboard');
+    const adminDashboard = document.getElementById('adminDashboard');
+
+    if (dashboard) dashboard.style.display = 'none';
+    if (adminDashboard) adminDashboard.style.display = 'block';
+    closeAuthModal();
+
+    const managedJobs = getManagedJobs();
+    const jobs = managedJobs.length;
+    const users = JSON.parse(localStorage.getItem('imcc_users') || '[]');
+    const applicants = users.filter(function(user) { return (user.role || 'user') !== 'admin'; }).length;
+
+    document.getElementById('adminTotalJobs').textContent = jobs;
+    document.getElementById('adminTotalUsers').textContent = users.length;
+    document.getElementById('adminTotalApplicants').textContent = applicants;
+
+    let userList = document.getElementById('adminUsersList');
+
+    refreshAdminJobList();
+
+    if (userList) {
+        const list = users.map(function(user) {
+            const name = (user.profile && user.profile.fullname) ? user.profile.fullname : (user.email || 'User');
+            return '<li><strong>' + name + '</strong> — ' + (user.role || 'user') + '</li>';
+        });
+        userList.innerHTML = list.length ? list.join('') : '<li>No users found.</li>';
+    }
+}
+
+function logoutAdmin() {
+    localStorage.removeItem('imcc_admin_session');
+    document.getElementById('adminDashboard').style.display = 'none';
+    showAuthView('login');
+    openAuthModal();
+}
+
+
+function showLogin() {
+
+    showAuthView("login");
+    openAuthModal();
+
+}
+
+
+function showRegister() {
+
+    showAuthView("register");
+    openAuthModal();
+
+}
+
+
+document.getElementById("authModal").addEventListener("click", function(event) {
+    if (event.target === event.currentTarget) {
+        closeAuthModal();
+    }
+});
+
+document.getElementById("profileEditModal").addEventListener("click", function(event) {
+    if (event.target === event.currentTarget) {
+        closeProfileEditModal();
+    }
+});
+
+document.getElementById("jobEditorModal").addEventListener("click", function(event) {
+    if (event.target === event.currentTarget) {
+        closeJobEditor();
+    }
+});
+
+window.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        closeAuthModal();
+        closeProfileEditModal();
+        closeJobEditor();
+    }
+});
+
+window.addEventListener('DOMContentLoaded', function() {
+    getManagedJobs();
+    refreshPublicJobs();
+    updateNavAuthState();
+});
+
+
+/* APPLY JOB */
+
+function setAuthError(formType, message) {
+    let errorEl = document.getElementById(formType + "Error");
+    if (errorEl) {
+        errorEl.textContent = message;
+    }
+}
+
+function clearAuthErrors(formType) {
+    let form = document.getElementById(formType + "Error").closest('.auth-form');
+    if (form) {
+        form.querySelectorAll('input').forEach(function(input) {
+            input.classList.remove('field-error');
+        });
+    }
+    setAuthError(formType, '');
+}
+
+function validateEmail(email) {
+    return /^\S+@\S+\.\S+$/.test(email);
+}
+
+async function handleLoginSubmit(event) {
+    event.preventDefault();
+    clearAuthErrors('login');
+
+    let email = document.getElementById('loginEmail').value.trim();
+    let password = document.getElementById('loginPassword').value.trim();
+
+    ensureAdminAccount();
+    const users = JSON.parse(localStorage.getItem('imcc_users') || '[]');
+    const adminUser = users.find(function(user) {
+        return (user.email || '').toLowerCase() === (email || '').toLowerCase() && (user.password || '') === password && (user.role || 'user') === 'admin';
+    });
+
+    if (adminUser) {
+        localStorage.setItem('imcc_admin_session', 'active');
+        showAdminDashboard();
+        return;
+    }
+
+    if (hasSupabaseConfig()) {
+        const { data, error } = await window.supabaseClient.auth.signInWithPassword({ email: email, password: password });
+        if (error || !data.user) {
+            document.getElementById('loginPassword').classList.add('field-error');
+            return setAuthError('login', error ? error.message : 'Unable to sign in.');
+        }
+
+        const user = await supabaseGetProfile(data.user.id);
+        if (!user) return setAuthError('login', 'Your account is missing a profile. Please contact support.');
+        const profile = {
+            fullname: user.fullname || 'User', email: user.email, phone: user.phone || '',
+            course: user.course || '', skills: user.skills || '',
+            experienceSummary: user.experience_summary || '', photoDataUrl: user.photo_data_url || null
+        };
+        localStorage.setItem('imcc_user', JSON.stringify({ email: user.email, profile: profile }));
+        updateNavAuthState();
+        closeAuthModal();
+        showDashboard();
+        return;
+    }
+
+    try {
+        const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+        if (!stored || stored.email !== email || stored.password !== password) {
+            document.getElementById('loginPassword').classList.add('field-error');
+            return setAuthError('login', 'Invalid email or password.');
+        }
+        updateNavAuthState();
+        closeAuthModal();
+        showDashboard();
+    } catch (e) {
+        alert('Login successful!');
+        updateNavAuthState();
+        closeAuthModal();
+    }
+}
+
+async function handleRegisterSubmit(event) {
+    event.preventDefault();
+    clearAuthErrors('register');
+    let fullname = document.getElementById('registerName').value.trim();
+    let email = document.getElementById('registerEmail').value.trim();
+    let passwordEl = document.getElementById('registerPassword');
+    let password = passwordEl ? passwordEl.value.trim() : '';
+
+    if (!fullname) {
+        document.getElementById('registerName').classList.add('field-error');
+        return setAuthError('register', 'Please enter your full name.');
+    }
+
+    if (!email) {
+        document.getElementById('registerEmail').classList.add('field-error');
+        return setAuthError('register', 'Please enter your email address.');
+    }
+
+    if (!validateEmail(email)) {
+        document.getElementById('registerEmail').classList.add('field-error');
+        return setAuthError('register', 'Enter a valid email address.');
+    }
+
+    let phone = document.getElementById('registerPhone').value.trim();
+    let course = document.getElementById('registerCourse').value.trim();
+    let skills = document.getElementById('registerSkills').value.trim();
+    let experienceSummary = document.getElementById('registerExperienceSummary').value.trim();
+    let photoFile = document.getElementById('registerPhoto') ? document.getElementById('registerPhoto').files[0] : null;
+
+    if (!phone) {
+        document.getElementById('registerPhone').classList.add('field-error');
+        return setAuthError('register', 'Please enter your phone number.');
+    }
+
+    if (!course) {
+        document.getElementById('registerCourse').classList.add('field-error');
+        return setAuthError('register', 'Please enter your course or program.');
+    }
+
+    if (!skills) {
+        document.getElementById('registerSkills').classList.add('field-error');
+        return setAuthError('register', 'Please enter your skills.');
+    }
+
+    if (!experienceSummary) {
+        document.getElementById('registerExperienceSummary').classList.add('field-error');
+        return setAuthError('register', 'Please enter a brief experience summary.');
+    }
+
+    const existingUser = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    const isSupabaseProfileEdit = hasSupabaseConfig() && existingUser && existingUser.email === email;
+    if (!password) {
+        if (isSupabaseProfileEdit) {
+            password = '';
+        } else if (existingUser && existingUser.email === email && existingUser.password) {
+            password = existingUser.password;
+        } else {
+            passwordEl.classList.add('field-error');
+            return setAuthError('register', 'Password must be at least 6 characters.');
+        }
+    }
+
+    if (password && password.length < 6) {
+        passwordEl.classList.add('field-error');
+        return setAuthError('register', 'Password must be at least 6 characters.');
+    }
+
+    let profile = {
+        fullname: fullname,
+        email: email,
+        phone: phone,
+        course: course,
+        skills: skills,
+        experienceSummary: experienceSummary,
+        photoDataUrl: null
+    };
+
+    async function finishRegistration() {
+        if (hasSupabaseConfig()) {
+            if (isSupabaseProfileEdit) {
+                const { data: sessionData } = await window.supabaseClient.auth.getUser();
+                if (!sessionData.user) return setAuthError('register', 'Your session has expired. Please log in again.');
+                const saved = await supabaseSaveProfile({
+                    id: sessionData.user.id, fullname: fullname, email: email, phone: phone,
+                    course: course, skills: skills, experience_summary: experienceSummary,
+                    photo_data_url: profile.photoDataUrl || null
+                });
+                if (!saved) return setAuthError('register', 'Your profile could not be updated.');
+                localStorage.setItem('imcc_user', JSON.stringify({ email: email, profile: profile }));
+                updateNavAuthState(); closeAuthModal(); showDashboard();
+                return;
+            }
+
+            const { data, error } = await window.supabaseClient.auth.signUp({
+                email: email,
+                password: password,
+                options: { data: { fullname: fullname, phone: phone, course: course, skills: skills, experience_summary: experienceSummary, photo_data_url: profile.photoDataUrl || null } }
+            });
+            if (error || !data.user) return setAuthError('register', error ? error.message : 'Unable to create your account.');
+
+            if (!data.session) {
+                showAuthView('login');
+                return setAuthError('login', 'Check your email to confirm your account, then log in.');
+            }
+            localStorage.setItem('imcc_user', JSON.stringify({ email: email, profile: profile }));
+            updateNavAuthState(); generateCVPdf(profile); closeAuthModal(); showDashboard();
+            return;
+        }
+
+        localStorage.setItem('imcc_user', JSON.stringify({ email: email, password: password, profile: profile }));
+        updateNavAuthState();
+        generateCVPdf(profile);
+        closeAuthModal();
+        showDashboard();
+    }
+
+    if (photoFile) {
+        if (!photoFile.type.startsWith('image/')) {
+            document.getElementById('registerPhoto').classList.add('field-error');
+            return setAuthError('register', 'Please upload a valid image file.');
+        }
+
+        let reader = new FileReader();
+        reader.onload = function(event) {
+            profile.photoDataUrl = event.target.result;
+            finishRegistration();
+        };
+        reader.readAsDataURL(photoFile);
+    } else {
+        finishRegistration();
+    }
+}
+
+function previewProfilePhoto(event) {
+    let preview = document.getElementById('registerPhotoPreview');
+    let file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+    } else {
+        preview.src = '';
+        preview.style.display = 'none';
+    }
+}
+
+function escapePdfText(value) {
+    return String(value || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/\(/g, '\\(')
+        .replace(/\)/g, '\\)')
+        .replace(/\r/g, ' ')
+        .replace(/\n/g, ' ')
+        .replace(/[^\x20-\x7E]/g, '');
+}
+
+function generateSimplePdf(profile) {
+    const safeName = (profile.fullname || 'profile')
+        .replace(/[^a-zA-Z0-9-_ ]/g, '')
+        .replace(/\s+/g, '_') || 'profile';
+
+    const lines = [
+        'Curriculum Vitae',
+        '',
+        `Name: ${profile.fullname || 'Unknown'}`,
+        `Email: ${profile.email || ''}`,
+        `Phone: ${profile.phone || ''}`,
+        `Course / Program: ${profile.course || ''}`,
+        '',
+        'Skills:',
+        profile.skills || '',
+        '',
+        'Experience Summary:',
+        profile.experienceSummary || ''
+    ];
+
+    const content = lines.map(function(line, index) {
+        const y = 760 - index * 18;
+        return `BT /F1 12 Tf 50 ${y} Td (${escapePdfText(line)}) Tj ET`;
+    }).join('\n');
+
+    const objects = [
+        '<< /Type /Catalog /Pages 2 0 R >>',
+        '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+        '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>',
+        `<< /Length ${content.length} >>\nstream\n${content}\nendstream`,
+        '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>'
+    ];
+
+    let pdf = '%PDF-1.4\n';
+    const offsets = [0];
+
+    for (let i = 0; i < objects.length; i += 1) {
+        offsets.push(pdf.length);
+        pdf += `${i + 1} 0 obj\n${objects[i]}\nendobj\n`;
+    }
+
+    const xrefOffset = pdf.length;
+    pdf += `xref\n0 ${objects.length + 1}\n`;
+    pdf += '0000000000 65535 f \n';
+
+    for (let i = 1; i < offsets.length; i += 1) {
+        pdf += `${String(offsets[i]).padStart(10, '0')} 00000 n \n`;
+    }
+
+    pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+    const blob = new Blob([pdf], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `IMCC_CV_${safeName}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(function() {
+        URL.revokeObjectURL(url);
+    }, 1000);
+}
+
+function generateCVPdf(profile) {
+    if (window.jspdf && window.jspdf.jsPDF) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const lineHeight = 10;
+        let y = 20;
+
+        doc.setFontSize(18);
+        doc.text('Curriculum Vitae', 105, y, { align: 'center' });
+        y += 15;
+
+        doc.setFontSize(12);
+        doc.text(`Name: ${profile.fullname}`, 20, y);
+
+        if (profile.photoDataUrl) {
+            let imageType = 'JPEG';
+            let matches = profile.photoDataUrl.match(/^data:image\/(\w+);base64,/);
+            if (matches && matches[1]) {
+                imageType = matches[1].toUpperCase() === 'PNG' ? 'PNG' : 'JPEG';
+            }
+            try {
+                doc.addImage(profile.photoDataUrl, imageType, 140, 25, 40, 40);
+            } catch (error) {
+                console.warn('Unable to add image to PDF:', error);
+            }
+        }
+
+        y += lineHeight;
+        doc.text(`Email: ${profile.email}`, 20, y);
+        y += lineHeight;
+        doc.text(`Phone: ${profile.phone}`, 20, y);
+        y += lineHeight;
+        doc.text(`Course / Program: ${profile.course}`, 20, y);
+        y += lineHeight;
+
+        if (profile.photoDataUrl) {
+            y = Math.max(y, 70);
+        }
+
+        doc.setFontSize(14);
+        doc.text('Skills', 20, y);
+        y += lineHeight;
+        doc.setFontSize(12);
+        doc.text(profile.skills, 20, y, { maxWidth: 170 });
+        y += lineHeight * (Math.ceil((profile.skills || '').length / 60) + 1);
+
+        doc.setFontSize(14);
+        doc.text('Experience Summary', 20, y);
+        y += lineHeight;
+        doc.setFontSize(12);
+        doc.text(profile.experienceSummary, 20, y, { maxWidth: 170 });
+
+        const safeName = (profile.fullname || 'profile').replace(/[^a-zA-Z0-9-_ ]/g, '').replace(/\s+/g, '_') || 'profile';
+        doc.save(`IMCC_CV_${safeName}.pdf`);
+        return;
+    }
+
+    generateSimplePdf(profile);
+}
+
+function showDashboard() {
+    const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    if (!stored || !stored.profile) return;
+    const p = stored.profile;
+    // build recommendation list
+    const terms = (p.course + ' ' + p.skills).toLowerCase().split(/[,\s]+/).filter(Boolean);
+    const jobs = Array.from(document.querySelectorAll('.job-card'));
+    const matches = jobs.filter(function(job) {
+        const text = (job.querySelector('h3').innerText + ' ' + (job.querySelector('.company') ? job.querySelector('.company').innerText : '') + ' ' + Array.from(job.querySelectorAll('.job-info')).map(function(el){return el.innerText;}).join(' ') + ' ' + (job.querySelector('.job-tag') ? job.querySelector('.job-tag').innerText : '')).toLowerCase();
+        return terms.some(function(t){return t && text.includes(t);});
+    }).slice(0,6);
+
+    let recHtml = '<h4 class="dash-subtitle">Recommended Jobs</h4>';
+    if (!matches.length) recHtml += '<p class="muted">No direct matches found — try refining your skills.</p>';
+    else {
+        recHtml += '<ul class="recommendation-list">' + matches.map(function(job){
+            const title = job.querySelector('h3').innerText;
+            const comp = job.querySelector('.company') ? job.querySelector('.company').innerText : '';
+            const url = job.dataset.url || '#';
+            return `<li><a href="${url}" target="_blank" rel="noopener noreferrer">${title} — ${comp}</a></li>`;
+        }).join('') + '</ul>';
+    }
+
+    // profile card with photo
+    const photoHtml = p.photoDataUrl ? `<img src="${p.photoDataUrl}" class="profile-photo" alt="Profile photo">` : '';
+
+    const profileHtml = `
+        <div class="dashboard-grid">
+            <div class="profile-card">
+                ${photoHtml}
+                <h3 class="profile-name">${p.fullname}</h3>
+                <p class="muted profile-course">${p.course}</p>
+                <p><strong>Email:</strong> ${stored.email}</p>
+                <p><strong>Phone:</strong> ${p.phone}</p>
+                <p class="skills"><strong>Skills:</strong> ${p.skills}</p>
+                <p class="summary"><strong>Summary:</strong> ${p.experienceSummary}</p>
+                <div class="dashboard-actions">
+                    <button class="register-btn" onclick="downloadMyCV()">Download My CV</button>
+                    <button class="register-btn" onclick="editProfile()">Edit Profile</button>
+                    <button class="clear-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div class="recommendation-card">
+                ${recHtml}
+            </div>
+        </div>
+    `;
+
+    document.getElementById('dashboardProfile').innerHTML = profileHtml;
+    document.getElementById('dashboardRecommendations').innerHTML = '';
+
+    // show dashboard area
+    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('dashboard').scrollIntoView({behavior:'smooth'});
+}
+
+function downloadMyCV() {
+    const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    if (stored && stored.profile) {
+        return generateCVPdf(stored.profile);
+    }
+
+    // fallback: try to build profile from registration form fields
+    const nameEl = document.getElementById('registerName');
+    const emailEl = document.getElementById('registerEmail');
+    if (!nameEl || !emailEl) return alert('No profile found. Please register first.');
+
+    const profile = {
+        fullname: nameEl.value.trim() || 'Unnamed',
+        email: emailEl.value.trim() || '',
+        phone: (document.getElementById('registerPhone') || { value: '' }).value.trim(),
+        course: (document.getElementById('registerCourse') || { value: '' }).value.trim(),
+        skills: (document.getElementById('registerSkills') || { value: '' }).value.trim(),
+        experienceSummary: (document.getElementById('registerExperienceSummary') || { value: '' }).value.trim(),
+        photoDataUrl: null
+    };
+
+    const photoInput = document.getElementById('registerPhoto');
+    if (photoInput && photoInput.files && photoInput.files[0]) {
+        const file = photoInput.files[0];
+        if (!file.type.startsWith('image/')) return alert('Please select a valid image file for the photo.');
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            profile.photoDataUrl = ev.target.result;
+            generateCVPdf(profile);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        generateCVPdf(profile);
+    }
+}
+
+async function logout() {
+    if (hasSupabaseConfig()) {
+        await window.supabaseClient.auth.signOut();
+    }
+    localStorage.removeItem('imcc_user');
+    updateNavAuthState();
+    document.getElementById('dashboard').style.display = 'none';
+    window.location.hash = '';
+}
+
+function editProfile() {
+    const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    if (!stored || !stored.profile) return alert('No profile found to edit.');
+    const p = stored.profile;
+
+    document.getElementById('editName').value = p.fullname || '';
+    document.getElementById('editEmail').value = stored.email || p.email || '';
+    document.getElementById('editPhone').value = p.phone || '';
+    document.getElementById('editCourse').value = p.course || '';
+    document.getElementById('editSkills').value = p.skills || '';
+    document.getElementById('editExperienceSummary').value = p.experienceSummary || '';
+    document.getElementById('editPhoto').value = '';
+    document.getElementById('profileEditError').textContent = '';
+
+    const preview = document.getElementById('editPhotoPreview');
+    if (p.photoDataUrl) {
+        preview.src = p.photoDataUrl;
+        preview.style.display = 'block';
+    } else {
+        preview.src = '';
+        preview.style.display = 'none';
+    }
+
+    const modal = document.getElementById('profileEditModal');
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden', 'false');
+    document.getElementById('editName').focus();
+}
+
+function closeProfileEditModal() {
+    const modal = document.getElementById('profileEditModal');
+    if (!modal) return;
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+}
+
+function previewEditProfilePhoto(event) {
+    const preview = document.getElementById('editPhotoPreview');
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+    }
+}
+
+async function handleProfileEditSubmit(event) {
+    event.preventDefault();
+    const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    if (!stored || !stored.profile) return closeProfileEditModal();
+
+    const errorEl = document.getElementById('profileEditError');
+    errorEl.textContent = '';
+    const fields = {
+        fullname: document.getElementById('editName').value.trim(),
+        phone: document.getElementById('editPhone').value.trim(),
+        course: document.getElementById('editCourse').value.trim(),
+        skills: document.getElementById('editSkills').value.trim(),
+        experienceSummary: document.getElementById('editExperienceSummary').value.trim()
+    };
+
+    if (Object.keys(fields).some(function(key) { return !fields[key]; })) {
+        errorEl.textContent = 'Please complete all profile fields.';
+        return;
+    }
+
+    const photoInput = document.getElementById('editPhoto');
+    const photoFile = photoInput.files[0];
+    if (photoFile && !photoFile.type.startsWith('image/')) {
+        errorEl.textContent = 'Please upload a valid image file.';
+        return;
+    }
+
+    const save = async function(photoDataUrl) {
+        const profile = Object.assign({}, stored.profile, fields, { email: stored.email, photoDataUrl: photoDataUrl });
+        if (hasSupabaseConfig()) {
+            const { data: sessionData } = await window.supabaseClient.auth.getUser();
+            if (!sessionData.user) {
+                errorEl.textContent = 'Your session has expired. Please log in again.';
+                return;
+            }
+            const saved = await supabaseSaveProfile({
+                id: sessionData.user.id, fullname: fields.fullname, email: stored.email,
+                phone: fields.phone, course: fields.course, skills: fields.skills,
+                experience_summary: fields.experienceSummary, photo_data_url: photoDataUrl
+            });
+            if (!saved) {
+                errorEl.textContent = 'Your profile could not be updated.';
+                return;
+            }
+        }
+        const nextUser = Object.assign({}, stored, { profile: profile });
+        localStorage.setItem('imcc_user', JSON.stringify(nextUser));
+        updateNavAuthState();
+        closeProfileEditModal();
+        showDashboard();
+    };
+
+    if (photoFile) {
+        const reader = new FileReader();
+        reader.onload = function(fileEvent) { save(fileEvent.target.result); };
+        reader.readAsDataURL(photoFile);
+    } else {
+        save(stored.profile.photoDataUrl || null);
+    }
+}
+
+function applyJob(jobTitle, url) {
+    if (url) {
+        window.open(url, '_blank');
+        return;
+    }
+
+    showAuthView('login');
+    openAuthModal();
+    setAuthError('login', 'Please log in to apply for ' + jobTitle + '.');
+}
+
+
+/* FILTER JOBS */
+
+function filterJobs(category, event) {
+
+    let jobs =
+    document.querySelectorAll(
+        ".job-card"
+    );
+
+    let buttons =
+    document.querySelectorAll(
+        ".filter-btn"
+    );
+
+    buttons.forEach(
+        function(button) {
+
+            button.classList.remove(
+                "active"
+            );
+
+        }
+    );
+
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add(
+            "active"
+        );
+    }
+
+    jobs.forEach(
+        function(job) {
+            if (
+                category === "all" ||
+                job.dataset.category === category
+            ) {
+                job.style.display = "block";
+            } else {
+                job.style.display = "none";
+            }
+        }
+    );
+
+    document.querySelectorAll('.category-block').forEach(
+        function(block) {
+            let visibleJobs = block.querySelectorAll('.job-card:not([style*="display: none"])');
+            block.style.display = visibleJobs.length ? 'block' : 'none';
+        }
+    );
+}
+
+
+/* SEARCH JOB */
+
+function searchJobs() {
+
+    let search =
+    document
+    .getElementById(
+        "jobSearch"
+    )
+    .value
+    .trim()
+    .toLowerCase();
+
+    let category =
+    document
+    .getElementById(
+        "jobCategory"
+    )
+    .value;
+
+    let jobs =
+    document.querySelectorAll(
+        ".job-card"
+    );
+
+    let visibleCount = 0;
+
+    jobs.forEach(
+        function(job) {
+
+            let title =
+            job.querySelector("h3")
+            .innerText
+            .toLowerCase();
+
+            let company =
+            job.querySelector(".company")
+            .innerText
+            .toLowerCase();
+
+            let tag =
+            job.querySelector(".job-tag")
+            .innerText
+            .toLowerCase();
+
+            let matchesSearch =
+            !search ||
+            title.includes(search) ||
+            company.includes(search) ||
+            tag.includes(search);
+
+            let matchesCategory =
+            category === "all" ||
+            category ===
+            job.dataset.category;
+
+            if(
+                matchesSearch &&
+                matchesCategory
+            ) {
+
+                job.style.display =
+                "block";
+                visibleCount++;
+
+            }
+
+            else {
+
+                job.style.display =
+                "none";
+
+            }
+
+        }
+    );
+
+    let message =
+    document.getElementById(
+        "searchResultMessage"
+    );
+
+    if (search || category !== "all") {
+        let foundText =
+            visibleCount +
+            " job" +
+            (visibleCount === 1 ?
+                " found" :
+                "s found");
+
+        if (visibleCount) {
+            message.innerHTML =
+                `<a href="#" onclick="scrollToFirstVisibleJob(event)">` +
+                foundText +
+                " — click to view" +
+                `</a>`;
+        } else {
+            message.textContent = foundText;
+        }
+    } else {
+        message.textContent = "";
+    }
+
+    document.querySelectorAll('.category-block').forEach(
+        function(block) {
+            let visibleJobs = block.querySelectorAll('.job-card:not([style*="display: none"])');
+            block.style.display = visibleJobs.length ? 'grid' : 'none';
+        }
+    );
+}
+
+function clearSearch() {
+    document.getElementById('jobSearch').value = '';
+    document.getElementById('jobCategory').value = 'all';
+    document.getElementById('searchResultMessage').textContent = '';
+    document.querySelectorAll('.job-card').forEach(function(job) {
+        job.style.display = 'block';
+    });
+    document.querySelectorAll('.category-block').forEach(function(block) {
+        block.style.display = 'grid';
+    });
+}
+
+function scrollToFirstVisibleJob(event) {
+    event.preventDefault();
+    const firstVisible = Array.from(document.querySelectorAll('.job-card')).find(job => job.style.display !== 'none');
+    if (firstVisible) {
+        firstVisible.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        firstVisible.classList.add('highlight-job');
+        setTimeout(() => firstVisible.classList.remove('highlight-job'), 2000);
+    }
+}
+
+function scrollToRecommendedJob(event, title) {
+    event.preventDefault();
+    const allJobs = Array.from(document.querySelectorAll('.job-card'));
+    const match = allJobs.find(job => job.querySelector('h3').innerText === title);
+    if (match) {
+        match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        match.classList.add('highlight-job');
+        setTimeout(() => match.classList.remove('highlight-job'), 2000);
+    }
+}
+
+function clearRecommendation() {
+    document.getElementById('userCourse').value = '';
+    document.getElementById('userSkills').value = '';
+    document.getElementById('userExperienceType').value = 'Fresh Graduate';
+    document.getElementById('userYearsExperience').value = '';
+    const result = document.getElementById('recommendation-result');
+    result.style.display = 'none';
+    result.innerHTML = '';
+    result.classList.remove('recommendation-warning');
+}
+
+
+/* AI JOB RECOMMENDATION */
+
+function recommendJob() {
+
+    let course =
+    document
+    .getElementById(
+        "userCourse"
+    )
+    .value
+    .toLowerCase();
+
+    let skills =
+    document
+    .getElementById(
+        "userSkills"
+    )
+    .value
+    .toLowerCase();
+
+    let experienceType =
+    document
+    .getElementById(
+        "userExperienceType"
+    )
+    .value;
+
+    let yearsExperience = parseInt(
+        document
+        .getElementById(
+            "userYearsExperience"
+        )
+        .value,
+        10
+    );
+
+    let result =
+    document
+    .getElementById(
+        "recommendation-result"
+    );
+
+    let keywords = (course + " " + skills).trim();
+    let readableText = keywords.replace(/[\s\W_]+/g, '');
+
+    if (!keywords || !readableText) {
+        result.classList.add('recommendation-warning');
+        result.style.display = "block";
+        result.innerHTML =
+            "<strong>AI Recommendation:</strong>" +
+            "<br><br>" +
+            "Please enter readable course and skills text instead of symbols or unreadable characters. " +
+            "For example: Computer Science, Business Administration, Nursing, or Digital Marketing.";
+        return;
+    }
+
+    const experienceLabel =
+        experienceType === "Fresh Graduate" ?
+            "as a fresh graduate" :
+        experienceType === "Internship Experience" ?
+            "with internship experience" :
+        yearsExperience >= 0 ?
+            `with ${yearsExperience} year${yearsExperience === 1 ? "" : "s"} of work experience` :
+            "with work experience";
+
+    function getCategoryFromText(text) {
+        if (!text) return "";
+        if (/information|computer|software|it|technology|programming|coding|javascript|python|html|css|sql|database|network|systems/.test(text)) {
+            return "IT";
+        }
+        if (/nursing|medical|health|clinic|patient|care|pharmacy|healthcare|clinical/.test(text)) {
+            return "Healthcare";
+        }
+        if (/business|management|marketing|finance|accounting|sales|entrepreneur|admin|human resources|hr/.test(text)) {
+            return "Business";
+        }
+        if (/crime|criminal|police|law enforcement|investigation|security|forensic|corrections|justice/.test(text)) {
+            return "CCJE";
+        }
+        if (/social work|social welfare|community|case management|counseling|rehabilitation|outreach|family service/.test(text)) {
+            return "Social Work";
+        }
+        if (/hospitality|tourism|hotel|resort|events?|food and beverage|f&b|restaurant|travel/.test(text)) {
+            return "CHTM";
+        }
+        if (/education|teaching|tutor|training|learning|curriculum|school|instructor/.test(text)) {
+            return "Education";
+        }
+        if (/design|graphic|ux|ui|creative|content|multimedia|social media|video/.test(text)) {
+            return "Creative";
+        }
+        if (/engineering|civil|mechanical|electronics|construction|drafting|cad|technical/.test(text)) {
+            return "Engineering";
+        }
+        return "";
+    }
+
+    const courseCategory = getCategoryFromText(course);
+    const skillsCategory = getCategoryFromText(skills);
+    const selectedCategories = [];
+    if (courseCategory) selectedCategories.push(courseCategory);
+    if (skillsCategory && skillsCategory !== courseCategory) selectedCategories.push(skillsCategory);
+
+    const categoryLabels = {
+        IT: 'Information Technology',
+        Healthcare: 'Healthcare',
+        Business: 'Business',
+        Education: 'Education',
+        CCJE: 'CCJE',
+        'Social Work': 'Social Work',
+        CHTM: 'CHTM'
+    };
+
+    let category = "General Career Opportunities";
+    let summary =
+        "Your course and skills do not clearly align to one category, so this recommendation focuses on transferable roles and broad openings.";
+    let recommendationLabel = category;
+
+    if (selectedCategories.length === 1) {
+        category = selectedCategories[0];
+        recommendationLabel = categoryLabels[category] || category;
+        if (category === "IT") {
+            summary =
+                `Build your tech career ${experienceLabel} in roles that match your growing technical skills.`;
+        } else if (category === "Healthcare") {
+            summary =
+                `Support health teams and patients ${experienceLabel} in a rewarding healthcare role.`;
+        } else if (category === "Business") {
+            summary =
+                `Start your business career ${experienceLabel} with roles focused on operations, marketing, or client service.`;
+        } else if (category === "Education") {
+            summary =
+                `Use your passion for learning and teaching ${experienceLabel} to make an impact in education.`;
+        } else if (category === "CCJE") {
+            summary =
+                `Use your strong sense of justice and community safety ${experienceLabel} in criminal justice and public safety roles.`;
+        } else if (category === "Social Work") {
+            summary =
+                `Support communities and individuals ${experienceLabel} in meaningful social work and welfare roles.`;
+        } else if (category === "CHTM") {
+            summary =
+                `Enter hospitality, tourism, and event services ${experienceLabel} with customer-focused and service-oriented roles.`;
+        }
+    } else if (selectedCategories.length === 2) {
+        recommendationLabel = `${categoryLabels[courseCategory] || courseCategory} & ${categoryLabels[skillsCategory] || skillsCategory}`;
+        summary =
+            `Your course suggests ${categoryLabels[courseCategory] || courseCategory} while your skills point toward ${categoryLabels[skillsCategory] || skillsCategory}. Here are opportunities across both categories that may use your transferable experience.`;
+    }
+
+    let jobs = Array.from(document.querySelectorAll('.job-card'));
+    let matches = [];
+    if (selectedCategories.length) {
+        matches = jobs.filter(function(job) {
+            return selectedCategories.includes(job.dataset.category);
+        });
+    }
+    if (!matches.length && category && category !== 'General Career Opportunities') {
+        matches = jobs.filter(function(job) {
+            return job.dataset.category === category;
+        });
+    }
+
+    if (!matches.length) {
+        let terms = keywords.split(/\s+/).filter(Boolean);
+        matches = jobs.filter(function(job) {
+            let text = (
+                job.querySelector('h3').innerText + ' ' +
+                job.querySelector('.company').innerText + ' ' +
+                Array.from(job.querySelectorAll('.job-info')).map(function(el) { return el.innerText; }).join(' ') + ' ' +
+                job.querySelector('.job-tag').innerText
+            ).toLowerCase();
+            return terms.some(function(term) {
+                return text.includes(term);
+            });
+        });
+    }
+
+    if (!matches.length && jobs.length) {
+        matches = jobs.slice(0, 3);
+    }
+
+    let listHtml = '<ul class="recommendation-list">';
+    matches.slice(0, 3).forEach(function(job) {
+        let title = job.querySelector('h3').innerText;
+        let company = job.querySelector('.company').innerText;
+        let info = Array.from(job.querySelectorAll('.job-info')).map(function(el) { return el.innerText; }).join(' • ');
+        let url = job.dataset.url || '';
+        let safeTitle = title.replace(/'/g, "\\'");
+        listHtml += '<li class="recommendation-item">';
+        listHtml += '<a href="#" class="recommendation-suggestion" onclick="scrollToRecommendedJob(event, \'' + safeTitle + '\')">';
+        listHtml += '<strong>' + title + '</strong><br>' + company + ' • ' + info;
+        listHtml += '</a>';
+        if (url) {
+            listHtml += '<br><a href="' + url + '" target="_blank" rel="noopener noreferrer">View job details</a>';
+        }
+        listHtml += '</li>';
+    });
+    listHtml += '</ul>';
+
+    result.classList.remove('recommendation-warning');
+    result.style.display = "block";
+    result.innerHTML =
+        "<strong>AI Recommendation:</strong>" +
+        "<br><br>" +
+        `Based on your course and skills, the best match is <strong>${category}</strong>.` +
+        "<br><br>" +
+        summary +
+        "<br><br>" +
+        "<em>Top matching openings from the current job feed:</em>" +
+        listHtml +
+        "<br>" +
+        "Tip: include more specific skills, tools, or career goals for even better recommendations.";
+
+}
+
+</script>
+
+</body>
+</html>
