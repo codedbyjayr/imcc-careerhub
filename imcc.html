@@ -27,7 +27,7 @@
         <li><a href="#home">Home</a></li>
         <li><a href="#jobs">Jobs</a></li>
         <li><a href="#ai">AI Match</a></li>
-        <li><a href="#profile">Profile</a></li>
+        <li><a href="#dashboard" onclick="openUserDashboard(); return false;">Dashboard</a></li>
     </ul>
 
     <div class="nav-buttons" id="navButtons">
@@ -47,10 +47,11 @@
             <span id="profileChipLabel">Profile</span>
         </button>
 
-        <button onclick="toggleDarkMode()">
-            🌙
-        </button>
+    </div>
 
+    <div class="rail-footer">
+        <span class="status-dot"></span>
+        <span>© 2026 IMCC Careers</span>
     </div>
 
 </nav>
@@ -59,8 +60,7 @@
 <!-- HERO -->
 
 <section class="hero" id="home">
-
-    <div class="hero-content">
+    
 
         <h1>
             Find Your Career Opportunity
@@ -192,7 +192,12 @@
     </div>
 
 
-    <div class="filters">
+    <div class="jobs-layout">
+
+    <aside class="course-sidebar" aria-label="Filter jobs by course">
+        <span class="course-sidebar-title">Courses</span>
+
+        <div class="filters">
 
         <button
             class="filter-btn active"
@@ -242,9 +247,12 @@
             Education
         </button>
 
-    </div>
+        </div>
+    </aside>
 
     <div class="job-container" id="jobContainer"></div>
+
+    </div>
 
 </section>
 
@@ -329,37 +337,6 @@
             </div>
 
         </div>
-
-    </div>
-
-</section>
-
-
-<!-- PROFILE -->
-
-<section
-class="profile-section"
-id="profile">
-
-    <div class="profile-box">
-
-        <h2>
-            Create Your Career Profile
-        </h2>
-
-        <p>
-            Add your education, skills,
-            experience, and career goals
-            to receive better job recommendations.
-        </p>
-
-        <button
-        class="register-btn"
-        onclick="showRegister()">
-
-            Create Profile
-
-        </button>
 
     </div>
 
@@ -575,46 +552,123 @@ id="profile">
 
 const SUPABASE_URL = window.SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || '';
-window.supabaseClient = window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY
-    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-    : null;
+window.supabaseClient = null;
+if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
+    try {
+        window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+        });
+    } catch (error) {
+        console.warn('Supabase client could not be initialized:', error.message);
+    }
+}
 
 function hasSupabaseConfig() {
     return !!(window.supabaseClient && SUPABASE_URL && SUPABASE_ANON_KEY && !SUPABASE_URL.includes('YOUR_PROJECT_REF') && !SUPABASE_ANON_KEY.includes('YOUR_SUPABASE'));
 }
 
+function readLocalJson(key, fallback) {
+    try {
+        const value = JSON.parse(localStorage.getItem(key) || 'null');
+        return value == null ? fallback : value;
+    } catch (error) {
+        console.warn('Invalid local storage value for ' + key + '; using defaults.');
+        return fallback;
+    }
+}
+
 async function supabaseGetProfile(userId) {
     if (!hasSupabaseConfig()) return null;
 
-    const { data, error } = await window.supabaseClient
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .maybeSingle();
+    try {
+        const { data, error } = await window.supabaseClient
+            .from('profiles')
+            .select('*')
+            .eq('id', userId)
+            .maybeSingle();
 
-    if (error) {
+        if (error) throw error;
+        return data;
+    } catch (error) {
         console.warn('Supabase user lookup failed:', error.message);
         return null;
     }
-
-    return data;
 }
 
 async function supabaseSaveProfile(profilePayload) {
     if (!hasSupabaseConfig()) return null;
 
-    const { data, error } = await window.supabaseClient
-        .from('profiles')
-        .upsert(profilePayload)
-        .select()
-        .single();
+    try {
+        const { data, error } = await window.supabaseClient
+            .from('profiles')
+            .upsert(profilePayload, { onConflict: 'id' })
+            .select()
+            .single();
 
-    if (error) {
+        if (error) throw error;
+        return data;
+    } catch (error) {
         console.warn('Supabase user insert failed:', error.message);
         return null;
     }
+}
 
-    return data;
+async function supabaseGetJobs() {
+    if (!hasSupabaseConfig()) return null;
+
+    try {
+        const { data, error } = await window.supabaseClient
+            .from('jobs')
+            .select('id,title,company,category,location,employment_type,description,application_url,status')
+            .eq('status', 'published')
+            .order('published_at', { ascending: false });
+
+        if (error) throw error;
+        return (data || []).map(function(job) {
+            return {
+                id: 'supabase-' + job.id,
+                title: job.title,
+                company: job.company,
+                category: job.category,
+                location: job.location || '',
+                employmentType: job.employment_type || '',
+                tag: job.category,
+                url: job.application_url || '',
+                description: job.description || ''
+            };
+        });
+    } catch (error) {
+        console.warn('Supabase jobs lookup failed; using local jobs:', error.message);
+        return null;
+    }
+}
+
+async function restoreSupabaseSession() {
+    if (!hasSupabaseConfig()) return;
+
+    try {
+        const { data, error } = await window.supabaseClient.auth.getSession();
+        if (error) throw error;
+        if (!data.session || !data.session.user) return;
+
+        const profile = await supabaseGetProfile(data.session.user.id);
+        if (!profile) return;
+        localStorage.setItem('imcc_user', JSON.stringify({
+            email: profile.email,
+            profile: {
+                fullname: profile.fullname || 'User',
+                email: profile.email,
+                phone: profile.phone || '',
+                course: profile.course || '',
+                skills: profile.skills || '',
+                experienceSummary: profile.experience_summary || '',
+                photoDataUrl: profile.photo_data_url || null
+            }
+        }));
+        updateNavAuthState();
+    } catch (error) {
+        console.warn('Supabase session restore failed:', error.message);
+    }
 }
 
 /* DARK MODE */
@@ -670,7 +724,7 @@ function showAuthView(view) {
 }
 
 function updateNavAuthState() {
-    const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    const stored = readLocalJson('imcc_user', null);
     const loginBtn = document.getElementById('loginNavBtn');
     const registerBtn = document.getElementById('registerNavBtn');
     const profileChip = document.getElementById('profileChip');
@@ -693,7 +747,7 @@ function updateNavAuthState() {
 }
 
 function openUserDashboard() {
-    const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    const stored = readLocalJson('imcc_user', null);
     if (!stored || !stored.profile) {
         showLogin();
         return;
@@ -702,7 +756,7 @@ function openUserDashboard() {
 }
 
 function ensureAdminAccount() {
-    const users = JSON.parse(localStorage.getItem('imcc_users') || '[]');
+    const users = readLocalJson('imcc_users', []);
     const adminEmail = 'admin@imcc.edu';
     const exists = users.some(function(user) {
         return (user.email || '').toLowerCase() === adminEmail;
@@ -723,6 +777,67 @@ function ensureAdminAccount() {
         });
         localStorage.setItem('imcc_users', JSON.stringify(users));
     }
+}
+
+function getStoredUsers() {
+    try {
+        const users = readLocalJson('imcc_users', []);
+        return Array.isArray(users) ? users : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function persistLocalUserRegistration(profile, password, role) {
+    const normalizedRole = role || 'user';
+    const users = getStoredUsers();
+    const email = String(profile.email || '').trim().toLowerCase();
+    const existingIndex = users.findIndex(function(user) {
+        return ((user.email || '').trim().toLowerCase() === email) && ((user.role || 'user') === normalizedRole || normalizedRole === 'user');
+    });
+    const record = {
+        email: profile.email,
+        password: password || '',
+        role: normalizedRole,
+        profile: profile
+    };
+
+    if (existingIndex >= 0) {
+        users[existingIndex] = Object.assign({}, users[existingIndex], record);
+    } else {
+        users.push(record);
+    }
+
+    localStorage.setItem('imcc_users', JSON.stringify(users));
+    localStorage.setItem('imcc_user', JSON.stringify({
+        email: profile.email,
+        password: password || '',
+        profile: profile
+    }));
+}
+
+function findLocalUser(email, password) {
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    const normalizedPassword = String(password || '');
+    const users = getStoredUsers();
+    const match = users.find(function(user) {
+        return ((user.email || '').trim().toLowerCase() === normalizedEmail) && (String(user.password || '') === normalizedPassword) && ((user.role || 'user') !== 'admin' || normalizedPassword === 'admin123');
+    });
+
+    if (match && match.profile) {
+        return {
+            email: match.email,
+            password: match.password,
+            profile: match.profile
+        };
+    }
+
+    const stored = readLocalJson('imcc_user', null);
+    if (stored && (stored.email || '').trim().toLowerCase() === normalizedEmail && String(stored.password || '') === normalizedPassword && stored.profile) {
+        return stored;
+    }
+
+    return null;
 }
 
 function showAdminLogin() {
@@ -768,7 +883,7 @@ function getManagedJobs() {
     }
     try {
         const jobs = JSON.parse(saved);
-        return Array.isArray(jobs) ? jobs : [];
+        return Array.isArray(jobs) ? jobs : getStaticJobs();
     } catch (error) {
         return [];
     }
@@ -779,7 +894,8 @@ function saveManagedJobs(jobs) {
 }
 
 function getRenderableJobCategories() {
-    const jobs = getManagedJobs().filter(function(job) { return job.status === 'published'; });
+    const sourceJobs = Array.isArray(window.supabaseJobs) ? window.supabaseJobs : getManagedJobs();
+    const jobs = sourceJobs.filter(function(job) { return job.status === 'published' || !job.status; });
     const groups = {};
     jobs.forEach(function(job) {
         const category = job.category || 'Other';
@@ -794,6 +910,24 @@ function getRenderableJobCategories() {
 function refreshPublicJobs() {
     if (typeof renderJobs === 'function') renderJobs();
     if (typeof clearSearch === 'function') clearSearch();
+}
+
+async function loadPublicJobs() {
+    const remoteJobs = await supabaseGetJobs();
+    if (remoteJobs && remoteJobs.length) {
+        window.supabaseJobs = remoteJobs;
+        window.jobCategories = remoteJobs.reduce(function(groups, job) {
+            const category = job.category || 'Other';
+            let group = groups.find(function(item) { return item.category === category; });
+            if (!group) {
+                group = { category: category, label: category, jobs: [] };
+                groups.push(group);
+            }
+            group.jobs.push(job);
+            return groups;
+        }, []);
+        refreshPublicJobs();
+    }
 }
 
 function openJobEditor(jobId) {
@@ -908,7 +1042,7 @@ function showAdminDashboard() {
 
     const managedJobs = getManagedJobs();
     const jobs = managedJobs.length;
-    const users = JSON.parse(localStorage.getItem('imcc_users') || '[]');
+    const users = readLocalJson('imcc_users', []);
     const applicants = users.filter(function(user) { return (user.role || 'user') !== 'admin'; }).length;
 
     document.getElementById('adminTotalJobs').textContent = jobs;
@@ -982,6 +1116,8 @@ window.addEventListener('DOMContentLoaded', function() {
     getManagedJobs();
     refreshPublicJobs();
     updateNavAuthState();
+    loadPublicJobs();
+    restoreSupabaseSession();
 });
 
 
@@ -1016,7 +1152,7 @@ async function handleLoginSubmit(event) {
     let password = document.getElementById('loginPassword').value.trim();
 
     ensureAdminAccount();
-    const users = JSON.parse(localStorage.getItem('imcc_users') || '[]');
+    const users = readLocalJson('imcc_users', []);
     const adminUser = users.find(function(user) {
         return (user.email || '').toLowerCase() === (email || '').toLowerCase() && (user.password || '') === password && (user.role || 'user') === 'admin';
     });
@@ -1027,8 +1163,29 @@ async function handleLoginSubmit(event) {
         return;
     }
 
-    if (hasSupabaseConfig()) {
-        const { data, error } = await window.supabaseClient.auth.signInWithPassword({ email: email, password: password });
+    const localUser = findLocalUser(email, password);
+    if (localUser && localUser.profile) {
+        localStorage.setItem('imcc_user', JSON.stringify({ email: localUser.email, password: localUser.password, profile: localUser.profile }));
+        updateNavAuthState();
+        closeAuthModal();
+        showDashboard();
+        return;
+    }
+
+    if (hasSupabaseConfig() && window.supabaseClient) {
+        let signInResult;
+        try {
+            signInResult = await window.supabaseClient.auth.signInWithPassword({ email: email, password: password });
+        } catch (networkError) {
+            signInResult = null;
+        }
+
+        if (!signInResult) {
+            document.getElementById('loginPassword').classList.add('field-error');
+            return setAuthError('login', 'The account service is unavailable. Please try again later.');
+        }
+
+        const { data, error } = signInResult;
         if (error || !data.user) {
             document.getElementById('loginPassword').classList.add('field-error');
             return setAuthError('login', error ? error.message : 'Unable to sign in.');
@@ -1048,20 +1205,8 @@ async function handleLoginSubmit(event) {
         return;
     }
 
-    try {
-        const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
-        if (!stored || stored.email !== email || stored.password !== password) {
-            document.getElementById('loginPassword').classList.add('field-error');
-            return setAuthError('login', 'Invalid email or password.');
-        }
-        updateNavAuthState();
-        closeAuthModal();
-        showDashboard();
-    } catch (e) {
-        alert('Login successful!');
-        updateNavAuthState();
-        closeAuthModal();
-    }
+    document.getElementById('loginPassword').classList.add('field-error');
+    setAuthError('login', 'Invalid email or password.');
 }
 
 async function handleRegisterSubmit(event) {
@@ -1113,7 +1258,7 @@ async function handleRegisterSubmit(event) {
         return setAuthError('register', 'Please enter a brief experience summary.');
     }
 
-    const existingUser = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    const existingUser = readLocalJson('imcc_user', null);
     const isSupabaseProfileEdit = hasSupabaseConfig() && existingUser && existingUser.email === email;
     if (!password) {
         if (isSupabaseProfileEdit) {
@@ -1142,7 +1287,9 @@ async function handleRegisterSubmit(event) {
     };
 
     async function finishRegistration() {
-        if (hasSupabaseConfig()) {
+        persistLocalUserRegistration(profile, password, 'user');
+
+        if (hasSupabaseConfig() && window.supabaseClient) {
             if (isSupabaseProfileEdit) {
                 const { data: sessionData } = await window.supabaseClient.auth.getUser();
                 if (!sessionData.user) return setAuthError('register', 'Your session has expired. Please log in again.');
@@ -1152,28 +1299,38 @@ async function handleRegisterSubmit(event) {
                     photo_data_url: profile.photoDataUrl || null
                 });
                 if (!saved) return setAuthError('register', 'Your profile could not be updated.');
-                localStorage.setItem('imcc_user', JSON.stringify({ email: email, profile: profile }));
+                localStorage.setItem('imcc_user', JSON.stringify({ email: email, password: password, profile: profile }));
                 updateNavAuthState(); closeAuthModal(); showDashboard();
                 return;
             }
 
-            const { data, error } = await window.supabaseClient.auth.signUp({
-                email: email,
-                password: password,
-                options: { data: { fullname: fullname, phone: phone, course: course, skills: skills, experience_summary: experienceSummary, photo_data_url: profile.photoDataUrl || null } }
-            });
+            let signUpResult;
+            try {
+                signUpResult = await window.supabaseClient.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: { data: { fullname: fullname, phone: phone, course: course, skills: skills, experience_summary: experienceSummary, photo_data_url: profile.photoDataUrl || null } }
+                });
+            } catch (networkError) {
+                updateNavAuthState();
+                generateCVPdf(profile);
+                closeAuthModal();
+                showDashboard();
+                return;
+            }
+
+            const { data, error } = signUpResult;
             if (error || !data.user) return setAuthError('register', error ? error.message : 'Unable to create your account.');
 
             if (!data.session) {
                 showAuthView('login');
                 return setAuthError('login', 'Check your email to confirm your account, then log in.');
             }
-            localStorage.setItem('imcc_user', JSON.stringify({ email: email, profile: profile }));
+            localStorage.setItem('imcc_user', JSON.stringify({ email: email, password: password, profile: profile }));
             updateNavAuthState(); generateCVPdf(profile); closeAuthModal(); showDashboard();
             return;
         }
 
-        localStorage.setItem('imcc_user', JSON.stringify({ email: email, password: password, profile: profile }));
         updateNavAuthState();
         generateCVPdf(profile);
         closeAuthModal();
@@ -1344,7 +1501,7 @@ function generateCVPdf(profile) {
 }
 
 function showDashboard() {
-    const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    const stored = readLocalJson('imcc_user', null);
     if (!stored || !stored.profile) return;
     const p = stored.profile;
     // build recommendation list
@@ -1400,7 +1557,7 @@ function showDashboard() {
 }
 
 function downloadMyCV() {
-    const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    const stored = readLocalJson('imcc_user', null);
     if (stored && stored.profile) {
         return generateCVPdf(stored.profile);
     }
@@ -1437,7 +1594,12 @@ function downloadMyCV() {
 
 async function logout() {
     if (hasSupabaseConfig()) {
-        await window.supabaseClient.auth.signOut();
+        try {
+            const { error } = await window.supabaseClient.auth.signOut();
+            if (error) console.warn('Supabase sign out failed:', error.message);
+        } catch (error) {
+            console.warn('Supabase sign out failed:', error.message);
+        }
     }
     localStorage.removeItem('imcc_user');
     updateNavAuthState();
@@ -1446,7 +1608,7 @@ async function logout() {
 }
 
 function editProfile() {
-    const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    const stored = readLocalJson('imcc_user', null);
     if (!stored || !stored.profile) return alert('No profile found to edit.');
     const p = stored.profile;
 
@@ -1492,7 +1654,7 @@ function previewEditProfilePhoto(event) {
 
 async function handleProfileEditSubmit(event) {
     event.preventDefault();
-    const stored = JSON.parse(localStorage.getItem('imcc_user') || 'null');
+    const stored = readLocalJson('imcc_user', null);
     if (!stored || !stored.profile) return closeProfileEditModal();
 
     const errorEl = document.getElementById('profileEditError');
@@ -1518,9 +1680,20 @@ async function handleProfileEditSubmit(event) {
     }
 
     const save = async function(photoDataUrl) {
-        const profile = Object.assign({}, stored.profile, fields, { email: stored.email, photoDataUrl: photoDataUrl });
+        const profile = Object.assign({}, stored.profile, fields, {
+            email: stored.email,
+            photoDataUrl: photoDataUrl || stored.profile.photoDataUrl || null
+        });
         if (hasSupabaseConfig()) {
-            const { data: sessionData } = await window.supabaseClient.auth.getUser();
+            let sessionData;
+            try {
+                const result = await window.supabaseClient.auth.getUser();
+                if (result.error) throw result.error;
+                sessionData = result.data;
+            } catch (error) {
+                errorEl.textContent = 'The account service is unavailable. Please try again later.';
+                return;
+            }
             if (!sessionData.user) {
                 errorEl.textContent = 'Your session has expired. Please log in again.';
                 return;
@@ -1528,7 +1701,7 @@ async function handleProfileEditSubmit(event) {
             const saved = await supabaseSaveProfile({
                 id: sessionData.user.id, fullname: fields.fullname, email: stored.email,
                 phone: fields.phone, course: fields.course, skills: fields.skills,
-                experience_summary: fields.experienceSummary, photo_data_url: photoDataUrl
+                experience_summary: fields.experienceSummary, photo_data_url: profile.photoDataUrl
             });
             if (!saved) {
                 errorEl.textContent = 'Your profile could not be updated.';
