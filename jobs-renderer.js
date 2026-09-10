@@ -7,6 +7,15 @@ function renderJobs() {
         : window.jobCategories;
     if (!categories) return;
 
+    function safeText(value) {
+        return String(value == null ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     categories.forEach(function(categoryGroup) {
         let block = document.createElement('div');
         block.className = 'category-block';
@@ -24,16 +33,21 @@ function renderJobs() {
             card.tabIndex = 0;
             if (job.url) card.dataset.url = job.url;
 
-            let description = 'This ' + (job.tag || categoryGroup.label) + ' opportunity at ' + job.company + ' is a strong fit for students and alumni seeking practical experience, career growth, and role-based development in ' + (categoryGroup.label || 'this field') + '.';
+            let description = job.description || ('This ' + (job.tag || categoryGroup.label) + ' opportunity at ' + job.company + ' is a strong fit for students and alumni seeking practical experience, career growth, and role-based development in ' + (categoryGroup.label || 'this field') + '.');
 
             card.innerHTML =
-                '<h3>' + job.title + '</h3>' +
-                '<p class="company">' + job.company + '</p>' +
-                '<p class="job-info">' + job.location + '</p>' +
-                '<p class="job-info">' + job.employmentType + '</p>' +
-                '<span class="job-tag">' + job.tag + '</span>' +
-                '<div class="job-description">' + description + '</div>' +
-                '<button class="apply-btn" onclick="event.stopPropagation(); applyJob(\'' + job.title + '\'' + (job.url ? ', \'' + job.url + '\'' : '') + ')">Apply Now</button>';
+                '<h3>' + safeText(job.title) + '</h3>' +
+                '<p class="company">' + safeText(job.company) + '</p>' +
+                '<p class="job-info">' + safeText(job.location) + '</p>' +
+                '<p class="job-info">' + safeText(job.employmentType) + '</p>' +
+                '<span class="job-tag">' + safeText(job.tag) + '</span>' +
+                '<div class="job-description">' + safeText(description) + '</div>' +
+                '<button class="apply-btn" type="button">Apply Now</button>';
+
+            card.querySelector('.apply-btn').addEventListener('click', function(event) {
+                event.stopPropagation();
+                applyJob(job.title, job.url);
+            });
 
             card.addEventListener('click', function(event) {
                 if (event.target && event.target.closest('.apply-btn')) {
