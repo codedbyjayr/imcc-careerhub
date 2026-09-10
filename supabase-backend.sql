@@ -1,14 +1,3 @@
--- IMCC Careers: complete Supabase backend migration
---
--- Run this file once in Supabase Dashboard > SQL Editor, as the database owner.
--- It replaces the profile trigger/policies from supabase-schema.sql, so use this
--- migration instead of running the two files together.  Browser clients must use
--- only the anon/publishable key; never place a service-role key in imcc.html.
---
--- This migration deliberately creates no default administrator or password.
--- After a real user has signed up, promote that user's UUID from the SQL Editor:
---   select public.set_app_role('USER_UUID_HERE', 'admin');
-
 begin;
 
 create extension if not exists pgcrypto;
