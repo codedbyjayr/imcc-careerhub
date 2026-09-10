@@ -876,16 +876,21 @@ function getStaticJobs() {
 
 function getManagedJobs() {
     const saved = localStorage.getItem(MANAGED_JOBS_STORAGE_KEY);
+    const staticJobs = getStaticJobs();
+
     if (!saved) {
-        const seeded = getStaticJobs();
-        localStorage.setItem(MANAGED_JOBS_STORAGE_KEY, JSON.stringify(seeded));
-        return seeded;
+        localStorage.setItem(MANAGED_JOBS_STORAGE_KEY, JSON.stringify(staticJobs));
+        return staticJobs;
     }
+
     try {
         const jobs = JSON.parse(saved);
-        return Array.isArray(jobs) ? jobs : getStaticJobs();
+        if (Array.isArray(jobs) && jobs.length) {
+            return jobs;
+        }
+        return staticJobs;
     } catch (error) {
-        return [];
+        return staticJobs;
     }
 }
 
@@ -894,17 +899,28 @@ function saveManagedJobs(jobs) {
 }
 
 function getRenderableJobCategories() {
-    const sourceJobs = Array.isArray(window.supabaseJobs) ? window.supabaseJobs : getManagedJobs();
-    const jobs = sourceJobs.filter(function(job) { return job.status === 'published' || !job.status; });
-    const groups = {};
-    jobs.forEach(function(job) {
-        const category = job.category || 'Other';
-        if (!groups[category]) {
-            groups[category] = { category: category, label: category, jobs: [] };
-        }
-        groups[category].jobs.push(job);
+    const groups = Array.isArray(window.jobCategories) && window.jobCategories.length
+        ? window.jobCategories
+        : getStaticJobs().reduce(function(result, job) {
+            const category = job.category || 'Other';
+            let group = result.find(function(item) { return item.category === category; });
+            if (!group) {
+                group = { category: category, label: category, jobs: [] };
+                result.push(group);
+            }
+            group.jobs.push(job);
+            return result;
+        }, []);
+
+    const merged = groups.map(function(group) {
+        return {
+            category: group.category || 'Other',
+            label: group.label || group.category || 'Other',
+            jobs: Array.isArray(group.jobs) ? group.jobs.map(function(job) { return Object.assign({}, job); }) : []
+        };
     });
-    return Object.keys(groups).map(function(key) { return groups[key]; });
+
+    return merged;
 }
 
 function refreshPublicJobs() {
@@ -913,21 +929,57 @@ function refreshPublicJobs() {
 }
 
 async function loadPublicJobs() {
-    const remoteJobs = await supabaseGetJobs();
-    if (remoteJobs && remoteJobs.length) {
-        window.supabaseJobs = remoteJobs;
-        window.jobCategories = remoteJobs.reduce(function(groups, job) {
+    const localGroups = Array.isArray(window.jobCategories) && window.jobCategories.length
+        ? window.jobCategories.map(function(group) {
+            return {
+                category: group.category || 'Other',
+                label: group.label || group.category || 'Other',
+                jobs: Array.isArray(group.jobs) ? group.jobs.map(function(job) { return Object.assign({}, job); }) : []
+            };
+        })
+        : getStaticJobs().reduce(function(result, job) {
             const category = job.category || 'Other';
-            let group = groups.find(function(item) { return item.category === category; });
+            let group = result.find(function(item) { return item.category === category; });
             if (!group) {
                 group = { category: category, label: category, jobs: [] };
-                groups.push(group);
+                result.push(group);
             }
             group.jobs.push(job);
-            return groups;
+            return result;
         }, []);
-        refreshPublicJobs();
+
+    const remoteJobs = await supabaseGetJobs();
+    const mergedGroups = localGroups.map(function(group) {
+        return Object.assign({}, group, { jobs: Array.isArray(group.jobs) ? group.jobs.map(function(job) { return Object.assign({}, job); }) : [] });
+    });
+
+    if (remoteJobs && remoteJobs.length) {
+        const grouped = {};
+        mergedGroups.forEach(function(group) {
+            grouped[group.category] = group;
+        });
+
+        remoteJobs.forEach(function(job) {
+            const category = job.category || 'Other';
+            if (!grouped[category]) {
+                grouped[category] = { category: category, label: category, jobs: [] };
+            }
+
+            const found = grouped[category].jobs.some(function(item) {
+                return (item.title || '') === (job.title || '') && (item.company || '') === (job.company || '');
+            });
+
+            if (!found) {
+                grouped[category].jobs.push(Object.assign({}, job));
+            }
+        });
+
+        window.jobCategories = Object.keys(grouped).map(function(key) { return grouped[key]; });
+    } else {
+        window.jobCategories = mergedGroups;
     }
+
+    refreshPublicJobs();
 }
 
 function openJobEditor(jobId) {
