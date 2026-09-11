@@ -58,6 +58,22 @@ window.jobCategories.push({
             employmentType: '💼 Full Time',
             tag: 'Education',
             url: 'https://promoteiligan.com/job/general-science-instructor/'
+        },
+        {
+            title: 'Teacher I / Elementary Teacher',
+            company: 'DepEd Iligan City',
+            location: '📍 Iligan City, Lanao del Norte',
+            employmentType: '💼 Full Time',
+            tag: 'Education',
+            url: 'https://main.depedldn.com/vacant-positions/'
+        },
+        {
+            title: 'School Librarian',
+            company: 'Iligan City Schools',
+            location: '📍 Iligan City, Lanao del Norte',
+            employmentType: '💼 Full Time',
+            tag: 'Education',
+            url: 'https://sites.google.com/deped.gov.ph/depedign-t1application/home'
         }
 
     ]
