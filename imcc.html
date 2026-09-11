@@ -3,257 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
     <title>IMCC Careers | Job Marketplace</title>
-
     <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
-
-<!-- NAVIGATION -->
+<body class="auth-locked">
 
 <nav>
-
-    <div class="logo">
-        IMCC <span>Careers</span>
-    </div>
-
+    <div class="logo">IMCC <span>Careers</span></div>
     <ul class="nav-links">
         <li><a href="#home">Home</a></li>
         <li><a href="#jobs">Jobs</a></li>
         <li><a href="#ai">AI Match</a></li>
         <li><a href="#dashboard" onclick="openUserDashboard(); return false;">Dashboard</a></li>
     </ul>
-
     <div class="nav-buttons" id="navButtons">
-
-        <button class="login-btn" id="loginNavBtn"
-                onclick="showLogin()">
-            Login
-        </button>
-
-        <button class="register-btn" id="registerNavBtn"
-                onclick="showRegister()">
-            Register
-        </button>
-
-        <button class="profile-chip" id="profileChip" style="display:none;" onclick="openUserDashboard()">
+        <button class="profile-chip" id="profileChip" style="display:none;" onclick="openUserProfile()">
             <span class="profile-chip-avatar" id="profileChipAvatar">U</span>
             <span id="profileChipLabel">Profile</span>
         </button>
-
     </div>
-
-    <div class="rail-footer">
-        <span class="status-dot"></span>
-        <span>© 2026 IMCC Careers</span>
-    </div>
-
+    <div class="rail-footer"><span class="status-dot"></span><span>© 2026 IMCC Careers</span></div>
 </nav>
 
-
-<!-- HERO -->
-
 <section class="hero" id="home">
-    
-
-        <h1>
-            Find Your Career Opportunity
-        </h1>
-
-        <p>
-            IMCC Careers connects graduating students
-            and alumni with job opportunities that match
-            their skills, course, and career goals.
-        </p>
-
-        <div class="search-box">
-
-            <input
-                type="text"
-                id="jobSearch"
-                placeholder="Search title, company, or skill..."
-            >
-
-            <select id="jobCategory">
-
-                <option value="all">
-                    All Categories
-                </option>
-
-                <option value="IT">
-                    Information Technology
-                </option>
-
-                <option value="Healthcare">
-                    Healthcare
-                </option>
-
-                <option value="Business">
-                    Business
-                </option>
-
-                <option value="CCJE">
-                    CCJE
-                </option>
-
-                <option value="Social Work">
-                    Social Work
-                </option>
-
-                <option value="CHTM">
-                    CHTM
-                </option>
-
-                <option value="Education">
-                    Education
-                </option>
-
-            </select>
-
-            <button
-                class="search-btn"
-                onclick="searchJobs()">
-                Search Jobs
-            </button>
-
-            <button
-                class="clear-btn"
-                onclick="clearSearch()">
-                Clear
-            </button>
-
-            <div id="searchResultMessage" class="search-result-message"></div>
-
-        </div>
-
+    <p class="hero-kicker">IMCC Careers | AI-Powered Job Recommendation System</p>
+    <h1>Find the right job for your career.</h1>
+    <p>Personalized opportunities for IMCC students and alumni, powered by your profile, skills, and goals.</p>
+    <div class="search-box">
+        <input type="text" id="jobSearch" placeholder="Search title, company, or skill...">
+        <select id="jobCategory">
+            <option value="all">All Categories</option>
+            <option value="IT">Information Technology</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Business">Business</option>
+            <option value="CCJE">CCJE</option>
+            <option value="Social Work">Social Work</option>
+            <option value="CHTM">CHTM</option>
+            <option value="Education">Education</option>
+        </select>
+        <button class="search-btn" onclick="searchJobs()">Search Jobs</button>
+        <button class="clear-btn" onclick="clearSearch()">Clear</button>
+        <div id="searchResultMessage" class="search-result-message"></div>
     </div>
-
 </section>
-
-
-<!-- STATISTICS -->
 
 <section class="statistics">
-
-    <div class="stat-card">
-
-        <h2>150+</h2>
-
-        <p>
-            Available Job Opportunities
-        </p>
-
-    </div>
-
-    <div class="stat-card">
-
-        <h2>500+</h2>
-
-        <p>
-            Students and Alumni
-        </p>
-
-    </div>
-
-    <div class="stat-card">
-
-        <h2>30+</h2>
-
-        <p>
-            Career Partners
-        </p>
-
-    </div>
-
+    <div class="stat-card"><h2>150+</h2><p>Available Job Opportunities</p></div>
+    <div class="stat-card"><h2>500+</h2><p>Students and Alumni</p></div>
+    <div class="stat-card"><h2>30+</h2><p>Career Partners</p></div>
 </section>
 
-
-<!-- JOB LIST -->
+<section class="recommended-section" id="recommended">
+    <div class="section-title">
+        <div>
+            <span class="section-kicker">Personalized matches</span>
+            <h2>Recommended for You</h2>
+        </div>
+        <p>Based on your course, skills, and experience.</p>
+    </div>
+    <div id="recommendedJobs" class="recommended-grid"></div>
+</section>
 
 <section class="jobs-section" id="jobs">
-
     <div class="section-title">
-
-        <h2>
-            Latest Job Opportunities
-        </h2>
-
-        <p>
-            Explore jobs that match your
-            education and skills.
-        </p>
-
+        <h2>Latest Job Opportunities</h2>
+        <p>Explore jobs that match your education and skills.</p>
     </div>
-
-
     <div class="jobs-layout">
-
-    <aside class="course-sidebar" aria-label="Filter jobs by course">
-        <span class="course-sidebar-title">Courses</span>
-
-        <div class="filters">
-
-        <button
-            class="filter-btn active"
-            onclick="filterJobs('all', event)">
-            All Jobs
-        </button>
-
-        <button
-            class="filter-btn"
-            onclick="filterJobs('IT', event)">
-            IT
-        </button>
-
-        <button
-            class="filter-btn"
-            onclick="filterJobs('Healthcare', event)">
-            Healthcare
-        </button>
-
-        <button
-            class="filter-btn"
-            onclick="filterJobs('Business', event)">
-            Business
-        </button>
-
-        <button
-            class="filter-btn"
-            onclick="filterJobs('CCJE', event)">
-            CCJE
-        </button>
-
-        <button
-            class="filter-btn"
-            onclick="filterJobs('Social Work', event)">
-            Social Work
-        </button>
-
-        <button
-            class="filter-btn"
-            onclick="filterJobs('CHTM', event)">
-            CHTM
-        </button>
-
-        <button
-            class="filter-btn"
-            onclick="filterJobs('Education', event)">
-            Education
-        </button>
-
-        </div>
-    </aside>
-
-    <div class="job-container" id="jobContainer"></div>
-
+        <aside class="course-sidebar" aria-label="Filter jobs by course">
+            <span class="course-sidebar-title">Courses</span>
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterJobs('all', event)">All Jobs</button>
+                <button class="filter-btn" onclick="filterJobs('IT', event)">IT</button>
+                <button class="filter-btn" onclick="filterJobs('Healthcare', event)">Healthcare</button>
+                <button class="filter-btn" onclick="filterJobs('Business', event)">Business</button>
+                <button class="filter-btn" onclick="filterJobs('CCJE', event)">CCJE</button>
+                <button class="filter-btn" onclick="filterJobs('Social Work', event)">Social Work</button>
+                <button class="filter-btn" onclick="filterJobs('CHTM', event)">CHTM</button>
+                <button class="filter-btn" onclick="filterJobs('Education', event)">Education</button>
+            </div>
+        </aside>
+        <div class="job-container" id="jobContainer"></div>
     </div>
-
 </section>
 
 
@@ -263,78 +98,39 @@
 
     <div class="ai-container">
 
+        <div class="career-ai-card">
+            <div class="career-ai-heading">
+                <span class="ai-spark">🤖</span>
+                <div>
+                    <span class="ai-label">Ask IMCC Career AI</span>
+                    <p>Tell us what you want to find.</p>
+                </div>
+            </div>
+            <div class="career-ai-input-row">
+                <input id="aiPrompt" type="text" placeholder="What jobs fit my skills?" aria-label="Ask IMCC Career AI">
+                <button class="search-btn" type="button" onclick="askCareerAI()">Send</button>
+                <button class="ai-clear-btn" type="button" onclick="clearRecommendation()">Clear</button>
+            </div>
+            <p class="career-ai-hint">Try: “I know HTML and Python” or “I want a healthcare job.”</p>
+            <div id="recommendation-result"></div>
+        </div>
+
         <div class="ai-content">
 
-            <h2>
-                🤖 AI Job Recommendation
-            </h2>
+            <h2>🤖 AI Career Agent</h2>
 
             <p>
-                    Enter your course, skills, and experience.
-                    The system will suggest career pathways,
-                    roles, and the best entry-point job category.
+                    Explore matching roles, understand why they fit, and identify the skills that can strengthen your next application.
                 </p>
 
                 <br>
 
                 <p>
-                    This recommendation uses common career
-                    matches for IMCC students and alumni.
+                    Applications continue through each employer's official application link.
                 </p>
 
             </div>
 
-
-            <div>
-
-                <div class="ai-form">
-
-                    <input
-                        type="text"
-                        id="userCourse"
-                        placeholder="Enter your course or program"
-                    >
-
-                    <input
-                        type="text"
-                        id="userSkills"
-                        placeholder="Enter your top skills, tools, or interests"
-                    >
-
-                    <select id="userExperienceType">
-                        <option>Fresh Graduate</option>
-                        <option>Internship Experience</option>
-                        <option>Experienced Professional</option>
-                    </select>
-
-                    <input
-                        type="number"
-                        id="userYearsExperience"
-                        placeholder="Years of work experience"
-                        min="0"
-                        step="1"
-                    >
-
-                    <button
-                        class="recommend-btn"
-                        onclick="recommendJob()">
-
-                        Find My Best Match
-
-                    </button>
-
-                    <button
-                        class="clear-btn"
-                        onclick="clearRecommendation()">
-                        Clear
-                    </button>
-
-                </div>
-
-
-            <div id="recommendation-result">
-
-            </div>
 
         </div>
 
@@ -349,7 +145,11 @@
 
     <div class="dashboard-box">
 
-        <h2>My Dashboard</h2>
+        <h2 id="dashboardTitle">Create Your Profile</h2>
+        <p class="dashboard-intro" id="dashboardIntro">Build your career profile so IMCC Careers can match you with relevant opportunities.</p>
+        <div class="profile-setup-actions">
+            <button class="register-btn" id="createProfileButton" type="button" onclick="editProfile()">Create Profile</button>
+        </div>
 
         <div id="dashboardProfile"></div>
 
@@ -446,42 +246,29 @@
 
         <button class="close-btn" onclick="closeAuthModal()">×</button>
 
-        <div class="auth-tabs">
-            <button class="auth-tab active" id="loginTab" onclick="showAuthView('login')">Login</button>
-            <button class="auth-tab" id="registerTab" onclick="showAuthView('register')">Register</button>
-        </div>
-
         <div class="auth-view active" id="loginView">
-            <h3>Welcome Back</h3>
-            <p>Sign in to view jobs and manage your applications.</p>
-            <form class="auth-form" onsubmit="handleLoginSubmit(event)">
-                <input id="loginEmail" type="email" placeholder="Email address" required>
-                <input id="loginPassword" type="password" placeholder="Password" required>
-                <button class="submit-btn" type="submit">Log In</button>
+            <h3>Welcome to IMCC-Careers</h3>
+            <form class="auth-form">
+                <button id="google-login" class="google-signin-btn" type="button" aria-label="Sign in with Google">
+                    <span class="google-mark" aria-hidden="true">G</span>
+                    <span>Continue with Google</span>
+                </button>
                 <p class="form-error" id="loginError"></p>
+                <button class="auth-admin-link" type="button" onclick="showAdminLogin()">Admin sign in</button>
             </form>
-            <p class="auth-links">Need an account? <a href="#" onclick="showAuthView('register'); return false;">Create one</a></p>
-            <p class="auth-links admin-link"><a href="#" onclick="showAdminLogin(); return false;">Admin Login</a></p>
         </div>
 
-        <div class="auth-view" id="registerView">
-            <h3>Create Your Account</h3>
-            <p>Join IMCC Careers to discover matching opportunities.</p>
-            <form class="auth-form" onsubmit="handleRegisterSubmit(event)">
-                <input id="registerName" type="text" placeholder="Full name" required>
-                <input id="registerEmail" type="email" placeholder="Email address" required>
-                <input id="registerPhone" type="text" placeholder="Phone number" required>
-                <input id="registerCourse" type="text" placeholder="Course or program" required>
-                <input id="registerSkills" type="text" placeholder="Skills (comma separated)" required>
-                <textarea id="registerExperienceSummary" placeholder="Brief experience summary" rows="3" required></textarea>
-                <label class="file-upload-label" for="registerPhoto">Upload profile photo</label>
-                <input id="registerPhoto" type="file" accept="image/*" onchange="previewProfilePhoto(event)">
-                <img id="registerPhotoPreview" class="photo-preview" alt="Photo preview" style="display:none; max-width:120px; margin-top:10px; border-radius:8px;" />
-                <input id="registerPassword" type="password" placeholder="Create password" required>
-                <button class="submit-btn" type="submit">Register</button>
-                <p class="form-error" id="registerError"></p>
+        <div class="auth-view" id="adminLoginView">
+            <h3>IMCC-Careers Admin</h3>
+            <p>Use your authorized institutional Google account to manage the marketplace.</p>
+            <form class="auth-form">
+                <button id="admin-google-login" class="google-signin-btn" type="button" aria-label="Admin sign in with Google">
+                    <span class="google-mark" aria-hidden="true">G</span>
+                    <span>Continue as Admin</span>
+                </button>
+                <p class="form-error" id="adminLoginError"></p>
+                <button class="auth-admin-link" type="button" onclick="showLogin()">Back to user sign in</button>
             </form>
-            <p class="auth-links">Already have an account? <a href="#" onclick="showAuthView('login'); return false;">Log in</a></p>
         </div>
 
     </div>
@@ -508,7 +295,13 @@
             <label class="file-upload-label" for="editPhoto">Change profile photo</label>
             <input id="editPhoto" type="file" accept="image/*" onchange="previewEditProfilePhoto(event)">
             <img id="editPhotoPreview" class="photo-preview" alt="Photo preview" style="display:none; max-width:120px; margin-top:10px; border-radius:8px;" />
-            <button class="submit-btn" type="submit">Save Profile</button>
+            <label class="file-upload-label" for="editResume">Upload your resume</label>
+            <input id="editResume" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+            <small id="editResumeStatus" class="file-upload-status">PDF, DOC, or DOCX up to 5 MB.</small>
+            <div class="profile-edit-actions">
+                <button class="submit-btn" type="submit">Save Profile</button>
+                <button class="download-cv-btn" type="button" onclick="downloadProfileCvFromEditor()">Download CV</button>
+            </div>
             <p class="form-error" id="profileEditError"></p>
         </form>
     </div>
@@ -547,16 +340,17 @@
     <script src="jobs-renderer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-E6Tr5bYFFa6toXs1Ffnxt+iwM2LKd3DXWv3dMHTiW2z8aIW4YDkk+DAGZ1tZlF5p7ZC1pF7S0d3tN5e80n1B9Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
 
 const SUPABASE_URL = window.SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || '';
 window.supabaseClient = null;
+let sessionRestoreInProgress = false;
 if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
     try {
         window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+            auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' }
         });
     } catch (error) {
         console.warn('Supabase client could not be initialized:', error.message);
@@ -595,6 +389,25 @@ async function supabaseGetProfile(userId) {
     }
 }
 
+async function supabaseIsAdmin(userId) {
+    if (!hasSupabaseConfig()) return false;
+
+    try {
+        const { data, error } = await window.supabaseClient
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', userId)
+            .eq('role', 'admin')
+            .maybeSingle();
+
+        if (error) throw error;
+        return !!data;
+    } catch (error) {
+        console.warn('Supabase role lookup failed:', error.message);
+        return false;
+    }
+}
+
 async function supabaseSaveProfile(profilePayload) {
     if (!hasSupabaseConfig()) return null;
 
@@ -609,6 +422,7 @@ async function supabaseSaveProfile(profilePayload) {
         return data;
     } catch (error) {
         console.warn('Supabase user insert failed:', error.message);
+        window.lastSupabaseProfileError = error;
         return null;
     }
 }
@@ -643,16 +457,116 @@ async function supabaseGetJobs() {
     }
 }
 
+function isOAuthCallbackPending() {
+    const hash = window.location.hash || '';
+    const query = window.location.search || '';
+    return hash.includes('access_token=') || hash.includes('error_description=') || query.includes('code=');
+}
+
+async function restoreImplicitOAuthSession() {
+    const hash = window.location.hash || '';
+    if (!hash.includes('access_token=')) return null;
+
+    const params = new URLSearchParams(hash.substring(1));
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token');
+    if (!accessToken || !refreshToken) return null;
+
+    const { data, error } = await window.supabaseClient.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken
+    });
+    if (error) throw error;
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    return data.session;
+}
+
+async function restorePkceOAuthSession() {
+    const code = new URLSearchParams(window.location.search).get('code');
+    if (!code) return null;
+
+    const { data, error } = await window.supabaseClient.auth.exchangeCodeForSession(code);
+    if (error) throw error;
+    window.history.replaceState({}, document.title, window.location.pathname);
+    return data.session;
+}
+
+async function waitForOAuthSession() {
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+        const result = await window.supabaseClient.auth.getSession();
+        if (result.error) throw result.error;
+        if (result.data && result.data.session) return result.data.session;
+        await new Promise(function(resolve) { window.setTimeout(resolve, 250); });
+    }
+    return null;
+}
+
+function goToMarketplaceHome() {
+    const dashboard = document.getElementById('dashboard');
+    const adminDashboard = document.getElementById('adminDashboard');
+    const homeSection = document.getElementById('home');
+    if (dashboard) dashboard.style.display = 'none';
+    if (adminDashboard) adminDashboard.style.display = 'none';
+    document.body.classList.remove('auth-locked');
+    closeAuthModal();
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.search + '#home');
+    if (homeSection) homeSection.scrollIntoView({ behavior: 'auto', block: 'start' });
+}
+
 async function restoreSupabaseSession() {
-    if (!hasSupabaseConfig()) return;
+    if (sessionRestoreInProgress) return;
+    sessionRestoreInProgress = true;
+    document.body.classList.add('auth-locked');
+    openAuthModal();
+    const adminLoginRequested = sessionStorage.getItem('imcc_admin_login_requested') === '1';
+    sessionStorage.removeItem('imcc_admin_login_requested');
+    if (!hasSupabaseConfig()) {
+        sessionRestoreInProgress = false;
+        return setAuthError('login', 'Account service is not configured. Please contact support.');
+    }
 
     try {
-        const { data, error } = await window.supabaseClient.auth.getSession();
-        if (error) throw error;
-        if (!data.session || !data.session.user) return;
+        let session;
+        const callbackSession = await restorePkceOAuthSession();
+        const implicitSession = callbackSession || await restoreImplicitOAuthSession();
+        if (implicitSession) {
+            session = implicitSession;
+        } else if (isOAuthCallbackPending()) {
+            session = await waitForOAuthSession();
+        } else {
+            const { data, error } = await window.supabaseClient.auth.getSession();
+            if (error) throw error;
+            session = data.session;
+        }
+        if (!session || !session.user || !isInstitutionalEmail(session.user.email)) {
+            await window.supabaseClient.auth.signOut();
+            if (adminLoginRequested) showAdminLogin();
+            return setAuthError(adminLoginRequested ? 'adminLogin' : 'login', 'Sign in with your @imcc.edu.ph Google account.');
+        }
 
-        const profile = await supabaseGetProfile(data.session.user.id);
-        if (!profile) return;
+        const isAdmin = await supabaseIsAdmin(session.user.id);
+        if (adminLoginRequested && !isAdmin) {
+            await window.supabaseClient.auth.signOut();
+            showAdminLogin();
+            return setAuthError('adminLogin', 'This institutional account is not authorized for admin access.');
+        }
+        if (!isAdmin) goToMarketplaceHome();
+        let profile = await supabaseGetProfile(session.user.id);
+        if (!profile) {
+            const userMetadata = session.user.user_metadata || {};
+            profile = await supabaseSaveProfile({
+                id: session.user.id,
+                email: session.user.email,
+                fullname: userMetadata.full_name || userMetadata.name || session.user.email.split('@')[0]
+            });
+        }
+        if (!profile) {
+            const userMetadata = session.user.user_metadata || {};
+            profile = {
+                email: session.user.email,
+                fullname: userMetadata.full_name || userMetadata.name || session.user.email.split('@')[0]
+            };
+        }
         localStorage.setItem('imcc_user', JSON.stringify({
             email: profile.email,
             profile: {
@@ -662,13 +576,34 @@ async function restoreSupabaseSession() {
                 course: profile.course || '',
                 skills: profile.skills || '',
                 experienceSummary: profile.experience_summary || '',
-                photoDataUrl: profile.photo_data_url || null
+                photoDataUrl: profile.photo_data_url || null,
+                resumeDataUrl: profile.resume_data_url || null,
+                resumeFileName: profile.resume_file_name || ''
             }
         }));
+        getManagedJobs();
+        refreshPublicJobs();
+        await loadPublicJobs();
         updateNavAuthState();
+        if (isAdmin) {
+            showAdminDashboard();
+        }
     } catch (error) {
         console.warn('Supabase session restore failed:', error.message);
+        if (document.body.classList.contains('auth-locked')) {
+            setAuthError('login', 'Unable to verify your institutional account. Please try again.');
+        }
+    } finally {
+        sessionRestoreInProgress = false;
     }
+}
+
+if (window.supabaseClient) {
+    window.supabaseClient.auth.onAuthStateChange(function(event) {
+        if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+            window.setTimeout(restoreSupabaseSession, 0);
+        }
+    });
 }
 
 /* DARK MODE */
@@ -694,6 +629,7 @@ function openAuthModal() {
 
 
 function closeAuthModal() {
+    if (document.body.classList.contains('auth-locked')) return;
 
     document.getElementById(
         "authModal"
@@ -703,37 +639,19 @@ function closeAuthModal() {
 
 
 function showAuthView(view) {
-
-    let loginView = document.getElementById("loginView");
-    let registerView = document.getElementById("registerView");
-    let loginTab = document.getElementById("loginTab");
-    let registerTab = document.getElementById("registerTab");
-
-    if (view === "register") {
-        loginView.classList.remove("active");
-        registerView.classList.add("active");
-        loginTab.classList.remove("active");
-        registerTab.classList.add("active");
-    } else {
-        registerView.classList.remove("active");
-        loginView.classList.add("active");
-        registerTab.classList.remove("active");
-        loginTab.classList.add("active");
-    }
-
+    const loginView = document.getElementById('loginView');
+    const adminLoginView = document.getElementById('adminLoginView');
+    if (loginView) loginView.classList.toggle('active', view === 'login');
+    if (adminLoginView) adminLoginView.classList.toggle('active', view === 'admin');
 }
 
 function updateNavAuthState() {
     const stored = readLocalJson('imcc_user', null);
-    const loginBtn = document.getElementById('loginNavBtn');
-    const registerBtn = document.getElementById('registerNavBtn');
     const profileChip = document.getElementById('profileChip');
     const profileLabel = document.getElementById('profileChipLabel');
     const profileAvatar = document.getElementById('profileChipAvatar');
     const isLoggedIn = !!(stored && stored.profile);
 
-    if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'inline-flex';
-    if (registerBtn) registerBtn.style.display = isLoggedIn ? 'none' : 'inline-flex';
     if (profileChip) profileChip.style.display = isLoggedIn ? 'inline-flex' : 'none';
 
     if (isLoggedIn) {
@@ -746,107 +664,29 @@ function updateNavAuthState() {
     }
 }
 
-function openUserDashboard() {
-    const stored = readLocalJson('imcc_user', null);
-    if (!stored || !stored.profile) {
+async function openUserDashboard() {
+    if (!hasSupabaseConfig()) {
         showLogin();
         return;
     }
-    showDashboard();
+    const { data, error } = await window.supabaseClient.auth.getUser();
+    if (error || !data.user || !isInstitutionalEmail(data.user.email)) {
+        showLogin();
+        return;
+    }
+    return showDashboard();
 }
 
-function ensureAdminAccount() {
-    const users = readLocalJson('imcc_users', []);
-    const adminEmail = 'admin@imcc.edu';
-    const exists = users.some(function(user) {
-        return (user.email || '').toLowerCase() === adminEmail;
-    });
-
-    if (!exists) {
-        users.push({
-            email: adminEmail,
-            password: 'admin123',
-            role: 'admin',
-            profile: {
-                fullname: 'System Administrator',
-                phone: 'N/A',
-                course: 'Administration',
-                skills: 'System management, oversight, reporting',
-                experienceSummary: 'Admin account for IMCC Careers dashboard.'
-            }
-        });
-        localStorage.setItem('imcc_users', JSON.stringify(users));
-    }
-}
-
-function getStoredUsers() {
-    try {
-        const users = readLocalJson('imcc_users', []);
-        return Array.isArray(users) ? users : [];
-    } catch (error) {
-        return [];
-    }
-}
-
-function persistLocalUserRegistration(profile, password, role) {
-    const normalizedRole = role || 'user';
-    const users = getStoredUsers();
-    const email = String(profile.email || '').trim().toLowerCase();
-    const existingIndex = users.findIndex(function(user) {
-        return ((user.email || '').trim().toLowerCase() === email) && ((user.role || 'user') === normalizedRole || normalizedRole === 'user');
-    });
-    const record = {
-        email: profile.email,
-        password: password || '',
-        role: normalizedRole,
-        profile: profile
-    };
-
-    if (existingIndex >= 0) {
-        users[existingIndex] = Object.assign({}, users[existingIndex], record);
-    } else {
-        users.push(record);
-    }
-
-    localStorage.setItem('imcc_users', JSON.stringify(users));
-    localStorage.setItem('imcc_user', JSON.stringify({
-        email: profile.email,
-        password: password || '',
-        profile: profile
-    }));
-}
-
-function findLocalUser(email, password) {
-    const normalizedEmail = String(email || '').trim().toLowerCase();
-    const normalizedPassword = String(password || '');
-    const users = getStoredUsers();
-    const match = users.find(function(user) {
-        return ((user.email || '').trim().toLowerCase() === normalizedEmail) && (String(user.password || '') === normalizedPassword) && ((user.role || 'user') !== 'admin' || normalizedPassword === 'admin123');
-    });
-
-    if (match && match.profile) {
-        return {
-            email: match.email,
-            password: match.password,
-            profile: match.profile
-        };
-    }
-
-    const stored = readLocalJson('imcc_user', null);
-    if (stored && (stored.email || '').trim().toLowerCase() === normalizedEmail && String(stored.password || '') === normalizedPassword && stored.profile) {
-        return stored;
-    }
-
-    return null;
+async function openUserProfile() {
+    await openUserDashboard();
+    if (document.body.classList.contains('auth-locked')) return;
+    editProfile();
 }
 
 function showAdminLogin() {
-    ensureAdminAccount();
-    showAuthView('login');
+    showAuthView('admin');
     openAuthModal();
-    document.getElementById('loginEmail').value = 'admin@imcc.edu';
-    document.getElementById('loginPassword').value = 'admin123';
-    setAuthError('login', 'Use admin credentials to access the dashboard.');
+    clearAuthErrors('adminLogin');
 }
 
 const MANAGED_JOBS_STORAGE_KEY = 'imcc_managed_jobs';
@@ -858,6 +698,19 @@ function escapeHtml(value) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+}
+
+function safeExternalUrl(value) {
+    try {
+        const url = new URL(String(value || ''), window.location.href);
+        return url.protocol === 'https:' ? url.href : '#';
+    } catch (error) {
+        return '#';
+    }
+}
+
+function safeImageDataUrl(value) {
+    return /^data:image\/(jpeg|png|webp);base64,[a-z0-9+/]+=*$/i.test(String(value || '')) ? value : '';
 }
 
 function getStaticJobs() {
@@ -980,6 +833,10 @@ async function loadPublicJobs() {
     }
 
     refreshPublicJobs();
+    const savedProfile = readLocalJson('imcc_user', null);
+    if (savedProfile && savedProfile.profile) {
+        renderRecommendedJobs(savedProfile.profile.course, savedProfile.profile.skills);
+    }
 }
 
 function openJobEditor(jobId) {
@@ -1084,7 +941,13 @@ function refreshAdminJobList() {
     }).join('');
 }
 
-function showAdminDashboard() {
+async function showAdminDashboard() {
+    if (!hasSupabaseConfig()) return showLogin();
+    const { data: authData, error: authError } = await window.supabaseClient.auth.getUser();
+    if (authError || !authData.user || !isInstitutionalEmail(authData.user.email) || !(await supabaseIsAdmin(authData.user.id))) {
+        return logout();
+    }
+
     const dashboard = document.getElementById('dashboard');
     const adminDashboard = document.getElementById('adminDashboard');
 
@@ -1094,7 +957,7 @@ function showAdminDashboard() {
 
     const managedJobs = getManagedJobs();
     const jobs = managedJobs.length;
-    const users = readLocalJson('imcc_users', []);
+    const users = [];
     const applicants = users.filter(function(user) { return (user.role || 'user') !== 'admin'; }).length;
 
     document.getElementById('adminTotalJobs').textContent = jobs;
@@ -1114,8 +977,12 @@ function showAdminDashboard() {
     }
 }
 
-function logoutAdmin() {
+async function logoutAdmin() {
+    if (hasSupabaseConfig() && window.supabaseClient) {
+        await window.supabaseClient.auth.signOut();
+    }
     localStorage.removeItem('imcc_admin_session');
+    localStorage.removeItem('imcc_user');
     document.getElementById('adminDashboard').style.display = 'none';
     showAuthView('login');
     openAuthModal();
@@ -1125,14 +992,6 @@ function logoutAdmin() {
 function showLogin() {
 
     showAuthView("login");
-    openAuthModal();
-
-}
-
-
-function showRegister() {
-
-    showAuthView("register");
     openAuthModal();
 
 }
@@ -1165,10 +1024,13 @@ window.addEventListener("keydown", function(event) {
 });
 
 window.addEventListener('DOMContentLoaded', function() {
-    getManagedJobs();
-    refreshPublicJobs();
+    localStorage.removeItem('imcc_admin_session');
+    const storedUser = readLocalJson('imcc_user', null);
+    if (storedUser && Object.prototype.hasOwnProperty.call(storedUser, 'password')) {
+        delete storedUser.password;
+        localStorage.setItem('imcc_user', JSON.stringify(storedUser));
+    }
     updateNavAuthState();
-    loadPublicJobs();
     restoreSupabaseSession();
 });
 
@@ -1192,231 +1054,63 @@ function clearAuthErrors(formType) {
     setAuthError(formType, '');
 }
 
-function validateEmail(email) {
-    return /^\S+@\S+\.\S+$/.test(email);
+function isInstitutionalEmail(email) {
+    return /^[^@\s]+@imcc\.edu\.ph$/i.test(String(email || '').trim());
 }
 
 async function handleLoginSubmit(event) {
-    event.preventDefault();
+    if (event && typeof event.preventDefault === 'function') {
+        event.preventDefault();
+    }
+    return signInWithGoogle();
+}
+
+async function signInWithGoogle() {
     clearAuthErrors('login');
-
-    let email = document.getElementById('loginEmail').value.trim();
-    let password = document.getElementById('loginPassword').value.trim();
-
-    ensureAdminAccount();
-    const users = readLocalJson('imcc_users', []);
-    const adminUser = users.find(function(user) {
-        return (user.email || '').toLowerCase() === (email || '').toLowerCase() && (user.password || '') === password && (user.role || 'user') === 'admin';
-    });
-
-    if (adminUser) {
-        localStorage.setItem('imcc_admin_session', 'active');
-        showAdminDashboard();
-        return;
+    if (!hasSupabaseConfig() || !window.supabaseClient) {
+        return setAuthError('login', 'Account service is not configured. Please contact support.');
     }
 
-    const localUser = findLocalUser(email, password);
-    if (localUser && localUser.profile) {
-        localStorage.setItem('imcc_user', JSON.stringify({ email: localUser.email, password: localUser.password, profile: localUser.profile }));
-        updateNavAuthState();
-        closeAuthModal();
-        showDashboard();
-        return;
+    if (!['http:', 'https:'].includes(window.location.protocol)) {
+        return setAuthError('login', 'Open IMCC-Careers from its website or a localhost server before signing in.');
     }
 
-    if (hasSupabaseConfig() && window.supabaseClient) {
-        let signInResult;
-        try {
-            signInResult = await window.supabaseClient.auth.signInWithPassword({ email: email, password: password });
-        } catch (networkError) {
-            signInResult = null;
-        }
+    const redirectTo = window.location.origin + window.location.pathname;
 
-        if (!signInResult) {
-            document.getElementById('loginPassword').classList.add('field-error');
-            return setAuthError('login', 'The account service is unavailable. Please try again later.');
-        }
-
-        const { data, error } = signInResult;
-        if (error || !data.user) {
-            document.getElementById('loginPassword').classList.add('field-error');
-            return setAuthError('login', error ? error.message : 'Unable to sign in.');
-        }
-
-        const user = await supabaseGetProfile(data.user.id);
-        if (!user) return setAuthError('login', 'Your account is missing a profile. Please contact support.');
-        const profile = {
-            fullname: user.fullname || 'User', email: user.email, phone: user.phone || '',
-            course: user.course || '', skills: user.skills || '',
-            experienceSummary: user.experience_summary || '', photoDataUrl: user.photo_data_url || null
-        };
-        localStorage.setItem('imcc_user', JSON.stringify({ email: user.email, profile: profile }));
-        updateNavAuthState();
-        closeAuthModal();
-        showDashboard();
-        return;
-    }
-
-    document.getElementById('loginPassword').classList.add('field-error');
-    setAuthError('login', 'Invalid email or password.');
-}
-
-async function handleRegisterSubmit(event) {
-    event.preventDefault();
-    clearAuthErrors('register');
-    let fullname = document.getElementById('registerName').value.trim();
-    let email = document.getElementById('registerEmail').value.trim();
-    let passwordEl = document.getElementById('registerPassword');
-    let password = passwordEl ? passwordEl.value.trim() : '';
-
-    if (!fullname) {
-        document.getElementById('registerName').classList.add('field-error');
-        return setAuthError('register', 'Please enter your full name.');
-    }
-
-    if (!email) {
-        document.getElementById('registerEmail').classList.add('field-error');
-        return setAuthError('register', 'Please enter your email address.');
-    }
-
-    if (!validateEmail(email)) {
-        document.getElementById('registerEmail').classList.add('field-error');
-        return setAuthError('register', 'Enter a valid email address.');
-    }
-
-    let phone = document.getElementById('registerPhone').value.trim();
-    let course = document.getElementById('registerCourse').value.trim();
-    let skills = document.getElementById('registerSkills').value.trim();
-    let experienceSummary = document.getElementById('registerExperienceSummary').value.trim();
-    let photoFile = document.getElementById('registerPhoto') ? document.getElementById('registerPhoto').files[0] : null;
-
-    if (!phone) {
-        document.getElementById('registerPhone').classList.add('field-error');
-        return setAuthError('register', 'Please enter your phone number.');
-    }
-
-    if (!course) {
-        document.getElementById('registerCourse').classList.add('field-error');
-        return setAuthError('register', 'Please enter your course or program.');
-    }
-
-    if (!skills) {
-        document.getElementById('registerSkills').classList.add('field-error');
-        return setAuthError('register', 'Please enter your skills.');
-    }
-
-    if (!experienceSummary) {
-        document.getElementById('registerExperienceSummary').classList.add('field-error');
-        return setAuthError('register', 'Please enter a brief experience summary.');
-    }
-
-    const existingUser = readLocalJson('imcc_user', null);
-    const isSupabaseProfileEdit = hasSupabaseConfig() && existingUser && existingUser.email === email;
-    if (!password) {
-        if (isSupabaseProfileEdit) {
-            password = '';
-        } else if (existingUser && existingUser.email === email && existingUser.password) {
-            password = existingUser.password;
-        } else {
-            passwordEl.classList.add('field-error');
-            return setAuthError('register', 'Password must be at least 6 characters.');
-        }
-    }
-
-    if (password && password.length < 6) {
-        passwordEl.classList.add('field-error');
-        return setAuthError('register', 'Password must be at least 6 characters.');
-    }
-
-    let profile = {
-        fullname: fullname,
-        email: email,
-        phone: phone,
-        course: course,
-        skills: skills,
-        experienceSummary: experienceSummary,
-        photoDataUrl: null
-    };
-
-    async function finishRegistration() {
-        persistLocalUserRegistration(profile, password, 'user');
-
-        if (hasSupabaseConfig() && window.supabaseClient) {
-            if (isSupabaseProfileEdit) {
-                const { data: sessionData } = await window.supabaseClient.auth.getUser();
-                if (!sessionData.user) return setAuthError('register', 'Your session has expired. Please log in again.');
-                const saved = await supabaseSaveProfile({
-                    id: sessionData.user.id, fullname: fullname, email: email, phone: phone,
-                    course: course, skills: skills, experience_summary: experienceSummary,
-                    photo_data_url: profile.photoDataUrl || null
-                });
-                if (!saved) return setAuthError('register', 'Your profile could not be updated.');
-                localStorage.setItem('imcc_user', JSON.stringify({ email: email, password: password, profile: profile }));
-                updateNavAuthState(); closeAuthModal(); showDashboard();
-                return;
+    try {
+        const { error } = await window.supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: redirectTo,
+                queryParams: { hd: 'imcc.edu.ph', prompt: 'select_account' }
             }
-
-            let signUpResult;
-            try {
-                signUpResult = await window.supabaseClient.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: { data: { fullname: fullname, phone: phone, course: course, skills: skills, experience_summary: experienceSummary, photo_data_url: profile.photoDataUrl || null } }
-                });
-            } catch (networkError) {
-                updateNavAuthState();
-                generateCVPdf(profile);
-                closeAuthModal();
-                showDashboard();
-                return;
-            }
-
-            const { data, error } = signUpResult;
-            if (error || !data.user) return setAuthError('register', error ? error.message : 'Unable to create your account.');
-
-            if (!data.session) {
-                showAuthView('login');
-                return setAuthError('login', 'Check your email to confirm your account, then log in.');
-            }
-            localStorage.setItem('imcc_user', JSON.stringify({ email: email, password: password, profile: profile }));
-            updateNavAuthState(); generateCVPdf(profile); closeAuthModal(); showDashboard();
-            return;
-        }
-
-        updateNavAuthState();
-        generateCVPdf(profile);
-        closeAuthModal();
-        showDashboard();
-    }
-
-    if (photoFile) {
-        if (!photoFile.type.startsWith('image/')) {
-            document.getElementById('registerPhoto').classList.add('field-error');
-            return setAuthError('register', 'Please upload a valid image file.');
-        }
-
-        let reader = new FileReader();
-        reader.onload = function(event) {
-            profile.photoDataUrl = event.target.result;
-            finishRegistration();
-        };
-        reader.readAsDataURL(photoFile);
-    } else {
-        finishRegistration();
+        });
+        if (error) throw error;
+    } catch (error) {
+        console.warn('Institutional SSO sign-in failed:', error.message);
+        const message = String(error.message || '').toLowerCase().includes('provider is not enabled')
+            ? 'Google SSO is not enabled in Supabase. Please enable the Google provider, then try again.'
+            : 'Institutional sign-in is temporarily unavailable. Please try again.';
+        setAuthError(sessionStorage.getItem('imcc_admin_login_requested') === '1' ? 'adminLogin' : 'login', message);
     }
 }
 
-function previewProfilePhoto(event) {
-    let preview = document.getElementById('registerPhotoPreview');
-    let file = event.target.files[0];
-    if (file && file.type.startsWith('image/')) {
-        preview.src = URL.createObjectURL(file);
-        preview.style.display = 'block';
-    } else {
-        preview.src = '';
-        preview.style.display = 'none';
+document.addEventListener('DOMContentLoaded', function() {
+    const googleLoginButton = document.getElementById('google-login');
+    const adminGoogleLoginButton = document.getElementById('admin-google-login');
+    if (googleLoginButton) {
+        googleLoginButton.addEventListener('click', function() {
+            sessionStorage.removeItem('imcc_admin_login_requested');
+            signInWithGoogle();
+        });
     }
-}
+    if (adminGoogleLoginButton) {
+        adminGoogleLoginButton.addEventListener('click', function() {
+            sessionStorage.setItem('imcc_admin_login_requested', '1');
+            signInWithGoogle();
+        });
+    }
+});
 
 function escapePdfText(value) {
     return String(value || '')
@@ -1496,55 +1190,102 @@ function generateCVPdf(profile) {
     if (window.jspdf && window.jspdf.jsPDF) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        const lineHeight = 10;
-        let y = 20;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const sidebarWidth = 52;
+        const magenta = [145, 12, 78];
+        const pink = [244, 214, 230];
+        const ink = [47, 26, 42];
+        const muted = [105, 83, 100];
+        const safeName = (profile.fullname || 'profile').replace(/[^a-zA-Z0-9-_ ]/g, '').replace(/\s+/g, '_') || 'profile';
 
-        doc.setFontSize(18);
-        doc.text('Curriculum Vitae', 105, y, { align: 'center' });
-        y += 15;
-
-        doc.setFontSize(12);
-        doc.text(`Name: ${profile.fullname}`, 20, y);
+        doc.setFillColor(magenta[0], magenta[1], magenta[2]);
+        doc.rect(0, 0, sidebarWidth, pageHeight, 'F');
+        doc.setFillColor(255, 255, 255);
+        doc.rect(sidebarWidth, 0, pageWidth - sidebarWidth, 48, 'F');
 
         if (profile.photoDataUrl) {
             let imageType = 'JPEG';
-            let matches = profile.photoDataUrl.match(/^data:image\/(\w+);base64,/);
-            if (matches && matches[1]) {
-                imageType = matches[1].toUpperCase() === 'PNG' ? 'PNG' : 'JPEG';
-            }
+            const matches = profile.photoDataUrl.match(/^data:image\/(\w+);base64,/);
+            if (matches && matches[1] && matches[1].toUpperCase() === 'PNG') imageType = 'PNG';
             try {
-                doc.addImage(profile.photoDataUrl, imageType, 140, 25, 40, 40);
+                doc.addImage(profile.photoDataUrl, imageType, 11, 16, 30, 30);
+                doc.setDrawColor(255, 255, 255);
+                doc.setLineWidth(1.2);
+                doc.rect(11, 16, 30, 30);
             } catch (error) {
                 console.warn('Unable to add image to PDF:', error);
             }
         }
 
-        y += lineHeight;
-        doc.text(`Email: ${profile.email}`, 20, y);
-        y += lineHeight;
-        doc.text(`Phone: ${profile.phone}`, 20, y);
-        y += lineHeight;
-        doc.text(`Course / Program: ${profile.course}`, 20, y);
-        y += lineHeight;
+        doc.setTextColor(ink[0], ink[1], ink[2]);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(18);
+        doc.text(profile.fullname || 'Your Name', sidebarWidth + 14, 22);
+        doc.setTextColor(magenta[0], magenta[1], magenta[2]);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9.5);
+        doc.text(profile.course || 'IMCC Careers Candidate', sidebarWidth + 14, 32);
+        doc.setDrawColor(230, 181, 207);
+        doc.setLineWidth(0.6);
+        doc.line(sidebarWidth + 14, 39, pageWidth - 14, 39);
 
-        if (profile.photoDataUrl) {
-            y = Math.max(y, 70);
+        doc.setTextColor(255, 255, 255);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8.5);
+        doc.text('CONTACT', 11, 62);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7.5);
+        let sidebarY = 70;
+        [profile.email, profile.phone].filter(Boolean).forEach(function(item) {
+            doc.text(doc.splitTextToSize(item, sidebarWidth - 20), 11, sidebarY);
+            sidebarY += 12;
+        });
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8.5);
+        doc.text('SKILLS', 11, sidebarY + 8);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7.5);
+        const skills = doc.splitTextToSize(profile.skills || 'Add your skills', sidebarWidth - 20);
+        doc.text(skills, 11, sidebarY + 17, { lineHeightFactor: 1.5 });
+
+        let y = 64;
+        const mainX = sidebarWidth + 14;
+        const mainWidth = pageWidth - mainX - 14;
+        function sectionHeading(title) {
+            doc.setTextColor(magenta[0], magenta[1], magenta[2]);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(10.5);
+            doc.text(title.toUpperCase(), mainX, y);
+            doc.setDrawColor(pink[0], pink[1], pink[2]);
+            doc.setLineWidth(1.2);
+            doc.line(mainX, y + 3, mainX + mainWidth, y + 3);
+            y += 12;
         }
 
-        doc.setFontSize(14);
-        doc.text('Skills', 20, y);
-        y += lineHeight;
-        doc.setFontSize(12);
-        doc.text(profile.skills, 20, y, { maxWidth: 170 });
-        y += lineHeight * (Math.ceil((profile.skills || '').length / 60) + 1);
+        sectionHeading('Professional Profile');
+        doc.setTextColor(muted[0], muted[1], muted[2]);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9.5);
+        const summaryLines = doc.splitTextToSize(profile.experienceSummary || 'Add your professional experience summary.', mainWidth);
+        doc.text(summaryLines, mainX, y, { lineHeightFactor: 1.55 });
+        y += summaryLines.length * 6 + 13;
+        sectionHeading('Education / Program');
+        doc.setTextColor(ink[0], ink[1], ink[2]);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.text(profile.course || 'Not specified', mainX, y);
+        y += 22;
+        sectionHeading('Core Skills');
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9.5);
+        const skillLines = doc.splitTextToSize(profile.skills || 'Not specified', mainWidth);
+        doc.text(skillLines, mainX, y, { lineHeightFactor: 1.55 });
 
-        doc.setFontSize(14);
-        doc.text('Experience Summary', 20, y);
-        y += lineHeight;
-        doc.setFontSize(12);
-        doc.text(profile.experienceSummary, 20, y, { maxWidth: 170 });
+        doc.setTextColor(125, 92, 112);
+        doc.setFontSize(8);
+        doc.text('IMCC Careers  |  Professional Profile', mainX, pageHeight - 12);
 
-        const safeName = (profile.fullname || 'profile').replace(/[^a-zA-Z0-9-_ ]/g, '').replace(/\s+/g, '_') || 'profile';
         doc.save(`IMCC_CV_${safeName}.pdf`);
         return;
     }
@@ -1552,10 +1293,43 @@ function generateCVPdf(profile) {
     generateSimplePdf(profile);
 }
 
-function showDashboard() {
-    const stored = readLocalJson('imcc_user', null);
+async function showDashboard() {
+    if (!hasSupabaseConfig()) return showLogin();
+    const { data: authData, error: authError } = await window.supabaseClient.auth.getUser();
+    if (authError || !authData.user || !isInstitutionalEmail(authData.user.email)) return logout();
+
+    const remoteProfile = await supabaseGetProfile(authData.user.id);
+    const localProfile = readLocalJson('imcc_user', null);
+    const profileSource = remoteProfile || (localProfile && localProfile.profile) || {
+        email: authData.user.email,
+        fullname: authData.user.user_metadata && (authData.user.user_metadata.full_name || authData.user.user_metadata.name) || 'User'
+    };
+    const stored = {
+        email: profileSource.email || authData.user.email,
+        profile: {
+            fullname: profileSource.fullname || 'User',
+            email: profileSource.email || authData.user.email,
+            phone: profileSource.phone || '',
+            course: profileSource.course || '',
+            skills: profileSource.skills || '',
+            experienceSummary: profileSource.experience_summary || profileSource.experienceSummary || '',
+            photoDataUrl: profileSource.photo_data_url || profileSource.photoDataUrl || null,
+            resumeDataUrl: profileSource.resume_data_url || profileSource.resumeDataUrl || null,
+            resumeFileName: profileSource.resume_file_name || profileSource.resumeFileName || ''
+        }
+    };
+    localStorage.setItem('imcc_user', JSON.stringify(stored));
     if (!stored || !stored.profile) return;
     const p = stored.profile;
+    const profileComplete = Boolean(p.fullname && p.phone && p.course && p.skills && p.experienceSummary);
+    const dashboardTitle = document.getElementById('dashboardTitle');
+    const dashboardIntro = document.getElementById('dashboardIntro');
+    const createProfileButton = document.getElementById('createProfileButton');
+    if (dashboardTitle) dashboardTitle.textContent = profileComplete ? 'My Profile Dashboard' : 'Create Your Profile';
+    if (dashboardIntro) dashboardIntro.textContent = profileComplete
+        ? 'Keep your career information current to get better job matches.'
+        : 'Complete your career profile so IMCC Careers can match you with relevant opportunities.';
+    if (createProfileButton) createProfileButton.textContent = profileComplete ? 'Edit Profile' : 'Create Profile';
     // build recommendation list
     const terms = (p.course + ' ' + p.skills).toLowerCase().split(/[,\s]+/).filter(Boolean);
     const jobs = Array.from(document.querySelectorAll('.job-card'));
@@ -1571,25 +1345,28 @@ function showDashboard() {
             const title = job.querySelector('h3').innerText;
             const comp = job.querySelector('.company') ? job.querySelector('.company').innerText : '';
             const url = job.dataset.url || '#';
-            return `<li><a href="${url}" target="_blank" rel="noopener noreferrer">${title} — ${comp}</a></li>`;
+            return `<li><a href="${safeExternalUrl(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)} — ${escapeHtml(comp)}</a></li>`;
         }).join('') + '</ul>';
     }
 
     // profile card with photo
-    const photoHtml = p.photoDataUrl ? `<img src="${p.photoDataUrl}" class="profile-photo" alt="Profile photo">` : '';
+    const photoDataUrl = safeImageDataUrl(p.photoDataUrl);
+    const photoHtml = photoDataUrl ? `<img src="${photoDataUrl}" class="profile-photo" alt="Profile photo">` : '';
 
     const profileHtml = `
         <div class="dashboard-grid">
             <div class="profile-card">
                 ${photoHtml}
-                <h3 class="profile-name">${p.fullname}</h3>
-                <p class="muted profile-course">${p.course}</p>
-                <p><strong>Email:</strong> ${stored.email}</p>
-                <p><strong>Phone:</strong> ${p.phone}</p>
-                <p class="skills"><strong>Skills:</strong> ${p.skills}</p>
-                <p class="summary"><strong>Summary:</strong> ${p.experienceSummary}</p>
+                <h3 class="profile-name">${escapeHtml(p.fullname)}</h3>
+                <p class="muted profile-course">${escapeHtml(p.course)}</p>
+                <p><strong>Email:</strong> ${escapeHtml(stored.email)}</p>
+                <p><strong>Phone:</strong> ${escapeHtml(p.phone)}</p>
+                <p class="skills"><strong>Skills:</strong> ${escapeHtml(p.skills)}</p>
+                <p class="summary"><strong>Summary:</strong> ${escapeHtml(p.experienceSummary)}</p>
+                <p class="resume-status"><strong>Uploaded resume:</strong> ${p.resumeFileName ? escapeHtml(p.resumeFileName) : 'None'}</p>
                 <div class="dashboard-actions">
                     <button class="register-btn" onclick="downloadMyCV()">Download My CV</button>
+                    ${p.resumeDataUrl ? '<button class="register-btn" onclick="downloadUploadedResume()">Download Resume</button>' : ''}
                     <button class="register-btn" onclick="editProfile()">Edit Profile</button>
                     <button class="clear-btn" onclick="logout()">Logout</button>
                 </div>
@@ -1671,6 +1448,7 @@ function editProfile() {
     document.getElementById('editSkills').value = p.skills || '';
     document.getElementById('editExperienceSummary').value = p.experienceSummary || '';
     document.getElementById('editPhoto').value = '';
+    document.getElementById('editResume').value = '';
     document.getElementById('profileEditError').textContent = '';
 
     const preview = document.getElementById('editPhotoPreview');
@@ -1681,6 +1459,8 @@ function editProfile() {
         preview.src = '';
         preview.style.display = 'none';
     }
+    const resumeStatus = document.getElementById('editResumeStatus');
+    if (resumeStatus) resumeStatus.textContent = p.resumeFileName ? 'Current file: ' + p.resumeFileName : 'PDF, DOC, or DOCX up to 5 MB.';
 
     const modal = document.getElementById('profileEditModal');
     modal.classList.add('show');
@@ -1695,12 +1475,36 @@ function closeProfileEditModal() {
     modal.setAttribute('aria-hidden', 'true');
 }
 
+function downloadProfileCvFromEditor() {
+    const stored = readLocalJson('imcc_user', null);
+    const profile = stored && stored.profile ? stored.profile : {};
+    const currentProfile = {
+        fullname: document.getElementById('editName').value.trim(),
+        email: document.getElementById('editEmail').value.trim(),
+        phone: document.getElementById('editPhone').value.trim(),
+        course: document.getElementById('editCourse').value.trim(),
+        skills: document.getElementById('editSkills').value.trim(),
+        experienceSummary: document.getElementById('editExperienceSummary').value.trim(),
+        photoDataUrl: profile.photoDataUrl || null
+    };
+    if (!currentProfile.fullname || !currentProfile.course || !currentProfile.skills || !currentProfile.experienceSummary) {
+        document.getElementById('profileEditError').textContent = 'Complete your profile details before downloading your CV.';
+        return;
+    }
+    generateCVPdf(currentProfile);
+}
+
 function previewEditProfilePhoto(event) {
     const preview = document.getElementById('editPhotoPreview');
     const file = event.target.files[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file && ['image/jpeg', 'image/png', 'image/webp'].includes(file.type) && file.size <= 2000000) {
         preview.src = URL.createObjectURL(file);
         preview.style.display = 'block';
+    } else if (file) {
+        event.target.value = '';
+        preview.src = '';
+        preview.style.display = 'none';
+        document.getElementById('profileEditError').textContent = 'Use a JPEG, PNG, or WebP image up to 2 MB.';
     }
 }
 
@@ -1710,6 +1514,13 @@ async function handleProfileEditSubmit(event) {
     if (!stored || !stored.profile) return closeProfileEditModal();
 
     const errorEl = document.getElementById('profileEditError');
+    const saveButton = event.target.querySelector('button[type="submit"]');
+    const originalSaveLabel = saveButton ? saveButton.textContent : 'Save Profile';
+    const setSavingState = function(isSaving) {
+        if (!saveButton) return;
+        saveButton.disabled = isSaving;
+        saveButton.textContent = isSaving ? 'Saving...' : originalSaveLabel;
+    };
     errorEl.textContent = '';
     const fields = {
         fullname: document.getElementById('editName').value.trim(),
@@ -1726,15 +1537,27 @@ async function handleProfileEditSubmit(event) {
 
     const photoInput = document.getElementById('editPhoto');
     const photoFile = photoInput.files[0];
-    if (photoFile && !photoFile.type.startsWith('image/')) {
-        errorEl.textContent = 'Please upload a valid image file.';
+    if (photoFile && (!['image/jpeg', 'image/png', 'image/webp'].includes(photoFile.type) || photoFile.size > 2000000)) {
+        errorEl.textContent = 'Use a JPEG, PNG, or WebP image up to 2 MB.';
         return;
     }
 
-    const save = async function(photoDataUrl) {
+    const resumeInput = document.getElementById('editResume');
+    const resumeFile = resumeInput.files[0];
+    const allowedResumeTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (resumeFile && (!allowedResumeTypes.includes(resumeFile.type) || resumeFile.size > 5000000)) {
+        errorEl.textContent = 'Use a PDF, DOC, or DOCX resume up to 5 MB.';
+        return;
+    }
+
+    setSavingState(true);
+
+    const save = async function(photoDataUrl, resumeDataUrl, resumeFileName) {
         const profile = Object.assign({}, stored.profile, fields, {
             email: stored.email,
-            photoDataUrl: photoDataUrl || stored.profile.photoDataUrl || null
+            photoDataUrl: photoDataUrl || stored.profile.photoDataUrl || null,
+            resumeDataUrl: resumeDataUrl || stored.profile.resumeDataUrl || null,
+            resumeFileName: resumeFileName || stored.profile.resumeFileName || ''
         });
         if (hasSupabaseConfig()) {
             let sessionData;
@@ -1744,36 +1567,87 @@ async function handleProfileEditSubmit(event) {
                 sessionData = result.data;
             } catch (error) {
                 errorEl.textContent = 'The account service is unavailable. Please try again later.';
+                setSavingState(false);
                 return;
             }
             if (!sessionData.user) {
                 errorEl.textContent = 'Your session has expired. Please log in again.';
+                setSavingState(false);
                 return;
             }
-            const saved = await supabaseSaveProfile({
-                id: sessionData.user.id, fullname: fields.fullname, email: stored.email,
+            const profilePayload = {
+                id: sessionData.user.id, fullname: fields.fullname, email: sessionData.user.email,
                 phone: fields.phone, course: fields.course, skills: fields.skills,
-                experience_summary: fields.experienceSummary, photo_data_url: profile.photoDataUrl
-            });
+                experience_summary: fields.experienceSummary, photo_data_url: profile.photoDataUrl,
+                resume_data_url: profile.resumeDataUrl, resume_file_name: profile.resumeFileName
+            };
+            let saved = await supabaseSaveProfile(profilePayload);
+            const firstSaveError = window.lastSupabaseProfileError;
+            if (!saved && firstSaveError && /resume_data_url|resume_file_name|column .* does not exist/i.test(firstSaveError.message || '')) {
+                saved = await supabaseSaveProfile({
+                    id: sessionData.user.id, fullname: fields.fullname, email: sessionData.user.email,
+                    phone: fields.phone, course: fields.course, skills: fields.skills,
+                    experience_summary: fields.experienceSummary, photo_data_url: profile.photoDataUrl
+                });
+            }
             if (!saved) {
-                errorEl.textContent = 'Your profile could not be updated.';
+                const saveError = window.lastSupabaseProfileError;
+                errorEl.textContent = saveError && saveError.message
+                    ? 'Profile could not be saved: ' + saveError.message
+                    : 'Your profile could not be updated.';
+                setSavingState(false);
                 return;
             }
         }
         const nextUser = Object.assign({}, stored, { profile: profile });
-        localStorage.setItem('imcc_user', JSON.stringify(nextUser));
+        try {
+            localStorage.setItem('imcc_user', JSON.stringify(nextUser));
+        } catch (error) {
+            errorEl.textContent = 'Profile saved remotely, but this resume is too large for local browser storage. Use a smaller file.';
+            setSavingState(false);
+            return;
+        }
         updateNavAuthState();
         closeProfileEditModal();
-        showDashboard();
+        await showDashboard();
+        setSavingState(false);
+    };
+
+    const finishSave = function(photoDataUrl) {
+        const runSave = function(resumeDataUrl, resumeFileName) {
+            save(photoDataUrl, resumeDataUrl, resumeFileName).catch(function(error) {
+                console.warn('Profile save failed:', error.message);
+                errorEl.textContent = 'Your profile could not be saved. Please try again.';
+                setSavingState(false);
+            });
+        };
+        if (!resumeFile) return runSave(null, '');
+        const resumeReader = new FileReader();
+        resumeReader.onload = function(fileEvent) { runSave(fileEvent.target.result, resumeFile.name); };
+        resumeReader.onerror = function() { errorEl.textContent = 'The resume file could not be read. Please try again.'; setSavingState(false); };
+        resumeReader.readAsDataURL(resumeFile);
     };
 
     if (photoFile) {
         const reader = new FileReader();
-        reader.onload = function(fileEvent) { save(fileEvent.target.result); };
+        reader.onload = function(fileEvent) { finishSave(fileEvent.target.result); };
+        reader.onerror = function() { errorEl.textContent = 'The profile photo could not be read. Please try again.'; setSavingState(false); };
         reader.readAsDataURL(photoFile);
     } else {
-        save(stored.profile.photoDataUrl || null);
+        finishSave(stored.profile.photoDataUrl || null);
     }
+}
+
+function downloadUploadedResume() {
+    const stored = readLocalJson('imcc_user', null);
+    const profile = stored && stored.profile;
+    if (!profile || !profile.resumeDataUrl) return;
+    const link = document.createElement('a');
+    link.href = profile.resumeDataUrl;
+    link.download = profile.resumeFileName || 'IMCC-resume';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 function applyJob(jobTitle, url) {
@@ -1963,6 +1837,67 @@ function clearSearch() {
     });
 }
 
+function renderRecommendedJobs(course, skills) {
+    const container = document.getElementById('recommendedJobs');
+    if (!container) return;
+    const terms = (String(course || '') + ' ' + String(skills || '')).toLowerCase().split(/[^a-z0-9]+/).filter(function(term) {
+        return term.length > 2;
+    });
+    const jobs = Array.from(document.querySelectorAll('.job-card'));
+    const ranked = jobs.map(function(job) {
+        const text = job.innerText.toLowerCase();
+        const hits = terms.filter(function(term) { return text.includes(term); }).length;
+        const score = terms.length ? Math.min(94, Math.max(62, 58 + Math.round((hits / terms.length) * 40))) : 70;
+        return { job: job, score: score, hits: hits };
+    }).sort(function(left, right) {
+        return right.score - left.score;
+    }).slice(0, 3);
+
+    if (!ranked.length) {
+        container.innerHTML = '<p class="recommended-empty">Complete your profile or ask Career AI to see personalized matches.</p>';
+        return;
+    }
+
+    container.innerHTML = ranked.map(function(item) {
+        const job = item.job;
+        const title = job.querySelector('h3').innerText;
+        const company = job.querySelector('.company').innerText;
+        const info = Array.from(job.querySelectorAll('.job-info')).map(function(element) { return element.innerText; }).join(' • ');
+        const why = item.hits ? 'Matches your skills or career direction.' : 'A strong starting point in the current job feed.';
+        return '<article class="recommended-card">' +
+            '<div class="recommended-card-top"><span class="match-score">' + item.score + '% match</span><span class="job-tag">' + escapeHtml(job.querySelector('.job-tag').innerText) + '</span></div>' +
+            '<h3>' + escapeHtml(title) + '</h3>' +
+            '<p class="company">' + escapeHtml(company) + '</p>' +
+            '<p class="job-info">' + escapeHtml(info) + '</p>' +
+            '<div class="recommended-actions"><button type="button" class="apply-btn" onclick="scrollToRecommendedJob(event, \'' + title.replace(/'/g, "\\'") + '\')">View Job</button>' +
+            '<button type="button" class="why-match-btn" onclick="showMatchReason(event, this, \'' + why.replace(/'/g, "\\'") + '\')">Why this matches?</button></div>' +
+            '<p class="match-reason" hidden></p>' +
+            '</article>';
+    }).join('');
+}
+
+function showMatchReason(event, button, reason) {
+    event.stopPropagation();
+    const reasonElement = button.closest('.recommended-card').querySelector('.match-reason');
+    reasonElement.textContent = reason;
+    reasonElement.hidden = !reasonElement.hidden;
+}
+
+function askCareerAI() {
+    const prompt = document.getElementById('aiPrompt');
+    const text = prompt ? prompt.value.trim() : '';
+    if (!text) {
+        if (prompt) prompt.focus();
+        return;
+    }
+    const course = document.getElementById('userCourse');
+    const skills = document.getElementById('userSkills');
+    if (course) course.value = text;
+    if (skills) skills.value = text;
+    recommendJob();
+    document.getElementById('ai').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function scrollToFirstVisibleJob(event) {
     event.preventDefault();
     const firstVisible = Array.from(document.querySelectorAll('.job-card')).find(job => job.style.display !== 'none');
@@ -1985,10 +1920,16 @@ function scrollToRecommendedJob(event, title) {
 }
 
 function clearRecommendation() {
-    document.getElementById('userCourse').value = '';
-    document.getElementById('userSkills').value = '';
-    document.getElementById('userExperienceType').value = 'Fresh Graduate';
-    document.getElementById('userYearsExperience').value = '';
+    const prompt = document.getElementById('aiPrompt');
+    if (prompt) prompt.value = '';
+    const courseInput = document.getElementById('userCourse');
+    const skillsInput = document.getElementById('userSkills');
+    const experienceInput = document.getElementById('userExperienceType');
+    const yearsInput = document.getElementById('userYearsExperience');
+    if (courseInput) courseInput.value = '';
+    if (skillsInput) skillsInput.value = '';
+    if (experienceInput) experienceInput.value = 'Fresh Graduate';
+    if (yearsInput) yearsInput.value = '';
     const result = document.getElementById('recommendation-result');
     result.style.display = 'none';
     result.innerHTML = '';
@@ -1999,38 +1940,15 @@ function clearRecommendation() {
 /* AI JOB RECOMMENDATION */
 
 function recommendJob() {
-
-    let course =
-    document
-    .getElementById(
-        "userCourse"
-    )
-    .value
-    .toLowerCase();
-
-    let skills =
-    document
-    .getElementById(
-        "userSkills"
-    )
-    .value
-    .toLowerCase();
-
-    let experienceType =
-    document
-    .getElementById(
-        "userExperienceType"
-    )
-    .value;
-
-    let yearsExperience = parseInt(
-        document
-        .getElementById(
-            "userYearsExperience"
-        )
-        .value,
-        10
-    );
+    const promptText = (document.getElementById('aiPrompt') || {}).value || '';
+    const courseValue = (document.getElementById('userCourse') || {}).value || '';
+    const skillsValue = (document.getElementById('userSkills') || {}).value || '';
+    const experienceElement = document.getElementById('userExperienceType');
+    const yearsElement = document.getElementById('userYearsExperience');
+    let course = (courseValue || promptText).toLowerCase();
+    let skills = (skillsValue || promptText).toLowerCase();
+    let experienceType = experienceElement ? experienceElement.value : 'Fresh Graduate';
+    let yearsExperience = yearsElement ? parseInt(yearsElement.value, 10) : 0;
 
     let result =
     document
@@ -2108,6 +2026,8 @@ function recommendJob() {
         'Social Work': 'Social Work',
         CHTM: 'CHTM'
     };
+
+    renderRecommendedJobs(course, skills);
 
     let category = "General Career Opportunities";
     let summary =
