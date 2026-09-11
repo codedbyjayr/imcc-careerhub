@@ -59,6 +59,8 @@ alter table public.profiles
   add column if not exists skills text,
   add column if not exists experience_summary text,
   add column if not exists photo_data_url text,
+  add column if not exists resume_data_url text,
+  add column if not exists resume_file_name text,
   add column if not exists created_at timestamptz not null default now(),
   add column if not exists updated_at timestamptz not null default now();
 
@@ -128,6 +130,15 @@ begin
   ) then
     alter table public.profiles add constraint profiles_fullname_length_check
       check (char_length(fullname) <= 160) not valid;
+  end if;
+
+  if not exists (
+    select 1 from pg_catalog.pg_constraint
+    where conrelid = 'public.profiles'::regclass
+      and conname = 'profiles_institutional_email_check'
+  ) then
+    alter table public.profiles add constraint profiles_institutional_email_check
+      check (email ~* '^[^@[:space:]]+@imcc[.]edu[.]ph$') not valid;
   end if;
 
   if not exists (
@@ -288,6 +299,10 @@ declare
   display_name text;
   avatar_data text;
 begin
+  if coalesce(new.email, '') !~* '^[^@[:space:]]+@imcc[.]edu[.]ph$' then
+    raise exception 'Only @imcc.edu.ph institutional email addresses are allowed';
+  end if;
+
   display_name := coalesce(
     nullif(left(btrim(coalesce(
       new.raw_user_meta_data ->> 'fullname',
@@ -339,6 +354,10 @@ security definer
 set search_path = ''
 as $$
 begin
+  if coalesce(new.email, '') !~* '^[^@[:space:]]+@imcc[.]edu[.]ph$' then
+    raise exception 'Only @imcc.edu.ph institutional email addresses are allowed';
+  end if;
+
   if new.email is distinct from old.email then
     perform pg_catalog.set_config('app.profile_email_sync', 'true', true);
     update public.profiles
@@ -531,6 +550,25 @@ create trigger on_auth_user_email_updated
   after update of email on auth.users
   for each row execute function public.sync_profile_email_from_auth();
 
+-- Existing accounts outside the institutional domain must not remain usable.
+-- Review these accounts before permanently deleting them from Auth.
+update auth.users
+set banned_until = 'infinity'::timestamptz
+where email is null
+   or email !~* '^[^@[:space:]]+@imcc[.]edu[.]ph$';
+
+-- Remove legacy profiles that cannot satisfy the institutional-email rule.
+-- Their Auth accounts are banned above, so these rows must not be retained or
+-- synchronized back into the constrained profiles table.
+delete from public.profiles as profile
+where coalesce(profile.email, '') !~* '^[^@[:space:]]+@imcc[.]edu[.]ph$'
+   or not exists (
+     select 1
+     from auth.users as auth_user
+     where auth_user.id = profile.id
+       and coalesce(auth_user.email, '') ~* '^[^@[:space:]]+@imcc[.]edu[.]ph$'
+   );
+
 -- Backfill accounts created before this migration.  Existing profile content is
 -- preserved; only a missing profile is created and email is synchronized with
 -- Auth, which is the source of truth.
@@ -559,6 +597,7 @@ select
     else null
   end
 from auth.users as auth_user
+where coalesce(auth_user.email, '') ~* '^[^@[:space:]]+@imcc[.]edu[.]ph$'
 on conflict (id) do nothing;
 
 select pg_catalog.set_config('app.profile_email_sync', 'true', true);
