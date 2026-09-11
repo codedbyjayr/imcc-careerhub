@@ -1,11 +1,66 @@
+function normalizeJob(job, fallbackCategory, fallbackLabel) {
+    const title = job && job.title ? job.title : 'Untitled Position';
+    return {
+        title: title,
+        company: job && job.company ? job.company : '',
+        location: job && job.location ? job.location : '',
+        employmentType: job && (job.employmentType || job.employment_type) ? (job.employmentType || job.employment_type) : '',
+        tag: job && job.tag ? job.tag : (fallbackLabel || fallbackCategory || 'General'),
+        url: job && job.url ? job.url : '',
+        description: job && job.description ? job.description : ''
+    };
+}
+
+function getRenderableJobCategories() {
+    const groups = Array.isArray(window.jobCategories) ? window.jobCategories : [];
+    const merged = {};
+
+    groups.forEach(function(group) {
+        if (!group || !group.category) return;
+        const category = String(group.category);
+        const label = group.label || category;
+        if (!merged[category]) {
+            merged[category] = { category: category, label: label, jobs: [] };
+        }
+
+        const jobs = Array.isArray(group.jobs) ? group.jobs : [];
+        jobs.forEach(function(job) {
+            const normalized = normalizeJob(job, category, label);
+            const key = [normalized.title, normalized.company, normalized.url].join('|').toLowerCase();
+            const existing = merged[category].jobs.some(function(existingJob) {
+                const existingKey = [existingJob.title, existingJob.company, existingJob.url].join('|').toLowerCase();
+                return existingKey === key;
+            });
+
+            if (!existing) {
+                merged[category].jobs.push(normalized);
+            }
+        });
+    });
+
+    return Object.keys(merged).map(function(category) {
+        return merged[category];
+    });
+}
+
 function renderJobs() {
     let container = document.getElementById('jobContainer');
+    if (!container) return;
     container.innerHTML = '';
 
     const categories = typeof getRenderableJobCategories === 'function'
         ? getRenderableJobCategories()
-        : window.jobCategories;
-    if (!categories) return;
+        : (Array.isArray(window.jobCategories) ? window.jobCategories : []);
+    if (!categories.length) return;
+
+    function safeText(value) {
+        return String(value == null ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
 
     categories.forEach(function(categoryGroup) {
         let block = document.createElement('div');
@@ -24,16 +79,21 @@ function renderJobs() {
             card.tabIndex = 0;
             if (job.url) card.dataset.url = job.url;
 
-            let description = 'This ' + (job.tag || categoryGroup.label) + ' opportunity at ' + job.company + ' is a strong fit for students and alumni seeking practical experience, career growth, and role-based development in ' + (categoryGroup.label || 'this field') + '.';
+            let description = job.description || ('This ' + (job.tag || categoryGroup.label) + ' opportunity at ' + job.company + ' is a strong fit for students and alumni seeking practical experience, career growth, and role-based development in ' + (categoryGroup.label || 'this field') + '.');
 
             card.innerHTML =
-                '<h3>' + job.title + '</h3>' +
-                '<p class="company">' + job.company + '</p>' +
-                '<p class="job-info">' + job.location + '</p>' +
-                '<p class="job-info">' + job.employmentType + '</p>' +
-                '<span class="job-tag">' + job.tag + '</span>' +
-                '<div class="job-description">' + description + '</div>' +
-                '<button class="apply-btn" onclick="event.stopPropagation(); applyJob(\'' + job.title + '\'' + (job.url ? ', \'' + job.url + '\'' : '') + ')">Apply Now</button>';
+                '<h3>' + safeText(job.title) + '</h3>' +
+                '<p class="company">' + safeText(job.company) + '</p>' +
+                '<p class="job-info">' + safeText(job.location) + '</p>' +
+                '<p class="job-info">' + safeText(job.employmentType) + '</p>' +
+                '<span class="job-tag">' + safeText(job.tag) + '</span>' +
+                '<div class="job-description">' + safeText(description) + '</div>' +
+                '<button class="apply-btn" type="button">Apply Now</button>';
+
+            card.querySelector('.apply-btn').addEventListener('click', function(event) {
+                event.stopPropagation();
+                applyJob(job.title, job.url);
+            });
 
             card.addEventListener('click', function(event) {
                 if (event.target && event.target.closest('.apply-btn')) {

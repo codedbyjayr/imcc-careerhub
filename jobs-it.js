@@ -43,6 +43,22 @@ window.jobCategories.push({
             employmentType: '💼 Full Time',
             tag: 'Information Technology',
             url: 'https://promoteiligan.com/job/information-technology-faculty/'
+        },
+        {
+            title: 'IT Help Desk Support Specialist',
+            company: 'Telecom Plus Philippines',
+            location: '📍 Iligan City, Lanao del Norte',
+            employmentType: '💼 Full-Time',
+            tag: 'Information Technology',
+            url: 'https://ph.jobstreet.com/it-related-jobs/in-Iligan-City-Lanao-del-Norte'
+        },
+        {
+            title: 'Web Developer',
+            company: 'Kalken Digital',
+            location: '📍 Cagayan de Oro City',
+            employmentType: '💼 Full-Time',
+            tag: 'Information Technology',
+            url: 'https://www.glassdoor.com/Job/it-jobs-SRCH_KO0,2.htm'
         }
     ]
 });

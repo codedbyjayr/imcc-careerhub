@@ -51,6 +51,22 @@ window.jobCategories.push({
             employmentType: '💼 Full-Time',
             tag: 'Healthcare',
             url: 'https://imcc.edu.ph/careers/'
+        },
+        {
+            title: 'Nursing Assistant',
+            company: 'Iligan Medical Center College',
+            location: '📍 Iligan City, Lanao del Norte',
+            employmentType: '💼 Full-Time',
+            tag: 'Healthcare',
+            url: 'https://imcc.edu.ph/careers/'
+        },
+        {
+            title: 'Pharmacy Assistant',
+            company: 'Metro Drugstore',
+            location: '📍 Cagayan de Oro City',
+            employmentType: '💼 Full-Time',
+            tag: 'Healthcare',
+            url: 'https://ph.jobstreet.com/medical-technologist-jobs'
         }
     ]
 });
