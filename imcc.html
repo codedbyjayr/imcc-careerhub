@@ -983,7 +983,11 @@ async function logoutAdmin() {
     }
     localStorage.removeItem('imcc_admin_session');
     localStorage.removeItem('imcc_user');
+    document.body.classList.add('auth-locked');
     document.getElementById('adminDashboard').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'none';
+    window.history.replaceState({}, document.title, window.location.pathname);
+    window.scrollTo({ top: 0, behavior: 'auto' });
     showAuthView('login');
     openAuthModal();
 }
@@ -1433,7 +1437,12 @@ async function logout() {
     localStorage.removeItem('imcc_user');
     updateNavAuthState();
     document.getElementById('dashboard').style.display = 'none';
-    window.location.hash = '';
+    document.getElementById('adminDashboard').style.display = 'none';
+    document.body.classList.add('auth-locked');
+    window.history.replaceState({}, document.title, window.location.pathname);
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    showAuthView('login');
+    openAuthModal();
 }
 
 function editProfile() {
@@ -1562,11 +1571,18 @@ async function handleProfileEditSubmit(event) {
         if (hasSupabaseConfig()) {
             let sessionData;
             try {
+                const sessionResult = await window.supabaseClient.auth.getSession();
+                if (sessionResult.error) throw sessionResult.error;
+                if (!sessionResult.data.session) {
+                    throw new Error('Your Google session has expired. Please sign in again.');
+                }
                 const result = await window.supabaseClient.auth.getUser();
                 if (result.error) throw result.error;
                 sessionData = result.data;
             } catch (error) {
-                errorEl.textContent = 'The account service is unavailable. Please try again later.';
+                errorEl.textContent = error && error.message
+                    ? error.message
+                    : 'Your Google session could not be verified. Please sign in again.';
                 setSavingState(false);
                 return;
             }
