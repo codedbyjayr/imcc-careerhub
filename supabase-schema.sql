@@ -7,9 +7,15 @@ create table if not exists public.profiles (
   skills text,
   experience_summary text,
   photo_data_url text,
+  resume_data_url text,
+  resume_file_name text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.profiles
+  add column if not exists resume_data_url text,
+  add column if not exists resume_file_name text;
 
 alter table public.profiles enable row level security;
 
@@ -19,6 +25,10 @@ language plpgsql
 security definer set search_path = public
 as $$
 begin
+  if coalesce(new.email, '') !~* '^[^@[:space:]]+@imcc[.]edu[.]ph$' then
+    raise exception 'Only @imcc.edu.ph institutional email addresses are allowed';
+  end if;
+
   insert into public.profiles (id, email, fullname, phone, course, skills, experience_summary, photo_data_url)
   values (
     new.id,
