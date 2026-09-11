@@ -1,11 +1,57 @@
+function normalizeJob(job, fallbackCategory, fallbackLabel) {
+    const title = job && job.title ? job.title : 'Untitled Position';
+    return {
+        title: title,
+        company: job && job.company ? job.company : '',
+        location: job && job.location ? job.location : '',
+        employmentType: job && (job.employmentType || job.employment_type) ? (job.employmentType || job.employment_type) : '',
+        tag: job && job.tag ? job.tag : (fallbackLabel || fallbackCategory || 'General'),
+        url: job && job.url ? job.url : '',
+        description: job && job.description ? job.description : ''
+    };
+}
+
+function getRenderableJobCategories() {
+    const groups = Array.isArray(window.jobCategories) ? window.jobCategories : [];
+    const merged = {};
+
+    groups.forEach(function(group) {
+        if (!group || !group.category) return;
+        const category = String(group.category);
+        const label = group.label || category;
+        if (!merged[category]) {
+            merged[category] = { category: category, label: label, jobs: [] };
+        }
+
+        const jobs = Array.isArray(group.jobs) ? group.jobs : [];
+        jobs.forEach(function(job) {
+            const normalized = normalizeJob(job, category, label);
+            const key = [normalized.title, normalized.company, normalized.url].join('|').toLowerCase();
+            const existing = merged[category].jobs.some(function(existingJob) {
+                const existingKey = [existingJob.title, existingJob.company, existingJob.url].join('|').toLowerCase();
+                return existingKey === key;
+            });
+
+            if (!existing) {
+                merged[category].jobs.push(normalized);
+            }
+        });
+    });
+
+    return Object.keys(merged).map(function(category) {
+        return merged[category];
+    });
+}
+
 function renderJobs() {
     let container = document.getElementById('jobContainer');
+    if (!container) return;
     container.innerHTML = '';
 
     const categories = typeof getRenderableJobCategories === 'function'
         ? getRenderableJobCategories()
-        : window.jobCategories;
-    if (!categories) return;
+        : (Array.isArray(window.jobCategories) ? window.jobCategories : []);
+    if (!categories.length) return;
 
     function safeText(value) {
         return String(value == null ? '' : value)
