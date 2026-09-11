@@ -1310,16 +1310,16 @@ function generateCVPdf(profile) {
 
 async function showDashboard(cachedProfile, cachedEmail, sessionUserId) {
     if (!hasSupabaseConfig()) return showLogin();
-    const localProfile = cachedProfile || readLocalJson('imcc_user', null)?.profile;
-    const localEmail = cachedEmail || readLocalJson('imcc_user', null)?.email;
-    const profileToRender = localProfile || { fullname: 'User', email: localEmail || '' };
+    const localUser = readLocalJson('imcc_user', null);
+    const profileToRender = cachedProfile || (localUser && localUser.profile) || { fullname: 'User' };
+    const emailToRender = cachedEmail || (localUser && localUser.email) || profileToRender.email || '';
     document.body.classList.remove('auth-locked');
     closeAuthModal();
     const stored = {
-        email: profileToRender.email || localEmail || '',
+        email: profileToRender.email || emailToRender,
         profile: {
             fullname: profileToRender.fullname || 'User',
-            email: profileToRender.email || localEmail || '',
+            email: profileToRender.email || emailToRender,
             phone: profileToRender.phone || '',
             course: profileToRender.course || '',
             skills: profileToRender.skills || '',
