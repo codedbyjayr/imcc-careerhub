@@ -410,6 +410,7 @@ async function supabaseIsAdmin(userId) {
 
 async function supabaseSaveProfile(profilePayload) {
     if (!hasSupabaseConfig()) return null;
+    window.lastSupabaseProfileError = null;
 
     try {
         const { data, error } = await window.supabaseClient
@@ -669,12 +670,22 @@ async function openUserDashboard() {
         showLogin();
         return;
     }
-    const { data, error } = await window.supabaseClient.auth.getUser();
-    if (error || !data.user || !isInstitutionalEmail(data.user.email)) {
+    const cachedUser = readLocalJson('imcc_user', null);
+    if (cachedUser && cachedUser.profile) {
+        document.body.classList.remove('auth-locked');
+        closeAuthModal();
+        showDashboard(cachedUser.profile, cachedUser.email);
+        return;
+    }
+    const { data, error } = await window.supabaseClient.auth.getSession();
+    const sessionUser = data && data.session ? data.session.user : null;
+    if (error || !sessionUser || !isInstitutionalEmail(sessionUser.email)) {
         showLogin();
         return;
     }
-    return showDashboard();
+    document.body.classList.remove('auth-locked');
+    closeAuthModal();
+    return showDashboard(null, sessionUser.email, sessionUser.id);
 }
 
 async function openUserProfile() {
@@ -1297,29 +1308,25 @@ function generateCVPdf(profile) {
     generateSimplePdf(profile);
 }
 
-async function showDashboard() {
+async function showDashboard(cachedProfile, cachedEmail, sessionUserId) {
     if (!hasSupabaseConfig()) return showLogin();
-    const { data: authData, error: authError } = await window.supabaseClient.auth.getUser();
-    if (authError || !authData.user || !isInstitutionalEmail(authData.user.email)) return logout();
-
-    const remoteProfile = await supabaseGetProfile(authData.user.id);
-    const localProfile = readLocalJson('imcc_user', null);
-    const profileSource = remoteProfile || (localProfile && localProfile.profile) || {
-        email: authData.user.email,
-        fullname: authData.user.user_metadata && (authData.user.user_metadata.full_name || authData.user.user_metadata.name) || 'User'
-    };
+    const localProfile = cachedProfile || readLocalJson('imcc_user', null)?.profile;
+    const localEmail = cachedEmail || readLocalJson('imcc_user', null)?.email;
+    const profileToRender = localProfile || { fullname: 'User', email: localEmail || '' };
+    document.body.classList.remove('auth-locked');
+    closeAuthModal();
     const stored = {
-        email: profileSource.email || authData.user.email,
+        email: profileToRender.email || localEmail || '',
         profile: {
-            fullname: profileSource.fullname || 'User',
-            email: profileSource.email || authData.user.email,
-            phone: profileSource.phone || '',
-            course: profileSource.course || '',
-            skills: profileSource.skills || '',
-            experienceSummary: profileSource.experience_summary || profileSource.experienceSummary || '',
-            photoDataUrl: profileSource.photo_data_url || profileSource.photoDataUrl || null,
-            resumeDataUrl: profileSource.resume_data_url || profileSource.resumeDataUrl || null,
-            resumeFileName: profileSource.resume_file_name || profileSource.resumeFileName || ''
+            fullname: profileToRender.fullname || 'User',
+            email: profileToRender.email || localEmail || '',
+            phone: profileToRender.phone || '',
+            course: profileToRender.course || '',
+            skills: profileToRender.skills || '',
+            experienceSummary: profileToRender.experience_summary || profileToRender.experienceSummary || '',
+            photoDataUrl: profileToRender.photo_data_url || profileToRender.photoDataUrl || null,
+            resumeDataUrl: profileToRender.resume_data_url || profileToRender.resumeDataUrl || null,
+            resumeFileName: profileToRender.resume_file_name || profileToRender.resumeFileName || ''
         }
     };
     localStorage.setItem('imcc_user', JSON.stringify(stored));
@@ -1387,6 +1394,12 @@ async function showDashboard() {
     // show dashboard area
     document.getElementById('dashboard').style.display = 'block';
     document.getElementById('dashboard').scrollIntoView({behavior:'smooth'});
+
+    if (sessionUserId) {
+        supabaseGetProfile(sessionUserId).then(function(remoteProfile) {
+            if (remoteProfile) showDashboard(remoteProfile, remoteProfile.email, null);
+        });
+    }
 }
 
 function downloadMyCV() {
@@ -1580,9 +1593,17 @@ async function handleProfileEditSubmit(event) {
                 if (result.error) throw result.error;
                 sessionData = result.data;
             } catch (error) {
-                errorEl.textContent = error && error.message
-                    ? error.message
-                    : 'Your Google session could not be verified. Please sign in again.';
+                try {
+                    localStorage.setItem('imcc_user', JSON.stringify(Object.assign({}, stored, { profile: profile })));
+                    errorEl.textContent = 'Saved on this device. Cloud sync is temporarily unavailable.';
+                    updateNavAuthState();
+                    closeProfileEditModal();
+                    await showDashboard();
+                } catch (localError) {
+                    errorEl.textContent = error && error.message
+                        ? error.message
+                        : 'Your Google session could not be verified. Please sign in again.';
+                }
                 setSavingState(false);
                 return;
             }
@@ -1608,9 +1629,21 @@ async function handleProfileEditSubmit(event) {
             }
             if (!saved) {
                 const saveError = window.lastSupabaseProfileError;
-                errorEl.textContent = saveError && saveError.message
-                    ? 'Profile could not be saved: ' + saveError.message
-                    : 'Your profile could not be updated.';
+                if (saveError && /failed to fetch|network|fetch/i.test(saveError.message || '')) {
+                    try {
+                        localStorage.setItem('imcc_user', JSON.stringify(Object.assign({}, stored, { profile: profile })));
+                        errorEl.textContent = 'Saved on this device. Cloud sync is temporarily unavailable.';
+                        updateNavAuthState();
+                        closeProfileEditModal();
+                        await showDashboard();
+                    } catch (localError) {
+                        errorEl.textContent = 'Profile could not be saved locally. Please use a smaller resume file.';
+                    }
+                } else {
+                    errorEl.textContent = saveError && saveError.message
+                        ? 'Profile could not be saved: ' + saveError.message
+                        : 'Your profile could not be updated.';
+                }
                 setSavingState(false);
                 return;
             }
