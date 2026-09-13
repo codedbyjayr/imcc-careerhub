@@ -1,16 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/imcc.html"
-    },
-    {
-      "source": "/index",
-      "destination": "/imcc.html"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
