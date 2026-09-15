@@ -350,7 +350,12 @@ let sessionRestoreInProgress = false;
 if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
     try {
         window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' }
+           auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: false,
+    flowType: 'pkce'
+}
         });
     } catch (error) {
         console.warn('Supabase client could not be initialized:', error.message);
@@ -1070,7 +1075,8 @@ function clearAuthErrors(formType) {
 }
 
 function isInstitutionalEmail(email) {
-    return /^[^@\s]+@imcc\.edu\.ph$/i.test(String(email || '').trim());
+    const normalized = String(email || '').trim().toLowerCase();
+    return normalized.endsWith('@imcc.edu.ph');
 }
 
 async function handleLoginSubmit(event) {
