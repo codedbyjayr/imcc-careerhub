@@ -1096,7 +1096,7 @@ async function signInWithGoogle() {
         return setAuthError('login', 'Open IMCC-Careers from its website or a localhost server before signing in.');
     }
 
-    const redirectTo = window.location.origin + window.location.pathname;
+    const redirectTo = window.location.origin + '/imcc.html';
 
     try {
         const { error } = await window.supabaseClient.auth.signInWithOAuth({
