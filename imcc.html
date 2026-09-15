@@ -349,14 +349,17 @@ window.supabaseClient = null;
 let sessionRestoreInProgress = false;
 if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
     try {
-        window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-           auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: false,
-    flowType: 'pkce'
-}
-        });
+        window.supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY,
+    {
+        auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+        }
+    }
+);
     } catch (error) {
         console.warn('Supabase client could not be initialized:', error.message);
     }
@@ -487,16 +490,6 @@ async function restoreImplicitOAuthSession() {
     return data.session;
 }
 
-async function restorePkceOAuthSession() {
-    const code = new URLSearchParams(window.location.search).get('code');
-    if (!code) return null;
-
-    const { data, error } = await window.supabaseClient.auth.exchangeCodeForSession(code);
-    if (error) throw error;
-    window.history.replaceState({}, document.title, window.location.pathname);
-    return data.session;
-}
-
 async function waitForOAuthSession() {
     for (let attempt = 0; attempt < 20; attempt += 1) {
         const result = await window.supabaseClient.auth.getSession();
@@ -532,9 +525,12 @@ async function restoreSupabaseSession() {
     }
 
     try {
-        let session;
-        const callbackSession = await restorePkceOAuthSession();
-        const implicitSession = callbackSession || await restoreImplicitOAuthSession();
+        const { data, error } =
+    await window.supabaseClient.auth.getSession();
+
+if (error) throw error;
+
+const session = data.session;
         if (implicitSession) {
             session = implicitSession;
         } else if (isOAuthCallbackPending()) {
