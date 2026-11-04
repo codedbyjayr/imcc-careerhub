@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMCC Career Hub — Iligan Medical Center College | Career Services</title>
+    <meta name="description"
+        content="Official Career Services portal for IMCC students and alumni. Browse opportunities, build your resume, and connect with employers across the Philippines.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Top Authority Bar -->
+    <div class="authority-bar">
+        <div class="container">
+            <span>ILIGAN MEDICAL CENTER COLLEGE — OFFICE OF CAREER SERVICES</span>
+            <span class="hidden-mobile">A.Y. 2025–2026</span>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <a href="#home" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="logo-text">
+                        <div class="logo-title">IMCC Career Hub</div>
+                        <div class="logo-subtitle">Career Services Portal</div>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="desktop-nav" id="desktopNav">
+                    <a href="#home" class="nav-link active" data-page="home">Home</a>
+                    <a href="#jobs" class="nav-link" data-page="jobs">Career Opportunities</a>
+                    <a href="#dashboard" class="nav-link hidden-auth" data-page="dashboard">Dashboard</a>
+                    <a href="#resume" class="nav-link hidden-auth" data-page="resume">Resume Center</a>
+                    <a href="#admin" class="nav-link hidden-admin" data-page="admin">Admin Panel</a>
+                </nav>
+
+                <!-- User Menu -->
+                <div class="user-menu">
+                    <div class="user-info hidden-auth" id="userInfo">
+                        <div class="user-avatar" id="userAvatar">J</div>
+                        <div class="user-details">
+                            <div class="user-name" id="userName">Juan Dela Cruz</div>
+                            <div class="user-role" id="userRole">2024-001234</div>
+                        </div>
+                    </div>
+                    <button class="btn-logout hidden-auth" id="logoutBtn" title="Sign Out">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                    <a href="#login" class="btn-primary btn-signin hidden-guest" id="signinBtn">Sign In</a>
+
+                    <!-- Mobile menu button -->
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <nav class="mobile-nav">
+                <a href="#home" class="mobile-link" data-page="home">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="#jobs" class="mobile-link" data-page="jobs">
+                    <i class="fas fa-briefcase"></i> Career Opportunities
+                </a>
+                <a href="#dashboard" class="mobile-link hidden-auth" data-page="dashboard">
+                    <i class="fas fa-th-large"></i> Dashboard
+                </a>
+                <a href="#resume" class="mobile-link hidden-auth" data-page="resume">
+                    <i class="fas fa-file-alt"></i> Resume Center
+                </a>
+                <a href="#admin" class="mobile-link hidden-admin" data-page="admin">
+                    <i class="fas fa-shield-alt"></i> Admin Panel
+                </a>
+                <button class="mobile-logout hidden-auth" id="mobileLogoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb hidden" id="breadcrumb">
+        <div class="container">
+            <a href="#home">Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <span id="breadcrumbText">Career Opportunities</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="mainContent">
+        <!-- Home Page -->
+        <div id="homePage" class="page active">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-bg"></div>
+                <div class="container">
+                    <div class="hero-content">
+                        <div class="hero-badge">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Official Career Services Portal</span>
+                        </div>
+                        <h1 class="hero-title">
+                            Your Pathway to <span class="gradient-text">Professional Excellence</span>
+                        </h1>
+                        <p class="hero-description">
+                            Connecting IMCC students and alumni with meaningful career opportunities.
+                            Access curated job listings, professional development resources, and AI-powered
+                            career guidance — all in one place.
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="#jobs" class="btn-primary btn-large">
+                                <i class="fas fa-briefcase"></i>
+                                Browse Opportunities
+                            </a>
+                            <a href="#dashboard" class="btn-secondary btn-large btn-light">
+                                <i class="fas fa-th-large"></i>
+                                Student Dashboard
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Stats Panel -->
+                    <div class="stats-panel">
+                        <div class="stat-card">
+                            <i class="fas fa-briefcase"></i>
+                            <div class="stat-value">150+</div>
+                            <div class="stat-label">Active Opportunities</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-building"></i>
+                            <div class="stat-value">80+</div>
+                            <div class="stat-label">Partner Employers</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-graduation-cap"></i>
+                            <div class="stat-value">2,400+</div>
+                            <div class="stat-label">Placed Graduates</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-award"></i>
+                            <div class="stat-value">9</div>
+                            <div class="stat-label">Programs Supported</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Featured Opportunities -->
+            <section class="section">
+                <div class="container">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-label">Current Openings</div>
+                            <h2 class="section-title">Featured Opportunities</h2>
+                            <p class="section-description">Curated positions from our employer partners, matched to IMCC
+                                programs and graduate competencies.</p>
+                        </div>
+                        <a href="#jobs" class="view-all-link">
+                            View All Positions <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="jobs-grid" id="featuredJobsGrid">
+                        <!-- Jobs will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Academic Pathways -->
+            <section class="section section-white">
+                <div class="container">
+                    <div class="section-header text-center">
+                        <div class="section-label">Academic Pathways</div>
+                        <h2 class="section-title">Colleges & Programs</h2>
+                        <p class="section-description">Career opportunities organized by academic unit. Find positions
+                            aligned with your field of study.</p>
+                    </div>
+
+                    <div class="colleges-grid" id="collegesGrid">
+                        <!-- Colleges will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section class="section">
+                <div class="container">
+                    <div class="section-header text-center">
+                        <div class="section-label">Career Services</div>
+                        <h2 class="section-title">How We Support You</h2>
+                    </div>
+
+                    <div class="services-grid">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <h3 class="service-title">Job Matching</h3>
+                            <p class="service-description">AI-powered recommendations based on your academic background,
+                                skills, and career interests.</p>
+                        </div>
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <h3 class="service-title">Resume Intelligence</h3>
+                            <p class="service-description">Upload your resume for ATS scoring, keyword analysis, and
+                                AI-driven improvement suggestions.</p>
+                        </div>
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3 class="service-title">Career Guidance</h3>
+                            <p class="service-description">Personalized career advice, interview preparation resources,
+                                and professional development tracking.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trust Section -->
+            <section class="trust-section">
+                <div class="container">
+                    <div class="trust-badges">
+                        <div class="trust-badge">
+                            <i class="fas fa-shield-alt"></i>
+                            CHED Recognized Institution
+                        </div>
+                        <div class="trust-badge">
+                            <i class="fas fa-award"></i>
+                            PACUCOA Accredited
+                        </div>
+                        <div class="trust-badge">
+                            <i class="fas fa-users"></i>
+                            80+ Employer Partners
+                        </div>
+                        <div class="trust-badge">
+                            <i class="fas fa-check-circle"></i>
+                            Verified Job Listings
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Jobs Page -->
+        <div id="jobsPage" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <div class="section-label">Career Opportunities</div>
+                    <h1 class="page-title">Browse Positions</h1>
+                    <p class="page-description" id="jobsCount">Loading positions...</p>
+                </div>
+
+                <!-- Search & Filters -->
+                <div class="search-filters">
+                    <form class="search-form" id="searchForm">
+                        <div class="search-input-wrapper">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Search by title, company, or keyword...">
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                        <button type="button" class="btn-secondary mobile-only" id="toggleFiltersBtn">
+                            <i class="fas fa-filter"></i> Filters
+                        </button>
+                    </form>
+
+                    <div class="filters-row" id="filtersRow">
+                        <select id="collegeFilter" class="form-input">
+                            <option value="">All Colleges</option>
+                        </select>
+                        <select id="typeFilter" class="form-input">
+                            <option value="">All Types</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Internship">Internship</option>
+                        </select>
+                        <button class="btn-text" id="clearFiltersBtn">
+                            <i class="fas fa-times"></i> Clear filters
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Jobs List -->
+                <div class="jobs-list" id="jobsList">
+                    <!-- Jobs will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Detail Page -->
+        <div id="jobDetailPage" class="page">
+            <div class="container">
+                <a href="#jobs" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to all positions
+                </a>
+                <div id="jobDetailContent">
+                    <!-- Job details will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboardPage" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <div class="section-label">Student Portal</div>
+                    <h1 class="page-title">My Dashboard</h1>
+                    <p class="page-description">Manage your profile, track applications, and discover opportunities.</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Profile Section -->
+                    <div class="dashboard-main">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-header-content">
+                                    <div class="card-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="card-title">Personal Information</h2>
+                                        <p class="card-subtitle">Keep your profile updated for better job matching</p>
+                                    </div>
+                                </div>
+                                <button class="btn-text" id="editProfileBtn">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                            </div>
+                            <div class="card-body" id="profileContent">
+                                <!-- Profile will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Resume Upload Section -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-header-content">
+                                    <div class="card-icon">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="card-title">Resume / CV</h2>
+                                        <p class="card-subtitle">Upload your resume for ATS analysis and AI-powered
+                                            improvement</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="upload-area" id="uploadArea">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Drag and drop your resume here</p>
+                                    <p class="upload-hint">PDF, DOC, or DOCX (max 5MB)</p>
+                                    <a href="#resume" class="btn-primary">
+                                        <i class="fas fa-upload"></i> Upload Resume
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="dashboard-sidebar">
+                        <!-- Quick Stats -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="sidebar-title">Quick Stats</h3>
+                                <div class="stats-list">
+                                    <div class="stat-item">
+                                        <span class="stat-item-label">
+                                            <i class="fas fa-briefcase"></i> Applications
+                                        </span>
+                                        <span class="stat-item-value">3</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-item-label">
+                                            <i class="fas fa-chart-line"></i> Profile Completion
+                                        </span>
+                                        <span class="stat-item-value">75%</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-item-label">
+                                            <i class="fas fa-file-alt"></i> Resume Score
+                                        </span>
+                                        <span class="stat-item-value text-crimson">72/100</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Recommendations -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="sidebar-header">
+                                    <div class="sidebar-icon">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <h3 class="sidebar-title">AI Job Matches</h3>
+                                </div>
+                                <div class="recommendations-list" id="recommendationsList">
+                                    <!-- Recommendations will be loaded here -->
+                                </div>
+                                <a href="#jobs" class="sidebar-link">Browse All Opportunities →</a>
+                            </div>
+                        </div>
+
+                        <!-- Resume CTA -->
+                        <div class="card card-gradient">
+                            <div class="card-body">
+                                <h3 class="card-gradient-title">Improve Your Resume</h3>
+                                <p class="card-gradient-description">Get AI-powered analysis and ATS scoring to boost
+                                    your chances.</p>
+                                <a href="#resume" class="btn-gradient">
+                                    <i class="fas fa-file-alt"></i> Go to Resume Center
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resume Analyzer Page -->
+        <div id="resumePage" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <div class="section-label">Resume Center</div>
+                    <h1 class="page-title">Resume Analysis & ATS Scoring</h1>
+                    <p class="page-description">Upload your resume for AI-powered analysis, ATS compatibility scoring,
+                        and actionable improvement suggestions.</p>
+                </div>
+
+                <div class="resume-grid">
+                    <!-- Upload Section -->
+                    <div class="resume-main">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-header-content">
+                                    <div class="card-icon">
+                                        <i class="fas fa-upload"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="card-title">Upload Resume</h2>
+                                        <p class="card-subtitle">PDF, DOC, DOCX, or paste text directly</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- File Upload -->
+                                <div class="upload-area" id="resumeUploadArea">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <p class="upload-hint">PDF, DOC, DOCX up to 5MB</p>
+                                </div>
+                                <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx,.txt"
+                                    style="display: none;">
+
+                                <!-- Text Input -->
+                                <div class="form-group">
+                                    <div class="form-group-header">
+                                        <label class="form-label">Or paste resume text</label>
+                                        <button class="btn-text" id="loadSampleBtn">Load sample resume</button>
+                                    </div>
+                                    <textarea id="resumeText" class="form-textarea"
+                                        placeholder="Paste your resume content here for analysis..."></textarea>
+                                </div>
+
+                                <!-- Target Role -->
+                                <div class="form-group">
+                                    <label class="form-label">Target Position (optional)</label>
+                                    <input type="text" id="targetRole" class="form-input"
+                                        placeholder="e.g., Junior Software Developer, Staff Nurse">
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="button-group">
+                                    <button class="btn-primary" id="analyzeBtn">
+                                        <i class="fas fa-magic"></i> Analyze Resume
+                                    </button>
+                                    <button class="btn-secondary" id="previewBtn" style="display: none;">
+                                        <i class="fas fa-eye"></i> Preview
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div class="card" id="resultsCard" style="display: none;">
+                            <div class="card-header">
+                                <div class="card-header-content">
+                                    <div class="card-icon card-icon-gradient">
+                                        <i class="fas fa-chart-bar"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="card-title">Analysis Results</h2>
+                                        <p class="card-subtitle">AI-powered resume evaluation</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body" id="resultsContent">
+                                <!-- Results will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="resume-sidebar">
+                        <!-- Tips -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="sidebar-title">
+                                    <i class="fas fa-bullseye"></i> ATS Optimization Tips
+                                </h3>
+                                <ul class="tips-list">
+                                    <li>Use standard section headings (Experience, Education, Skills)</li>
+                                    <li>Include keywords from the job description</li>
+                                    <li>Quantify achievements with numbers and metrics</li>
+                                    <li>Avoid graphics, tables, or unusual formatting</li>
+                                    <li>Use a clean, single-column layout</li>
+                                    <li>Save as PDF or DOCX format</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- What is ATS -->
+                        <div class="card card-dark">
+                            <div class="card-body">
+                                <h3 class="card-dark-title">What is ATS?</h3>
+                                <p class="card-dark-description">An Applicant Tracking System (ATS) is software used by
+                                    employers to filter resumes before they reach human reviewers. Optimizing your
+                                    resume for ATS increases your chances of getting noticed.</p>
+                            </div>
+                        </div>
+
+                        <!-- Progress -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="sidebar-title">Your Resume Journey</h3>
+                                <div class="progress-steps" id="progressSteps">
+                                    <!-- Steps will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard Page -->
+        <div id="adminPage" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <div class="page-header-row">
+                        <div class="section-label">Administration</div>
+                        <span class="admin-badge">
+                            <i class="fas fa-shield-alt"></i> Admin
+                        </span>
+                    </div>
+                    <h1 class="page-title">Admin Dashboard</h1>
+                    <p class="page-description">Manage students, monitor placements, and oversee career services
+                        operations.</p>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab active" data-tab="overview">
+                        <i class="fas fa-chart-bar"></i> Overview
+                    </button>
+                    <button class="tab" data-tab="students">
+                        <i class="fas fa-users"></i> Students & Alumni
+                    </button>
+                    <button class="tab" data-tab="jobs">
+                        <i class="fas fa-briefcase"></i> Job Management
+                    </button>
+                    <button class="tab" data-tab="analytics">
+                        <i class="fas fa-chart-line"></i> Analytics
+                    </button>
+                </div>
+
+                <!-- Tab Content -->
+                <div id="adminContent">
+                    <!-- Overview Tab -->
+                    <div id="overviewTab" class="tab-content active">
+                        <!-- Database Status -->
+                        <div id="databaseStatus" style="margin-bottom: 1rem;"></div>
+
+                        <!-- Stats Grid -->
+                        <div class="admin-stats-grid" id="adminStatsGrid">
+                            <!-- Stats will be loaded here -->
+                        </div>
+
+                        <div class="admin-grid">
+                            <!-- Placement Rate -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Placement Rate by College</h3>
+                                    <div class="placement-bars" id="placementBars">
+                                        <!-- Bars will be loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Recent Activity -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Recent Activity</h3>
+                                    <div class="activity-list" id="activityList">
+                                        <!-- Activity will be loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Students Tab -->
+                    <div id="studentsTab" class="tab-content">
+                        <!-- Filters -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="admin-filters">
+                                    <div class="search-input-wrapper">
+                                        <i class="fas fa-search"></i>
+                                        <input type="text" id="adminSearchInput"
+                                            placeholder="Search by name or student number...">
+                                    </div>
+                                    <select id="adminCollegeFilter" class="form-input">
+                                        <option value="">All Colleges</option>
+                                    </select>
+                                    <select id="adminStatusFilter" class="form-input">
+                                        <option value="">All Status</option>
+                                        <option value="student">Student</option>
+                                        <option value="alumni">Alumni</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Table -->
+                        <div class="card">
+                            <div class="table-wrapper">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Student</th>
+                                            <th class="hidden-mobile">Student No.</th>
+                                            <th>College</th>
+                                            <th class="hidden-desktop">Program</th>
+                                            <th>Status</th>
+                                            <th class="hidden-mobile">Resume</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="studentsTableBody">
+                                        <!-- Students will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-footer">
+                                <span id="studentsCount">Showing 0 records</span>
+                                <div class="pagination">
+                                    <button class="pagination-btn">Previous</button>
+                                    <button class="pagination-btn active">1</button>
+                                    <button class="pagination-btn">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Jobs Tab -->
+                    <div id="jobsTab" class="tab-content">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="empty-state">
+                                    <i class="fas fa-briefcase"></i>
+                                    <h3>Job Management</h3>
+                                    <p>In the full implementation, this section connects to your Supabase database for
+                                        managing job postings, employer accounts, and application tracking.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Tab -->
+                    <div id="analyticsTab" class="tab-content">
+                        <div class="admin-grid">
+                            <!-- Applications Chart -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Applications by Month</h3>
+                                    <div class="chart-bars" id="applicationsChart">
+                                        <!-- Chart will be loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Top Employers -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Top Hiring Employers</h3>
+                                    <div class="employers-list" id="employersList">
+                                        <!-- Employers will be loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KPIs -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">Key Performance Indicators</h3>
+                                <div class="kpi-grid" id="kpiGrid">
+                                    <!-- KPIs will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="loginPage" class="page">
+            <div class="login-container">
+                <div class="login-header">
+                    <div class="login-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h1 class="login-title" id="loginTitle">Welcome Back</h1>
+                    <p class="login-subtitle" id="loginSubtitle">Sign in to access your career portal</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <form id="loginForm">
+                            <div id="registerFields" style="display: none;">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" id="regName" class="form-input" placeholder="Juan Dela Cruz">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Student Number</label>
+                                    <input type="text" id="regStudentNo" class="form-input" placeholder="2024-001234">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Status</label>
+                                        <select id="regStatus" class="form-input">
+                                            <option value="student">Student</option>
+                                            <option value="alumni">Alumni</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">College</label>
+                                        <select id="regCollege" class="form-input">
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" id="loginEmail" class="form-input" placeholder="you@imcc.edu.ph"
+                                    required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <div class="password-wrapper">
+                                    <input type="password" id="loginPassword" class="form-input" placeholder="••••••••"
+                                        required>
+                                    <button type="button" class="password-toggle" id="passwordToggle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-primary btn-full" id="loginSubmitBtn">
+                                Sign In <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </form>
+
+                        <div class="login-switch">
+                            <button class="btn-text" id="switchAuthBtn">Don't have an account? Register</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demo Credentials -->
+                <div class="demo-credentials">
+                    <h3 class="demo-title">Demo Credentials</h3>
+                    <div class="demo-list">
+                        <div class="demo-item">
+                            <div>
+                                <span class="demo-label">Admin:</span>
+                                <span class="demo-value">admin@imcc.edu.ph</span>
+                            </div>
+                            <button class="btn-text demo-use-btn" data-email="admin@imcc.edu.ph">Use</button>
+                        </div>
+                        <div class="demo-item">
+                            <div>
+                                <span class="demo-label">Student:</span>
+                                <span class="demo-value">student@imcc.edu.ph</span>
+                            </div>
+                            <button class="btn-text demo-use-btn" data-email="student@imcc.edu.ph">Use</button>
+                        </div>
+                    </div>
+                    <p class="demo-hint">Any password will work for the demo.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-divider"></div>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="logo-text">
+                            <div class="logo-title">IMCC Career Hub</div>
+                            <div class="logo-subtitle">Career Services Portal</div>
+                        </div>
+                    </div>
+                    <p class="footer-description">
+                        The official career services platform of Iligan Medical Center College,
+                        connecting students and alumni with meaningful employment opportunities across the Philippines.
+                    </p>
+                </div>
+
+                <div class="footer-links">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul>
+                        <li><a href="#jobs">Browse Opportunities</a></li>
+                        <li><a href="#dashboard">Student Dashboard</a></li>
+                        <li><a href="#resume">Resume Center</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-contact">
+                    <h4 class="footer-heading">Contact</h4>
+                    <ul>
+                        <li>Office of Career Services</li>
+                        <li>IMCC Main Campus</li>
+                        <li>Iligan City, Lanao del Norte</li>
+                        <li class="text-crimson-light">careers@imcc.edu.ph</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2025 Iligan Medical Center College. All rights reserved.</p>
+                <div class="footer-badges">
+                    <span class="trust-badge trust-badge-dark">
+                        <i class="fas fa-shield-alt"></i> CHED Recognized
+                    </span>
+                    <span class="trust-badge trust-badge-dark">
+                        <i class="fas fa-graduation-cap"></i> PACUCOA Accredited
+                    </span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Preview Modal -->
+    <div class="modal" id="previewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Resume Preview</h3>
+                <button class="modal-close" id="closeModalBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <pre id="previewContent"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

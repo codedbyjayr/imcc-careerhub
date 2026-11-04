@@ -1,0 +1,17 @@
+{
+  "name": "imcc-career-hub",
+  "version": "1.0.0",
+  "description": "IMCC Career Hub - Career Services Portal",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.98.0"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}
