@@ -65,6 +65,24 @@ async function signIn(email, password) {
     return { data, error: null };
 }
 
+async function signInWithGoogle() {
+    if (!supabase) return { error: 'Supabase not initialized' };
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: window.location.origin
+        }
+    });
+
+    if (error) {
+        console.error('Google sign-in error:', error);
+        return { error: error.message };
+    }
+
+    return { data, error: null };
+}
+
 // Sign out user
 async function signOut() {
     if (!supabase) return { error: 'Supabase not initialized' };
@@ -544,6 +562,7 @@ window.SupabaseDB = {
     // Auth
     signUp,
     signIn,
+    signInWithGoogle,
     signOut,
     getCurrentUser,
     getUserProfile,

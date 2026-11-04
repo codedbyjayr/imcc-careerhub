@@ -486,6 +486,21 @@ async function handleLogin(e) {
     }
 }
 
+async function handleGoogleSignIn() {
+    const btn = document.getElementById('googleSignInBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Redirecting to Google...';
+
+    try {
+        const { error } = await window.SupabaseDB.signInWithGoogle();
+        if (error) throw new Error(error);
+    } catch (error) {
+        showToast(error.message || 'Unable to start Google sign-in. Please try again.', 'fa-exclamation-circle');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fab fa-google" aria-hidden="true"></i> Continue with Google';
+    }
+}
+
 async function handleRegister(e) {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value;
@@ -1810,6 +1825,7 @@ function initEventListeners() {
     window.addEventListener('hashchange', handleHashChange);
     document.getElementById('mobileMenuBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('active'));
     document.getElementById('loginForm').addEventListener('submit', e => { e.preventDefault(); isLoginMode ? handleLogin(e) : handleRegister(e); });
+    document.getElementById('googleSignInBtn').addEventListener('click', handleGoogleSignIn);
     document.getElementById('switchAuthBtn').addEventListener('click', switchAuthMode);
     document.getElementById('logoutBtn').addEventListener('click', handleLogout);
     document.getElementById('mobileLogoutBtn').addEventListener('click', handleLogout);

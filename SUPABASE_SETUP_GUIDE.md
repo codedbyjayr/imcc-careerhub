@@ -143,6 +143,22 @@ before signing in.
 
 ---
 
+### Google sign-in setup
+
+1. In Supabase, open **Authentication → Providers → Google** and enable Google.
+2. Configure the Google OAuth client ID and secret there.
+3. In Google Cloud Console, add Supabase's callback URL
+   (`https://<project-ref>.supabase.co/auth/v1/callback`) as an authorized
+   redirect URI for the Google OAuth client.
+4. In Supabase **Authentication → URL Configuration**, set the deployed app's
+   origin as the Site URL and allow that origin as a Redirect URL.
+
+The Career Hub's **Continue with Google** button starts Supabase OAuth and
+returns to the current site origin. The returned Google user must have a profile
+in the `users` table to access student features.
+
+---
+
 ### Step 8: Create real Supabase users
 
 Create accounts through the Career Hub registration form or in the Supabase Auth
