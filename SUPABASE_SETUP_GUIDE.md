@@ -10,6 +10,10 @@ Your IMCC Career Hub is ready to connect to **Supabase** - a free, open-source F
 - ✅ Row Level Security (RLS)
 - ✅ Free tier: 500MB database, 1GB storage, unlimited API requests
 
+The current application uses Supabase Auth for sign-in and registration. Configure
+`VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in Vercel and redeploy. The
+anon/public key is intended for browser use; never use a `service_role` key.
+
 ---
 
 ## 📋 What's Already Set Up
@@ -107,133 +111,43 @@ This allows students to upload their resumes.
 3. Add these variables:
 
 ```
-Name: SUPABASE_URL
+Name: VITE_SUPABASE_URL
 Value: https://xxxxx.supabase.co
 Environments: ✅ Production ✅ Preview ✅ Development
 
-Name: SUPABASE_ANON_KEY
-Value: eyJhbGc... (your anon key)
+Name: VITE_SUPABASE_ANON_KEY
+Value: your anon/public key (never use service_role)
 Environments: ✅ Production ✅ Preview ✅ Development
 ```
 
 4. Click **"Save"**
+5. Redeploy the site so Vite can include these build-time settings.
 
 ---
 
-### Step 6: Add Supabase Library to HTML
+### Step 6: Legacy instructions (do not follow)
 
-Open `index.html` and add this line before the closing `</body>` tag:
-
-```html
-<!-- Add this BEFORE <script src="app.js"></script> -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-client.js"></script>
-<script src="app.js"></script>
-```
+The next sections contain older manual integration examples. The current app
+already bundles the Supabase client and initializes it from Vite environment
+variables. Do not add a separate CDN script, uncomment the old snippets, or
+restore demo login.
 
 ---
 
-### Step 7: Enable Supabase in Your App
+### Step 7: Authentication behavior
 
-Open `public/app.js` and find line ~1226:
-
-```javascript
-// Supabase Client Setup (uncomment when ready to use)
-/*
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-```
-
-**Replace with:**
-
-```javascript
-// Supabase Client Setup - ENABLED
-const SUPABASE_URL = process.env.SUPABASE_URL || 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY';
-
-// Initialize Supabase
-if (typeof window.supabase !== 'undefined' && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    console.log('✅ Supabase connected!');
-
-    // Make it available globally
-    window.supabaseClient = supabase;
-}
-```
+The sign-in form verifies credentials with Supabase Auth. Registration saves
+profile details in Auth metadata and creates the `users` profile after successful
+authentication. If email confirmation is enabled, users must confirm their email
+before signing in.
 
 ---
 
-### Step 8: Replace Mock Auth with Supabase Auth
+### Step 8: Create real Supabase users
 
-Find the `handleLogin` function in `public/app.js` (~line 270):
-
-**Replace the existing function with:**
-
-```javascript
-async function handleLogin(e) {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    if (!email || !password) return;
-
-    const btn = document.getElementById('loginSubmitBtn');
-    btn.innerHTML = '<span class="spinner"></span> Signing in...';
-    btn.disabled = true;
-
-    try {
-        // Try Supabase auth first
-        if (window.supabaseClient) {
-            const { data, error } = await window.supabaseClient.auth.signInWithPassword({
-                email,
-                password
-            });
-
-            if (error) throw error;
-
-            // Get user profile from database
-            const profile = await window.SupabaseDB.getUserProfile(data.user.id);
-
-            currentUser = {
-                id: data.user.id,
-                email: data.user.email,
-                full_name: profile.full_name,
-                student_number: profile.student_number,
-                status: profile.status,
-                year_level: profile.year_level,
-                graduation_year: profile.graduation_year,
-                program: profile.program,
-                college: profile.college,
-                role: profile.role
-            };
-        } else {
-            // Fallback to demo mode
-            currentUser = DEMO_USERS[email] || {
-                id: Date.now().toString(),
-                email,
-                full_name: email.split('@')[0].replace(/[._]/g, ' '),
-                student_number: '2025-' + Math.floor(Math.random() * 999999).toString().padStart(6, '0'),
-                status: 'student',
-                year_level: 3,
-                program: 'BS Information Technology',
-                college: 'CCS',
-                role: 'student'
-            };
-        }
-
-        localStorage.setItem('imcc_user', JSON.stringify(currentUser));
-        updateAuthUI();
-        btn.innerHTML = 'Sign In <i class="fas fa-arrow-right"></i>';
-        btn.disabled = false;
-        window.location.hash = 'dashboard';
-    } catch (error) {
-        console.error('Login error:', error);
-        alert('Login failed: ' + error.message);
-        btn.innerHTML = 'Sign In <i class="fas fa-arrow-right"></i>';
-        btn.disabled = false;
-    }
-}
-```
+Create accounts through the Career Hub registration form or in the Supabase Auth
+dashboard. Existing Auth users need a matching `users` profile row, or the
+registration metadata required to create one at their next login.
 
 ---
 
@@ -526,8 +440,8 @@ window.SupabaseDB.unsubscribe(subscription);
 
 ### "Supabase not initialized"
 **Solution:**
-- Check `SUPABASE_URL` and `SUPABASE_ANON_KEY` in Vercel env vars
-- Make sure Supabase script is loaded in index.html
+- Check `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in Vercel environment variables
+- Redeploy after changing build-time environment variables
 - Check browser console for errors
 
 ### "relation does not exist"
@@ -563,14 +477,12 @@ window.SupabaseDB.unsubscribe(subscription);
 - [ ] Run `supabase-schema.sql` in SQL Editor
 - [ ] Create `resumes` storage bucket
 - [ ] Copy Project URL and anon key
-- [ ] Add `SUPABASE_URL` to Vercel
-- [ ] Add `SUPABASE_ANON_KEY` to Vercel
-- [ ] Add Supabase script to index.html
-- [ ] Uncomment Supabase code in app.js
-- [ ] Replace mock auth with Supabase auth
+- [ ] Add `VITE_SUPABASE_URL` to Vercel
+- [ ] Add `VITE_SUPABASE_ANON_KEY` to Vercel
+- [ ] Set Supabase Auth site URL and redirect URLs for the deployed domain
+- [ ] Create a real account and test sign-in
 - [ ] Replace mock job loading with Supabase
 - [ ] Test connection in browser console
-- [ ] Test login with sample users
 - [ ] Deploy with `vercel --prod`
 
 ---

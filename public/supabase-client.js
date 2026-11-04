@@ -2,28 +2,24 @@
 // Supabase Client & Database Functions
 // ============================================
 // This file handles all Supabase database operations
-// To enable: Add SUPABASE_URL and SUPABASE_ANON_KEY to Vercel env vars
+// The build injects the Supabase URL and public anon key from environment variables.
 // ============================================
-
-// Supabase Configuration
-const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // Get from Supabase Dashboard > Settings > API
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Get from Supabase Dashboard > Settings > API
 
 // Initialize Supabase Client
 let supabase = null;
 
-function initSupabase() {
+function initSupabase(url, anonKey) {
     if (typeof window.supabase === 'undefined') {
-        console.error('Supabase library not loaded. Add <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> to index.html');
+        console.error('Supabase library not loaded.');
         return false;
     }
 
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
-        console.warn('Supabase not configured. Add SUPABASE_URL and SUPABASE_ANON_KEY to environment variables.');
+    if (!url || !anonKey) {
+        console.warn('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.');
         return false;
     }
 
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabase = window.supabase.createClient(url, anonKey);
     console.log('✅ Supabase initialized successfully');
     return true;
 }
@@ -47,29 +43,6 @@ async function signUp(email, password, userData) {
     if (error) {
         console.error('Sign up error:', error);
         return { error: error.message };
-    }
-
-    // Create user profile in users table
-    if (data.user) {
-        const { error: profileError } = await supabase
-            .from('users')
-            .insert({
-                id: data.user.id,
-                email: email,
-                full_name: userData.full_name,
-                student_number: userData.student_number,
-                status: userData.status || 'student',
-                year_level: userData.year_level,
-                graduation_year: userData.graduation_year,
-                program: userData.program,
-                college: userData.college,
-                role: 'student'
-            });
-
-        if (profileError) {
-            console.error('Profile creation error:', profileError);
-            return { error: profileError.message };
-        }
     }
 
     return { data, error: null };
@@ -110,8 +83,12 @@ async function signOut() {
 async function getCurrentUser() {
     if (!supabase) return null;
 
-    const { data: { user } } = await supabase.auth.getUser();
-    return user;
+    const { data, error } = await supabase.auth.getSession();
+    if (error) {
+        console.error('Get session error:', error);
+        return null;
+    }
+    return data.session?.user || null;
 }
 
 // Get user profile from database
@@ -130,6 +107,49 @@ async function getUserProfile(userId) {
     }
 
     return data;
+}
+
+async function ensureUserProfile(authUser) {
+    if (!supabase) return { data: null, error: 'Supabase is not initialized.' };
+
+    const { data: existingProfile, error: lookupError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', authUser.id)
+        .maybeSingle();
+
+    if (lookupError) return { data: null, error: lookupError.message };
+    if (existingProfile) return { data: existingProfile, error: null };
+
+    const metadata = authUser.user_metadata || {};
+    if (!metadata.full_name || !metadata.student_number || !metadata.college) {
+        return {
+            data: null,
+            error: 'Your account does not have a Career Hub profile. Please register through the Career Hub or contact an administrator.'
+        };
+    }
+
+    const profile = {
+        id: authUser.id,
+        email: authUser.email,
+        full_name: metadata.full_name,
+        student_number: metadata.student_number,
+        status: metadata.status || 'student',
+        year_level: metadata.year_level || null,
+        graduation_year: metadata.graduation_year || null,
+        program: metadata.program || null,
+        college: metadata.college,
+        role: 'student'
+    };
+
+    const { data, error } = await supabase
+        .from('users')
+        .upsert(profile, { onConflict: 'id' })
+        .select()
+        .single();
+
+    if (error) return { data: null, error: error.message };
+    return { data, error: null };
 }
 
 // ============================================
@@ -527,6 +547,7 @@ window.SupabaseDB = {
     signOut,
     getCurrentUser,
     getUserProfile,
+    ensureUserProfile,
 
     // User Profile
     updateUserProfile,

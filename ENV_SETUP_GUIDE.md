@@ -49,13 +49,13 @@ cp .env.example .env
 3. Click "Create API Key"
 4. Copy the key (starts with `gsk_`)
 
-#### Supabase Credentials (Optional)
+#### Supabase Credentials (Required for account sign-in)
 1. Go to: https://supabase.com
 2. Create a project
 3. Go to Settings → API
 4. Copy:
    - Project URL
-   - anon public key
+   - anon/public key (never use the `service_role` key)
 
 #### Generate Cron Secret
 ```bash
@@ -75,13 +75,17 @@ JOOBLE_API_KEY=your_actual_jooble_key_here
 # Groq AI
 GROQ_API_KEY=gsk_your_actual_groq_key_here
 
-# Supabase (if using database)
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=eyJhbGc_your_actual_anon_key_here
+# Supabase client configuration
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your_public_anon_key_here
 
 # Cron Security
 CRON_SECRET=your_random_secret_string_here
 ```
+
+Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` to the Vercel project's
+Environment Variables for Production, Preview, and Development, then redeploy.
+The anon key is intended for browser use; never expose a Supabase `service_role` key.
 
 ### Step 4: Verify Security
 
@@ -111,8 +115,8 @@ git status
 
 | Variable | Purpose | Where to Get | Format |
 |----------|---------|--------------|--------|
-| `SUPABASE_URL` | Database URL | Supabase Dashboard | `https://xxx.supabase.co` |
-| `SUPABASE_ANON_KEY` | Database key | Supabase Dashboard | Starts with `eyJhbGc` |
+| `VITE_SUPABASE_URL` | Browser auth/database URL | Supabase Dashboard | `https://xxx.supabase.co` |
+| `VITE_SUPABASE_ANON_KEY` | Public browser key | Supabase Dashboard | Anon/public key; not `service_role` |
 | `OPENAI_API_KEY` | Alternative AI | https://platform.openai.com | Starts with `sk-` |
 | `GEMINI_API_KEY` | Alternative AI | https://aistudio.google.com | Starts with `AIzaSy` |
 
@@ -272,8 +276,8 @@ git commit -m "Remove .env from tracking"
 
 ### Issue: "Supabase not connecting"
 **Solution:**
-1. Check `SUPABASE_URL` format
-2. Verify `SUPABASE_ANON_KEY` is correct
+1. Check `VITE_SUPABASE_URL` format
+2. Verify `VITE_SUPABASE_ANON_KEY` is the anon/public key
 3. Check Supabase project is active
 
 ---

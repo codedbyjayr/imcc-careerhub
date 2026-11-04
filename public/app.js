@@ -332,19 +332,6 @@ const MOCK_STUDENTS = [
     { id: '8', name: 'Sofia Lim', student_number: '2024-001239', college: 'CAS', program: 'BS Psychology', status: 'student', year: 4, resume_score: 88 },
 ];
 
-const DEMO_USERS = {
-    'admin@imcc.edu.ph': {
-        id: '1', email: 'admin@imcc.edu.ph', full_name: 'Dr. Maria Santos',
-        student_number: 'ADMIN-001', status: 'alumni', program: 'Faculty',
-        college: 'Administration', role: 'admin'
-    },
-    'student@imcc.edu.ph': {
-        id: '2', email: 'student@imcc.edu.ph', full_name: 'Juan Dela Cruz',
-        student_number: '2024-001234', status: 'student', year_level: 4,
-        program: 'BS Computer Science', college: 'CCS', role: 'student', skills: ['Programming & Software Development', 'Web Development']
-    }
-};
-
 const SAMPLE_RESUME = `JUAN DELA CRUZ
 Iligan City, Lanao del Norte | juan.delacruz@email.com | +63 917 123 4567
 LinkedIn: linkedin.com/in/juandelacruz
@@ -462,7 +449,16 @@ function updateAuthUI() {
     }
 }
 
-function handleLogin(e) {
+function toCurrentUser(profile, authUser) {
+    const storedSkills = authUser.user_metadata?.skills;
+    const collegeSkills = COLLEGE_PROGRAMS_SKILLS[profile.college]?.skills.slice(0, 2).map(skill => skill.label) || [];
+    return {
+        ...profile,
+        skills: Array.isArray(storedSkills) ? storedSkills : collegeSkills
+    };
+}
+
+async function handleLogin(e) {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
@@ -472,22 +468,25 @@ function handleLogin(e) {
     btn.innerHTML = '<span class="spinner"></span> Signing in...';
     btn.disabled = true;
 
-    setTimeout(() => {
-        currentUser = DEMO_USERS[email] || {
-            id: Date.now().toString(), email,
-            full_name: email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-            student_number: '2025-' + Math.floor(Math.random() * 999999).toString().padStart(6, '0'),
-            status: 'student', year_level: 3, program: 'BS Information Technology', college: 'CCS', role: 'student', skills: ['Programming & Software Development', 'Web Development']
-        };
-        localStorage.setItem('imcc_user', JSON.stringify(currentUser));
+    try {
+        const { data, error } = await window.SupabaseDB.signIn(email, password);
+        if (error) throw new Error(error);
+
+        const { data: profile, error: profileError } = await window.SupabaseDB.ensureUserProfile(data.user);
+        if (profileError) throw new Error(profileError);
+
+        currentUser = toCurrentUser(profile, data.user);
         updateAuthUI();
+        window.location.hash = 'dashboard';
+    } catch (error) {
+        showToast(error.message || 'Unable to sign in. Please try again.', 'fa-exclamation-circle');
+    } finally {
         btn.innerHTML = 'Sign In <i class="fas fa-arrow-right"></i>';
         btn.disabled = false;
-        window.location.hash = 'dashboard';
-    }, 800);
+    }
 }
 
-function handleRegister(e) {
+async function handleRegister(e) {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
@@ -501,21 +500,50 @@ function handleRegister(e) {
     btn.innerHTML = '<span class="spinner"></span> Creating account...';
     btn.disabled = true;
 
-    setTimeout(() => {
-        currentUser = { id: Date.now().toString(), email, full_name: name, student_number: studentNo, status, college, program: (COLLEGE_PROGRAMS_SKILLS[college]?.programs[0] || ''), skills: (COLLEGE_PROGRAMS_SKILLS[college]?.skills.slice(0, 2).map(s => s.label) || []), role: 'student' };
-        localStorage.setItem('imcc_user', JSON.stringify(currentUser));
-        updateAuthUI();
-        btn.innerHTML = 'Create Account <i class="fas fa-arrow-right"></i>';
+    try {
+        const program = COLLEGE_PROGRAMS_SKILLS[college]?.programs[0] || '';
+        const skills = COLLEGE_PROGRAMS_SKILLS[college]?.skills.slice(0, 2).map(s => s.label) || [];
+        const { data, error } = await window.SupabaseDB.signUp(email, password, {
+            full_name: name,
+            student_number: studentNo,
+            status,
+            college,
+            program,
+            skills
+        });
+        if (error) throw new Error(error);
+
+        if (data.session) {
+            const { data: profile, error: profileError } = await window.SupabaseDB.ensureUserProfile(data.user);
+            if (profileError) throw new Error(profileError);
+            currentUser = toCurrentUser(profile, data.user);
+            updateAuthUI();
+            window.location.hash = 'dashboard';
+        } else {
+            showToast('Account created. Check your email to confirm it, then sign in.', 'fa-envelope');
+            switchAuthMode();
+        }
+    } catch (error) {
+        showToast(error.message || 'Unable to create your account. Please try again.', 'fa-exclamation-circle');
+    } finally {
+        btn.innerHTML = isLoginMode
+            ? 'Sign In <i class="fas fa-arrow-right"></i>'
+            : 'Create Account <i class="fas fa-arrow-right"></i>';
         btn.disabled = false;
-        window.location.hash = 'dashboard';
-    }, 800);
+    }
 }
 
-function handleLogout() {
-    currentUser = null;
-    localStorage.removeItem('imcc_user');
-    updateAuthUI();
-    window.location.hash = 'home';
+async function handleLogout() {
+    try {
+        const { error } = await window.SupabaseDB.signOut();
+        if (error) throw new Error(error);
+
+        currentUser = null;
+        updateAuthUI();
+        window.location.hash = 'home';
+    } catch (error) {
+        showToast(error.message || 'Unable to sign out. Please try again.', 'fa-exclamation-circle');
+    }
 }
 
 function switchAuthMode() {
@@ -559,9 +587,8 @@ async function fetchJoobleJobs(filters = {}) {
         const response = await fetch(`/api/jooble?${params.toString()}`);
 
         if (!response.ok) {
-            // 404 means running locally without a dev server — not a real error
             if (response.status === 404) {
-                console.warn('[CareerHub] Live job feed unavailable locally. Run "npm run dev" for live Jooble jobs. Using sample jobs.');
+                console.warn('[CareerHub] Job feed endpoint returned 404. Check that the Vercel API function is deployed. Using sample jobs.');
             } else {
                 console.warn('[CareerHub] Jooble API returned', response.status, '— using sample jobs as fallback.');
             }
@@ -1234,7 +1261,6 @@ async function analyzeResume() {
         currentAnalysisResult = { ...result, targetRole, resumeText: text };
         if (currentUser) {
             currentUser.resume_score = result.ats_score;
-            localStorage.setItem('imcc_user', JSON.stringify(currentUser));
             const dbScoreEl = document.getElementById('dashboardResumeScore');
             if (dbScoreEl) dbScoreEl.textContent = result.ats_score + '/100';
         }
@@ -1793,10 +1819,6 @@ function initEventListeners() {
         input.type = input.type === 'password' ? 'text' : 'password';
         icon.className = input.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
     });
-    document.querySelectorAll('.demo-use-btn').forEach(btn => btn.addEventListener('click', () => {
-        document.getElementById('loginEmail').value = btn.dataset.email;
-        document.getElementById('loginPassword').value = 'demo123';
-    }));
     document.getElementById('searchForm').addEventListener('submit', e => { e.preventDefault(); loadAllJobs({ search: document.getElementById('searchInput').value, college: document.getElementById('collegeFilter').value, type: document.getElementById('typeFilter').value }); });
     document.getElementById('collegeFilter').addEventListener('change', () => loadAllJobs({ search: document.getElementById('searchInput').value, college: document.getElementById('collegeFilter').value, type: document.getElementById('typeFilter').value }));
     document.getElementById('typeFilter').addEventListener('change', () => loadAllJobs({ search: document.getElementById('searchInput').value, college: document.getElementById('collegeFilter').value, type: document.getElementById('typeFilter').value }));
@@ -2088,16 +2110,30 @@ Respond with JSON: { "recommendations": [{ "job_index": number, "score": number,
 */
 
 // Initialize
-function init() {
-    const stored = localStorage.getItem('imcc_user');
-    if (stored) { try { currentUser = JSON.parse(stored); } catch (e) { localStorage.removeItem('imcc_user'); } }
+async function init() {
+    localStorage.removeItem('imcc_user');
+    initEventListeners();
+
+    try {
+        const authUser = await window.SupabaseDB.getCurrentUser();
+        if (authUser) {
+            const { data: profile, error } = await window.SupabaseDB.ensureUserProfile(authUser);
+            if (error) {
+                showToast(error, 'fa-exclamation-circle');
+            } else {
+                currentUser = toCurrentUser(profile, authUser);
+            }
+        }
+    } catch (error) {
+        showToast(error.message || 'Unable to restore your Supabase session.', 'fa-exclamation-circle');
+    }
+
     updateAuthUI();
     populateCollegeSelects();
     loadFeaturedJobs();
     loadColleges();
     loadAllJobs();
     updateProgressSteps();
-    initEventListeners();
     handleHashChange();
     window.addEventListener('hashchange', () => {
         const hash = window.location.hash.slice(1) || 'home';
@@ -2106,4 +2142,5 @@ function init() {
     });
 }
 
+window.navigateTo = navigateTo;
 document.addEventListener('DOMContentLoaded', init);

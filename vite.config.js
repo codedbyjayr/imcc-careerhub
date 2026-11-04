@@ -157,10 +157,28 @@ function inferTags(text) {
     return tags.length > 0 ? tags : ['General'];
 }
 
+const env = loadEnv();
+
 export default defineConfig({
     root: '.',
     publicDir: false,
     plugins: [localApiPlugin()],
+    define: {
+        __SUPABASE_URL__: JSON.stringify(
+            process.env.VITE_SUPABASE_URL ||
+            process.env.SUPABASE_URL ||
+            env.VITE_SUPABASE_URL ||
+            env.SUPABASE_URL ||
+            ''
+        ),
+        __SUPABASE_ANON_KEY__: JSON.stringify(
+            process.env.VITE_SUPABASE_ANON_KEY ||
+            process.env.SUPABASE_ANON_KEY ||
+            env.VITE_SUPABASE_ANON_KEY ||
+            env.SUPABASE_ANON_KEY ||
+            ''
+        )
+    },
     server: {
         port: 3000,
         open: true
@@ -170,4 +188,3 @@ export default defineConfig({
         outDir: 'dist'
     }
 });
-
