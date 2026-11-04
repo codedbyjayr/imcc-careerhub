@@ -143,7 +143,8 @@ async function ensureUserProfile(authUser) {
     if (!metadata.full_name || !metadata.student_number || !metadata.college) {
         return {
             data: null,
-            error: 'Your account does not have a Career Hub profile. Please register through the Career Hub or contact an administrator.'
+            error: null,
+            needsProfile: true
         };
     }
 
@@ -167,6 +168,36 @@ async function ensureUserProfile(authUser) {
         .single();
 
     if (error) return { data: null, error: error.message };
+    return { data, error: null };
+}
+
+async function completeUserProfile(authUser, profileData) {
+    if (!supabase) return { data: null, error: 'Supabase is not initialized.' };
+
+    const profile = {
+        id: authUser.id,
+        email: authUser.email,
+        full_name: profileData.full_name,
+        student_number: profileData.student_number,
+        status: profileData.status,
+        year_level: profileData.status === 'student' ? profileData.year_level : null,
+        graduation_year: profileData.status === 'alumni' ? profileData.graduation_year : null,
+        program: profileData.program,
+        college: profileData.college,
+        role: 'student'
+    };
+
+    const { data, error } = await supabase
+        .from('users')
+        .upsert(profile, { onConflict: 'id' })
+        .select()
+        .single();
+
+    if (error) {
+        console.error('Complete profile error:', error);
+        return { data: null, error: error.message };
+    }
+
     return { data, error: null };
 }
 
@@ -567,6 +598,7 @@ window.SupabaseDB = {
     getCurrentUser,
     getUserProfile,
     ensureUserProfile,
+    completeUserProfile,
 
     // User Profile
     updateUserProfile,

@@ -2896,6 +2896,19 @@ button.job-tag.job-source-link {
     margin-top: 1.5rem;
 }
 
+.profile-completion-copy {
+    margin-bottom: 1.25rem;
+    color: var(--slate-600);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.profile-cancel-btn {
+    display: flex;
+    justify-content: center;
+    margin: 1rem auto 0;
+}
+
 .demo-credentials {
     width: 100%;
     max-width: 28rem;

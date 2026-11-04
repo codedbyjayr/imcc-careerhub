@@ -360,6 +360,7 @@ CERTIFICATIONS
 
 // State
 let currentUser = null;
+let pendingProfileAuthUser = null;
 let currentPage = 'home';
 let isLoginMode = true;
 let resumeAnalyzed = false;
@@ -419,6 +420,10 @@ function navigateTo(page) {
 
 function handleHashChange() {
     const hash = window.location.hash.slice(1) || 'home';
+    if (hash.startsWith('access_token=') || hash.startsWith('error=')) {
+        navigateTo(pendingProfileAuthUser ? 'login' : currentUser ? 'home' : 'login');
+        return;
+    }
     if (hash.startsWith('job/')) {
         loadJobDetail(hash.split('/')[1]);
         navigateTo('jobDetail');
@@ -458,6 +463,32 @@ function toCurrentUser(profile, authUser) {
     };
 }
 
+function showProfileCompletion(authUser) {
+    pendingProfileAuthUser = authUser;
+    document.getElementById('loginForm').classList.add('hidden');
+    document.querySelector('.login-switch').classList.add('hidden');
+    document.getElementById('completeProfileForm').classList.remove('hidden');
+    document.getElementById('loginTitle').textContent = 'Complete Your Profile';
+    document.getElementById('loginSubtitle').textContent = 'One more step to access your career portal';
+    document.getElementById('profileEmail').value = authUser.email || '';
+    document.getElementById('profileFullName').value =
+        authUser.user_metadata?.full_name ||
+        authUser.user_metadata?.name ||
+        authUser.user_metadata?.display_name ||
+        '';
+    populateProfilePrograms();
+    navigateTo('login');
+}
+
+function hideProfileCompletion() {
+    pendingProfileAuthUser = null;
+    document.getElementById('completeProfileForm').classList.add('hidden');
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.querySelector('.login-switch').classList.remove('hidden');
+    document.getElementById('loginTitle').textContent = 'Welcome Back';
+    document.getElementById('loginSubtitle').textContent = 'Sign in to access your career portal';
+}
+
 async function handleLogin(e) {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value;
@@ -474,6 +505,10 @@ async function handleLogin(e) {
 
         const { data: profile, error: profileError } = await window.SupabaseDB.ensureUserProfile(data.user);
         if (profileError) throw new Error(profileError);
+        if (profile.needsProfile) {
+            showProfileCompletion(data.user);
+            return;
+        }
 
         currentUser = toCurrentUser(profile, data.user);
         updateAuthUI();
@@ -483,6 +518,44 @@ async function handleLogin(e) {
     } finally {
         btn.innerHTML = 'Sign In <i class="fas fa-arrow-right"></i>';
         btn.disabled = false;
+    }
+}
+
+async function handleProfileCompletion(e) {
+    e.preventDefault();
+    if (!pendingProfileAuthUser) {
+        showToast('Your sign-in session expired. Please sign in with Google again.', 'fa-exclamation-circle');
+        hideProfileCompletion();
+        return;
+    }
+
+    const btn = document.getElementById('completeProfileBtn');
+    const college = document.getElementById('profileCollege').value;
+    const status = document.getElementById('profileStatus').value;
+    const program = document.getElementById('profileProgram').value;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Saving profile...';
+
+    try {
+        const { data, error } = await window.SupabaseDB.completeUserProfile(pendingProfileAuthUser, {
+            full_name: document.getElementById('profileFullName').value.trim(),
+            student_number: document.getElementById('profileStudentNumber').value.trim(),
+            status,
+            college,
+            program
+        });
+        if (error) throw new Error(error);
+
+        currentUser = toCurrentUser(data, pendingProfileAuthUser);
+        pendingProfileAuthUser = null;
+        updateAuthUI();
+        hideProfileCompletion();
+        window.location.hash = 'dashboard';
+    } catch (error) {
+        showToast(error.message || 'Unable to save your profile. Please try again.', 'fa-exclamation-circle');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Profile and Continue';
     }
 }
 
@@ -554,6 +627,7 @@ async function handleLogout() {
         if (error) throw new Error(error);
 
         currentUser = null;
+        hideProfileCompletion();
         updateAuthUI();
         window.location.hash = 'home';
     } catch (error) {
@@ -1616,12 +1690,24 @@ function populateAdminFilters() {
 }
 
 function populateCollegeSelects() {
-    ['collegeFilter', 'regCollege'].forEach(id => {
+    ['collegeFilter', 'regCollege', 'profileCollege'].forEach(id => {
         const sel = document.getElementById(id);
         if (!sel) return;
         const opts = COLLEGES.map(c => `<option value="${c.code}">${c.code} — ${c.name}</option>`).join('');
         sel.innerHTML = (id === 'collegeFilter' ? '<option value="">All Colleges</option>' : '<option value="">Select</option>') + opts;
     });
+    populateProfilePrograms();
+}
+
+function populateProfilePrograms() {
+    const college = document.getElementById('profileCollege')?.value;
+    const programSelect = document.getElementById('profileProgram');
+    if (!programSelect) return;
+
+    const programs = COLLEGE_PROGRAMS_SKILLS[college]?.programs || [];
+    programSelect.innerHTML = programs.length
+        ? programs.map(program => `<option value="${program}">${program}</option>`).join('')
+        : '<option value="">Select a college first</option>';
 }
 
 
@@ -1825,6 +1911,9 @@ function initEventListeners() {
     window.addEventListener('hashchange', handleHashChange);
     document.getElementById('mobileMenuBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('active'));
     document.getElementById('loginForm').addEventListener('submit', e => { e.preventDefault(); isLoginMode ? handleLogin(e) : handleRegister(e); });
+    document.getElementById('completeProfileForm').addEventListener('submit', handleProfileCompletion);
+    document.getElementById('profileCollege').addEventListener('change', populateProfilePrograms);
+    document.getElementById('cancelProfileCompletionBtn').addEventListener('click', handleLogout);
     document.getElementById('googleSignInBtn').addEventListener('click', handleGoogleSignIn);
     document.getElementById('switchAuthBtn').addEventListener('click', switchAuthMode);
     document.getElementById('logoutBtn').addEventListener('click', handleLogout);
@@ -2136,6 +2225,9 @@ async function init() {
             const { data: profile, error } = await window.SupabaseDB.ensureUserProfile(authUser);
             if (error) {
                 showToast(error, 'fa-exclamation-circle');
+            } else if (profile.needsProfile) {
+                showProfileCompletion(authUser);
+                window.location.hash = 'login';
             } else {
                 currentUser = toCurrentUser(profile, authUser);
             }

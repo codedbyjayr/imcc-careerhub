@@ -841,6 +841,48 @@
                         <div class="login-switch">
                             <button class="btn-text" id="switchAuthBtn">Don't have an account? Register</button>
                         </div>
+                        <form id="completeProfileForm" class="hidden">
+                            <p class="profile-completion-copy">Your Google account is connected. Complete your Career Hub profile to continue.</p>
+                            <div class="form-group">
+                                <label class="form-label" for="profileEmail">Google account</label>
+                                <input type="email" id="profileEmail" class="form-input" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="profileFullName">Full Name</label>
+                                <input type="text" id="profileFullName" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="profileStudentNumber">Student Number</label>
+                                <input type="text" id="profileStudentNumber" class="form-input" placeholder="2024-001234" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="profileStatus">Status</label>
+                                    <select id="profileStatus" class="form-input" required>
+                                        <option value="student">Student</option>
+                                        <option value="alumni">Alumni</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="profileCollege">College</label>
+                                    <select id="profileCollege" class="form-input" required>
+                                        <option value="">Select</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="profileProgram">Program</label>
+                                <select id="profileProgram" class="form-input" required>
+                                    <option value="">Select a college first</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-primary btn-full" id="completeProfileBtn">
+                                Save Profile and Continue
+                            </button>
+                            <button type="button" class="btn-text profile-cancel-btn" id="cancelProfileCompletionBtn">
+                                Sign out
+                            </button>
+                        </form>
                     </div>
                 </div>
 

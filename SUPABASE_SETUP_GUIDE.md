@@ -154,8 +154,9 @@ before signing in.
    origin as the Site URL and allow that origin as a Redirect URL.
 
 The Career Hub's **Continue with Google** button starts Supabase OAuth and
-returns to the current site origin. The returned Google user must have a profile
-in the `users` table to access student features.
+returns to the current site origin. On first sign-in, users are prompted to
+complete their Career Hub profile (name, student number, status, college, and
+program); that profile is saved to the `users` table before student features open.
 
 ---
 
