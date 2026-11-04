@@ -119,6 +119,7 @@ async function getJobRecommendations(userProfile, jobs, apiKey) {
 - College: ${userProfile.college}
 - Program: ${userProfile.program}
 - Status: ${userProfile.status}
+${userProfile.skills && userProfile.skills.length > 0 ? `- Core Skills: ${Array.isArray(userProfile.skills) ? userProfile.skills.join(', ') : userProfile.skills}` : ''}
 ${userProfile.year_level ? `- Year Level: ${userProfile.year_level}` : ''}
 
 Available Jobs:

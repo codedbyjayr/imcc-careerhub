@@ -113,8 +113,8 @@ function transformJoobleJobs(joobleJobs, metadata) {
                 requirements: extractRequirements(job.snippet || ''),
                 posted_date: job.updated ? job.updated.split('T')[0] : new Date().toISOString().split('T')[0],
                 deadline: deadline.toISOString().split('T')[0],
-                source: 'Jooble',
-                apply_url: job.link || '#',
+                source: job.source || 'Jooble',
+                apply_url: job.link || '',
                 tags: tags,
                 isJooble: true,
                 daysAgo: job.updated ? getDaysAgo(job.updated) : 0

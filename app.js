@@ -15,6 +15,182 @@ const COLLEGES = [
     { code: 'CHTM', name: 'College of Hospitality and Tourism Management' },
 ];
 
+// Comprehensive mapping of Colleges, Programs, and Core Skills
+const COLLEGE_PROGRAMS_SKILLS = {
+    'CCS': {
+        name: 'College of Computer Studies',
+        programs: ['BS Computer Science', 'BS Information Technology'],
+        skills: [
+            { id: 'programming', label: 'Programming & Software Development', keywords: ['developer', 'software', 'programming', 'programmer', 'coding', 'java', 'python', 'c#', 'c++', 'backend', 'full stack', 'engineer'] },
+            { id: 'web-dev', label: 'Web Development', keywords: ['web', 'frontend', 'html', 'css', 'javascript', 'react', 'node', 'vue', 'ui', 'angular'] },
+            { id: 'database', label: 'Database & Data Management', keywords: ['database', 'sql', 'mysql', 'postgres', 'data analyst', 'data entry', 'data', 'analytics'] },
+            { id: 'it-support', label: 'IT Support & Networking', keywords: ['it support', 'technical support', 'network', 'system admin', 'hardware', 'helpdesk', 'troubleshooting', 'bpo'] },
+            { id: 'mobile-dev', label: 'Mobile App Development', keywords: ['mobile', 'android', 'ios', 'flutter', 'react native', 'app'] },
+            { id: 'ui-ux', label: 'UI/UX Design', keywords: ['ui/ux', 'design', 'figma', 'prototype', 'wireframe', 'user experience'] }
+        ]
+    },
+    'CNM': {
+        name: 'College of Nursing and Midwifery',
+        programs: ['BS Nursing', 'Diploma in Midwifery'],
+        skills: [
+            { id: 'patient-care', label: 'Clinical Care & Patient Management', keywords: ['nurse', 'nursing', 'patient care', 'clinical', 'hospital', 'bedside', 'ward'] },
+            { id: 'emergency-care', label: 'Emergency Response & BLS', keywords: ['emergency', 'bls', 'acls', 'critical care', 'first aid', 'trauma'] },
+            { id: 'maternal-child', label: 'Maternal & Child Health / Midwifery', keywords: ['midwife', 'midwifery', 'maternal', 'delivery', 'prenatal', 'obstetrics', 'pediatric'] },
+            { id: 'health-records', label: 'Health Records & Charting', keywords: ['charting', 'records', 'clinical documentation', 'health administration'] }
+        ]
+    },
+    'CMT': {
+        name: 'College of Medical Technology',
+        programs: ['BS Medical Technology / Medical Laboratory Science'],
+        skills: [
+            { id: 'clinical-lab', label: 'Clinical Laboratory Testing', keywords: ['medical technologist', 'medtech', 'laboratory', 'lab', 'diagnostic', 'specimen', 'analysis'] },
+            { id: 'hematology', label: 'Hematology & Blood Banking', keywords: ['hematology', 'blood bank', 'phlebotomy', 'crossmatching'] },
+            { id: 'microbiology', label: 'Microbiology & Parasitology', keywords: ['microbiology', 'parasitology', 'culture', 'diagnostic'] }
+        ]
+    },
+    'CRT': {
+        name: 'College of Radiologic Technology',
+        programs: ['BS Radiologic Technology'],
+        skills: [
+            { id: 'xray-radiography', label: 'X-Ray & Radiography', keywords: ['radiologic', 'radtech', 'x-ray', 'radiographer', 'radiology', 'imaging'] },
+            { id: 'advanced-imaging', label: 'CT Scan & Advanced Modalities', keywords: ['ct scan', 'mri', 'ultrasound', 'sonography'] },
+            { id: 'radiation-safety', label: 'Radiation Safety & Quality Assurance', keywords: ['radiation safety', 'dosimetry', 'quality control'] }
+        ]
+    },
+    'CBA': {
+        name: 'College of Business Administration',
+        programs: ['BS Accountancy', 'BS Business Administration - Marketing', 'BS Business Administration - Financial Management', 'BS Entrepreneurship'],
+        skills: [
+            { id: 'accounting-audit', label: 'Accounting & Auditing', keywords: ['accountant', 'accounting', 'audit', 'cpa', 'bookkeeping', 'tax', 'financial statement'] },
+            { id: 'finance-banking', label: 'Financial Analysis & Banking', keywords: ['finance', 'financial analyst', 'banking', 'investment', 'credit', 'budget'] },
+            { id: 'digital-marketing', label: 'Digital Marketing & Social Media', keywords: ['marketing', 'sales', 'campaign', 'social media', 'advertising', 'branding', 'content'] },
+            { id: 'business-ops', label: 'Business Management & Operations', keywords: ['operations', 'management', 'coordinator', 'administration', 'bpo', 'logistics'] }
+        ]
+    },
+    'CCJE': {
+        name: 'College of Criminal Justice and Education',
+        programs: ['BS Criminology', 'Law Enforcement Administration'],
+        skills: [
+            { id: 'investigation', label: 'Criminal Investigation & Forensics', keywords: ['criminology', 'investigation', 'forensic', 'crime', 'evidence', 'detective'] },
+            { id: 'law-enforcement', label: 'Security Management & Law Enforcement', keywords: ['security', 'law enforcement', 'police', 'patrol', 'safety', 'surveillance'] },
+            { id: 'criminology-instruction', label: 'Criminology Instruction & Academics', keywords: ['criminology instructor', 'training officer', 'academic', 'lecturer'] }
+        ]
+    },
+    'CAS': {
+        name: 'College of Arts and Sciences',
+        programs: ['BS Psychology', 'AB Communication', 'BS Biology'],
+        skills: [
+            { id: 'psych-counseling', label: 'Psychological Assessment & Counseling', keywords: ['psychology', 'psychologist', 'counseling', 'assessment', 'mental health', 'human resources'] },
+            { id: 'corporate-comm', label: 'Corporate Communications & Public Relations', keywords: ['communication', 'public relations', 'writer', 'editor', 'journalism', 'media'] },
+            { id: 'bio-research', label: 'Biological & Scientific Research', keywords: ['biology', 'research', 'scientific', 'laboratory', 'environmental'] }
+        ]
+    },
+    'CED': {
+        name: 'College of Education',
+        programs: ['Bachelor of Secondary Education (BSEd)', 'Bachelor of Elementary Education (BEEd)'],
+        skills: [
+            { id: 'classroom-teaching', label: 'Classroom Teaching & Pedagogy', keywords: ['teacher', 'teaching', 'instructor', 'education', 'high school', 'pedagogy'] },
+            { id: 'math-stem', label: 'Mathematics & STEM Instruction', keywords: ['mathematics', 'math teacher', 'science teacher', 'stem'] },
+            { id: 'edtech-tutoring', label: 'Educational Technology & Tutoring', keywords: ['edtech', 'tutor', 'e-learning', 'instructional design', 'curriculum'] }
+        ]
+    },
+    'CHTM': {
+        name: 'College of Hospitality and Tourism Management',
+        programs: ['BS Hospitality Management', 'BS Tourism Management'],
+        skills: [
+            { id: 'hotel-operations', label: 'Hotel & Front Office Operations', keywords: ['hotel', 'hospitality', 'front office', 'guest services', 'concierge', 'trainee', 'receptionist'] },
+            { id: 'food-beverage', label: 'Food & Beverage Service', keywords: ['food and beverage', 'restaurant', 'f&b', 'culinary', 'catering', 'barista', 'dining'] },
+            { id: 'tourism-guiding', label: 'Tourism Planning & Guiding', keywords: ['tourism', 'travel', 'tour guide', 'itinerary', 'airline'] }
+        ]
+    }
+};
+
+function findSkillDef(skillQuery) {
+    if (!skillQuery) return null;
+    const q = String(skillQuery).toLowerCase().trim();
+    for (const [code, data] of Object.entries(COLLEGE_PROGRAMS_SKILLS)) {
+        for (const s of data.skills) {
+            if (s.id.toLowerCase() === q || s.label.toLowerCase() === q || s.label.toLowerCase().includes(q) || q.includes(s.id.toLowerCase())) {
+                return { ...s, college: code, collegeName: data.name };
+            }
+        }
+    }
+    return null;
+}
+
+function calculateJobSkillScore(job, collegeCode, programName, skillIdOrQuery) {
+    let score = 0;
+    const reasons = [];
+    const matchedSkills = [];
+
+    const jobTitle = (job.title || '').toLowerCase();
+    const jobDesc = (job.description || '').toLowerCase();
+    const jobReqs = (Array.isArray(job.requirements) ? job.requirements.join(' ') : '').toLowerCase();
+    const jobTags = (Array.isArray(job.tags) ? job.tags.join(' ') : '').toLowerCase();
+    const fullText = `${jobTitle} ${jobDesc} ${jobReqs} ${jobTags}`;
+
+    const skillDef = skillIdOrQuery ? findSkillDef(skillIdOrQuery) : null;
+    const targetCollege = collegeCode || (skillDef ? skillDef.college : null);
+
+    // 1. College Alignment
+    if (targetCollege) {
+        if (job.tags && job.tags.includes(targetCollege)) {
+            score += 35;
+            reasons.push(`Directly aligned with ${targetCollege}`);
+        } else if (fullText.includes(targetCollege.toLowerCase())) {
+            score += 15;
+        }
+    }
+
+    // 2. Program Alignment
+    if (programName) {
+        const progLower = programName.toLowerCase().replace(/^bs\s+/, '').replace(/^ab\s+/, '');
+        if (jobReqs.includes(progLower) || fullText.includes(progLower)) {
+            score += 25;
+            reasons.push(`Targeted for ${programName}`);
+        }
+    }
+
+    // 3. Skill Alignment
+    if (skillDef) {
+        let titleHit = false;
+        let descHits = 0;
+
+        for (const kw of skillDef.keywords) {
+            const kwL = kw.toLowerCase();
+            if (jobTitle.includes(kwL)) {
+                titleHit = true;
+                score += 45;
+                reasons.push(`Matches role keyword "${kw}" in title`);
+                break;
+            }
+        }
+
+        for (const kw of skillDef.keywords) {
+            const kwL = kw.toLowerCase();
+            if (fullText.includes(kwL)) {
+                descHits++;
+            }
+        }
+
+        if (descHits > 0) {
+            score += Math.min(30, descHits * 10);
+            matchedSkills.push(skillDef.label);
+            if (!titleHit) {
+                reasons.push(`Matches ${skillDef.label} competencies`);
+            }
+        }
+    }
+
+    return {
+        score: Math.min(99, Math.max(0, score)),
+        matchedSkills,
+        reasons,
+        skillDef
+    };
+}
+
+
 // Helper for dynamic relative dates
 function getRelativeDateStr(daysOffset) {
     const d = new Date();
@@ -30,6 +206,7 @@ const JOBS = [
         description: 'We are looking for a motivated Junior Software Developer to join our growing team. You will work on enterprise solutions for our global clients.',
         requirements: ['BS Computer Science or IT', 'Knowledge of Java/Python', 'Good communication skills', 'Fresh graduates welcome'],
         posted_date: getRelativeDateStr(-2), deadline: getRelativeDateStr(25), source: 'Company Website',
+        apply_url: 'https://www.accenture.com/ph-en/careers/jobsearch?jk=software%20developer',
         tags: ['CCS', 'Technology', 'Entry Level']
     },
     {
@@ -39,6 +216,7 @@ const JOBS = [
         description: 'Join our nursing team providing quality patient care in one of the premier medical institutions in the Philippines.',
         requirements: ['BS Nursing graduate', 'Valid PRC license', 'BLS certification', 'Compassionate and detail-oriented'],
         posted_date: getRelativeDateStr(-3), deadline: getRelativeDateStr(28), source: 'JobStreet',
+        apply_url: 'https://ph.jobstreet.com/staff-nurse-jobs/in-Metro-Manila',
         tags: ['CNM', 'Healthcare', 'Licensed']
     },
     {
@@ -48,6 +226,7 @@ const JOBS = [
         description: 'Support our marketing team in developing campaigns, managing social media, and coordinating events for our retail portfolio.',
         requirements: ['BS Business Administration or Marketing', 'Strong written and verbal communication', 'Proficient in MS Office and social media platforms', 'Creative and organized'],
         posted_date: getRelativeDateStr(-5), deadline: getRelativeDateStr(18), source: 'LinkedIn',
+        apply_url: 'https://www.linkedin.com/jobs/search/?keywords=Marketing%20Coordinator&location=Metro%20Manila%2C%20Philippines',
         tags: ['CBA', 'Marketing', 'Entry Level']
     },
     {
@@ -57,6 +236,7 @@ const JOBS = [
         description: 'We are seeking a part-time instructor for our Criminology program.',
         requirements: ["Master's degree in Criminology", 'LEO board passer preferred', 'Teaching experience is a plus'],
         posted_date: getRelativeDateStr(-1), deadline: getRelativeDateStr(30), source: 'Company Website',
+        apply_url: 'https://www.imcc.edu.ph/',
         tags: ['CCJE', 'Education', 'Academic']
     },
     {
@@ -66,6 +246,7 @@ const JOBS = [
         description: 'Perform laboratory tests and analyses to support patient diagnosis and treatment.',
         requirements: ['BS Medical Technology graduate', 'Valid PRC license', 'Experience in clinical laboratory'],
         posted_date: getRelativeDateStr(-4), deadline: getRelativeDateStr(20), source: 'Indeed',
+        apply_url: 'https://ph.indeed.com/jobs?q=Medical%20Technologist&l=Iligan%20City',
         tags: ['CMT', 'Healthcare', 'Licensed']
     },
     {
@@ -75,6 +256,7 @@ const JOBS = [
         description: 'Operate radiologic equipment to produce diagnostic images.',
         requirements: ['BS Radiologic Technology', 'Valid PRC license as RadTech', 'Knowledge of imaging equipment'],
         posted_date: getRelativeDateStr(-6), deadline: getRelativeDateStr(24), source: 'JobStreet',
+        apply_url: 'https://ph.jobstreet.com/radiologic-technologist-jobs',
         tags: ['CRT', 'Healthcare', 'Licensed']
     },
     {
@@ -84,6 +266,7 @@ const JOBS = [
         description: 'Join our management trainee program in hotel operations and hospitality management.',
         requirements: ['BS Hospitality/Tourism Management', 'Excellent interpersonal skills', 'Fresh graduates welcome'],
         posted_date: getRelativeDateStr(-2), deadline: getRelativeDateStr(14), source: 'Company Website',
+        apply_url: 'https://www.marcopolohotels.com/en/careers',
         tags: ['CHTM', 'Hospitality', 'Entry Level']
     },
     {
@@ -93,6 +276,7 @@ const JOBS = [
         description: 'Build modern web applications using React, Node.js, and cloud technologies.',
         requirements: ['BS Computer Science or IT', 'Proficient in React and Node.js', 'Portfolio of web projects'],
         posted_date: getRelativeDateStr(-3), deadline: getRelativeDateStr(22), source: 'LinkedIn',
+        apply_url: 'https://www.linkedin.com/jobs/search/?keywords=Web%20Developer&location=Iligan%20City%2C%20Philippines',
         tags: ['CCS', 'Technology', 'Mid Level']
     },
     {
@@ -102,6 +286,7 @@ const JOBS = [
         description: 'Teach mathematics to senior high school students.',
         requirements: ['Bachelor of Secondary Education (Math)', 'Valid LET license', 'Passion for teaching'],
         posted_date: getRelativeDateStr(-7), deadline: getRelativeDateStr(15), source: 'Company Website',
+        apply_url: 'https://www.usc.edu.ph/',
         tags: ['CED', 'Education', 'Licensed']
     },
     {
@@ -111,6 +296,7 @@ const JOBS = [
         description: 'Analyze financial data and support decision-making for regional banking operations.',
         requirements: ['BS Accountancy or Finance', 'Strong analytical skills', 'CPA preferred'],
         posted_date: getRelativeDateStr(-1), deadline: getRelativeDateStr(26), source: 'JobStreet',
+        apply_url: 'https://ph.jobstreet.com/financial-analyst-jobs',
         tags: ['CBA', 'Finance', 'Entry Level']
     },
     {
@@ -120,6 +306,7 @@ const JOBS = [
         description: 'Provide psychological assessments and counseling services.',
         requirements: ['BS Psychology with MA in Clinical Psychology', 'Valid PRC license', 'Clinical experience'],
         posted_date: getRelativeDateStr(-4), deadline: getRelativeDateStr(21), source: 'Indeed',
+        apply_url: 'https://ph.indeed.com/jobs?q=Clinical%20Psychologist&l=Iligan%20City',
         tags: ['CAS', 'Healthcare', 'Licensed']
     },
     {
@@ -129,6 +316,7 @@ const JOBS = [
         description: 'Accurately input and manage data for multinational clients in a BPO environment.',
         requirements: ["Any bachelor's degree", 'Fast and accurate typing', 'Proficient in MS Office'],
         posted_date: getRelativeDateStr(-2), deadline: getRelativeDateStr(19), source: 'LinkedIn',
+        apply_url: 'https://www.linkedin.com/jobs/search/?keywords=Data%20Entry%20Specialist&location=Iligan%20City%2C%20Philippines',
         tags: ['General', 'BPO', 'Entry Level']
     },
 ];
@@ -153,7 +341,7 @@ const DEMO_USERS = {
     'student@imcc.edu.ph': {
         id: '2', email: 'student@imcc.edu.ph', full_name: 'Juan Dela Cruz',
         student_number: '2024-001234', status: 'student', year_level: 4,
-        program: 'BS Computer Science', college: 'CCS', role: 'student'
+        program: 'BS Computer Science', college: 'CCS', role: 'student', skills: ['Programming & Software Development', 'Web Development']
     }
 };
 
@@ -288,7 +476,7 @@ function handleLogin(e) {
             id: Date.now().toString(), email,
             full_name: email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
             student_number: '2025-' + Math.floor(Math.random() * 999999).toString().padStart(6, '0'),
-            status: 'student', year_level: 3, program: 'BS Information Technology', college: 'CCS', role: 'student'
+            status: 'student', year_level: 3, program: 'BS Information Technology', college: 'CCS', role: 'student', skills: ['Programming & Software Development', 'Web Development']
         };
         localStorage.setItem('imcc_user', JSON.stringify(currentUser));
         updateAuthUI();
@@ -313,7 +501,7 @@ function handleRegister(e) {
     btn.disabled = true;
 
     setTimeout(() => {
-        currentUser = { id: Date.now().toString(), email, full_name: name, student_number: studentNo, status, college, program: '', role: 'student' };
+        currentUser = { id: Date.now().toString(), email, full_name: name, student_number: studentNo, status, college, program: (COLLEGE_PROGRAMS_SKILLS[college]?.programs[0] || ''), skills: (COLLEGE_PROGRAMS_SKILLS[college]?.skills.slice(0, 2).map(s => s.label) || []), role: 'student' };
         localStorage.setItem('imcc_user', JSON.stringify(currentUser));
         updateAuthUI();
         btn.innerHTML = 'Create Account <i class="fas fa-arrow-right"></i>';
@@ -427,9 +615,56 @@ function getAllJobs() {
     });
 }
 
+function prettySource(source) {
+    if (!source) return 'Original site';
+    const key = String(source).toLowerCase().replace(/^www\./, '');
+    const known = {
+        'jobstreet': 'JobStreet',
+        'jobstreet.com': 'JobStreet',
+        'ph.jobstreet.com': 'JobStreet',
+        'jobstreet.com.ph': 'JobStreet',
+        'indeed': 'Indeed',
+        'indeed.com': 'Indeed',
+        'ph.indeed.com': 'Indeed',
+        'linkedin': 'LinkedIn',
+        'linkedin.com': 'LinkedIn',
+        'jooble': 'Jooble',
+        'jooble.org': 'Jooble',
+        'company website': 'Company Website'
+    };
+    return known[key] || source;
+}
+
+function getOriginalListingUrl(job) {
+    const url = job && (job.apply_url || job.source_url || '');
+    return typeof url === 'string' && /^https?:\/\//i.test(url) ? url : '';
+}
+
+function openOriginalListing(jobId, event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    const job = getAllJobs().find(j => String(j.id) === String(jobId));
+    const url = job && getOriginalListingUrl(job);
+    if (!url) {
+        showToast('No original listing link for this position', 'fa-info-circle');
+        return;
+    }
+    window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+function sourceChip(job) {
+    if (!job.source && !getOriginalListingUrl(job)) return '';
+    const label = `via ${prettySource(job.source)}`;
+    if (!getOriginalListingUrl(job)) {
+        return `<span class="job-source-text">${label}</span>`;
+    }
+    return `<button type="button" class="job-source-link" onclick="openOriginalListing('${job.id}', event)">${label} <i class="fas fa-external-link-alt"></i></button>`;
+}
+
 // Jobs
 function renderJobCard(job) {
-    const isJooble = job.isJooble || job.source === 'Jooble';
     const daysAgo = job.daysAgo || getDaysAgo(job.posted_date);
     const tags = Array.isArray(job.tags) ? job.tags : ['General'];
 
@@ -437,7 +672,7 @@ function renderJobCard(job) {
         <div class="job-card-header">
             <div>
                 <div class="job-card-title">${job.title}</div>
-                <div class="job-card-company">${job.company} ${isJooble ? '<span style="font-size: 0.6875rem; color: var(--slate-400); margin-left: 0.25rem;">via Jooble</span>' : ''}</div>
+                <div class="job-card-company">${job.company} ${sourceChip(job)}</div>
             </div>
             <span class="job-type-badge">${job.type}</span>
         </div>
@@ -464,7 +699,6 @@ function getDaysAgo(dateStr) {
 function renderJobListing(job) {
     const daysLeft = job.deadline ? daysUntilDeadline(job.deadline) : null;
     const dlStyle = daysLeft && daysLeft <= 7 ? 'style="color: var(--crimson); font-weight: 600;"' : '';
-    const isJooble = job.isJooble || job.source === 'Jooble';
     const daysAgo = job.daysAgo || getDaysAgo(job.posted_date);
     const tags = Array.isArray(job.tags) ? job.tags : ['General'];
 
@@ -474,7 +708,7 @@ function renderJobListing(job) {
                 <div class="job-listing-header">
                     <div>
                         <h3 class="job-listing-title">${job.title}</h3>
-                        <p class="job-listing-company"><i class="fas fa-building"></i> ${job.company} ${isJooble ? '<span style="font-size: 0.6875rem; color: var(--slate-400); margin-left: 0.25rem;">via Jooble</span>' : ''}</p>
+                        <p class="job-listing-company"><i class="fas fa-building"></i> ${job.company} ${sourceChip(job)}</p>
                     </div>
                     <span class="job-type-badge">${job.type}</span>
                 </div>
@@ -663,12 +897,16 @@ function loadJobDetail(jobId) {
     const collegeList = tags
         .map(t => COLLEGES.find(c => c.code === t))
         .filter(Boolean);
+    const originalUrl = getOriginalListingUrl(job);
+    const sourceName = prettySource(job.source);
 
     document.getElementById('jobDetailContent').innerHTML = `
         <div class="job-detail-header">
             <div class="job-detail-badges">
                 <span class="job-type-badge">${job.type}</span>
-                <span class="job-tag">${job.source ? `via ${job.source}` : 'IMCC Partner'}</span>
+                ${originalUrl
+                    ? `<button type="button" class="job-tag job-source-link" onclick="openOriginalListing('${job.id}')">via ${sourceName} <i class="fas fa-external-link-alt"></i></button>`
+                    : `<span class="job-tag">${job.source ? `via ${sourceName}` : 'IMCC Partner'}</span>`}
                 ${isJooble ? '<span class="job-tag" style="background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd;">Jooble Verified Feed</span>' : '<span class="verified-employer-pill"><i class="fas fa-shield-alt"></i> Verified Partner Employer</span>'}
             </div>
             <h1 class="job-detail-title">${job.title}</h1>
@@ -732,10 +970,13 @@ function loadJobDetail(jobId) {
                         ${job.salary_min || job.salary_max ? '<span class="sidebar-salary-sub">Estimated Monthly Gross</span>' : ''}
                     </div>
 
-                    ${job.apply_url && job.apply_url.startsWith('http') ? `
-                        <a href="${job.apply_url}" target="_blank" rel="noopener noreferrer" class="btn-primary btn-apply">
-                            <i class="fas fa-external-link-alt"></i> Apply on ${job.source || 'Company Site'}
-                        </a>
+                    ${originalUrl ? `
+                        <button type="button" class="btn-primary btn-apply" onclick="openOriginalListing('${job.id}')">
+                            <i class="fas fa-external-link-alt"></i> View on ${sourceName}
+                        </button>
+                        <button type="button" class="btn-secondary btn-apply-hub" onclick="openApplyModal('${job.id}')">
+                            <i class="fas fa-paper-plane"></i> Apply via Career Hub
+                        </button>
                     ` : `
                         <button type="button" class="btn-primary btn-apply" onclick="openApplyModal('${job.id}')">
                             <i class="fas fa-paper-plane"></i> Apply via Career Hub
@@ -756,7 +997,7 @@ function loadJobDetail(jobId) {
                             <div class="detail-row"><dt><i class="fas fa-briefcase" style="margin-right: 0.35rem; color: var(--slate-400);"></i> Type</dt><dd>${job.type}</dd></div>
                             <div class="detail-row"><dt><i class="fas fa-map-marker-alt" style="margin-right: 0.35rem; color: var(--slate-400);"></i> Location</dt><dd>${job.location}</dd></div>
                             <div class="detail-row"><dt><i class="fas fa-money-bill-wave" style="margin-right: 0.35rem; color: var(--slate-400);"></i> Salary</dt><dd>${formatSalary(job.salary_min, job.salary_max)}</dd></div>
-                            <div class="detail-row"><dt><i class="fas fa-building" style="margin-right: 0.35rem; color: var(--slate-400);"></i> Source</dt><dd>${job.source || 'IMCC Portal'}</dd></div>
+                            <div class="detail-row"><dt><i class="fas fa-building" style="margin-right: 0.35rem; color: var(--slate-400);"></i> Source</dt><dd>${originalUrl ? `<button type="button" class="job-source-link" onclick="openOriginalListing('${job.id}')">${sourceName}</button>` : (job.source || 'IMCC Portal')}</dd></div>
                             ${job.deadline ? `<div class="detail-row"><dt><i class="fas fa-calendar-check" style="margin-right: 0.35rem; color: var(--slate-400);"></i> Deadline</dt><dd>${formatDate(job.deadline)}</dd></div>` : ''}
                         </dl>
                     </div>
@@ -1340,7 +1581,7 @@ function initEventListeners() {
     document.getElementById('adminSearchInput').addEventListener('input', () => loadStudentsTable({ search: document.getElementById('adminSearchInput').value, college: document.getElementById('adminCollegeFilter').value, status: document.getElementById('adminStatusFilter').value }));
     document.getElementById('adminCollegeFilter').addEventListener('change', () => loadStudentsTable({ search: document.getElementById('adminSearchInput').value, college: document.getElementById('adminCollegeFilter').value, status: document.getElementById('adminStatusFilter').value }));
     document.getElementById('adminStatusFilter').addEventListener('change', () => loadStudentsTable({ search: document.getElementById('adminSearchInput').value, college: document.getElementById('adminCollegeFilter').value, status: document.getElementById('adminStatusFilter').value }));
-    document.getElementById('editProfileBtn').addEventListener('click', () => alert('Profile editing would connect to your Supabase database in the full implementation.'));
+    // Profile modal handled above
 }
 
 // ============================================

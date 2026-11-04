@@ -290,20 +290,32 @@
                     </form>
 
                     <div class="filters-row" id="filtersRow">
-                        <select id="collegeFilter" class="form-input">
+                        <select id="collegeFilter" class="form-input" title="Filter by Academic College">
                             <option value="">All Colleges</option>
                         </select>
-                        <select id="typeFilter" class="form-input">
+                        <select id="programFilter" class="form-input" title="Filter by Degree Program">
+                            <option value="">All Academic Programs</option>
+                        </select>
+                        <select id="skillsFilter" class="form-input" title="Filter by Core Skills">
+                            <option value="">All Core Skills</option>
+                        </select>
+                        <select id="typeFilter" class="form-input" title="Filter by Employment Type">
                             <option value="">All Types</option>
                             <option value="Full-time">Full-time</option>
                             <option value="Part-time">Part-time</option>
                             <option value="Contract">Contract</option>
                             <option value="Internship">Internship</option>
                         </select>
+                        <button type="button" class="btn-profile-match" id="matchProfileBtn" title="Auto-match positions for my college, program & skills">
+                            <i class="fas fa-magic"></i> Match My Profile
+                        </button>
                         <button class="btn-text" id="clearFiltersBtn">
                             <i class="fas fa-times"></i> Clear filters
                         </button>
                     </div>
+
+                    <!-- Skills & Program Match Status Banner -->
+                    <div id="filterStatusBanner" class="filter-status-banner" style="display: none;"></div>
                 </div>
 
                 <!-- Jobs List -->
@@ -890,6 +902,65 @@
             </div>
         </div>
     </footer>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="editProfileModal">
+        <div class="modal-content" style="max-width: 34rem;">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-graduate" style="color: var(--crimson); margin-right: 0.5rem;"></i> Edit Academic Profile & Skills</h3>
+                <button class="modal-close" id="closeEditProfileBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.8125rem; color: var(--slate-600); margin-bottom: 1.25rem;">
+                    Update your college, degree program, and specialized skills to get accurate, AI-tailored job matches.
+                </p>
+                <form id="editProfileForm">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label class="form-label" style="font-size: 0.8125rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display:block;">Full Name</label>
+                        <input type="text" class="form-input" id="editProfileName" required style="width: 100%;">
+                    </div>
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" style="font-size: 0.8125rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display:block;">Student / Alumni No.</label>
+                            <input type="text" class="form-input" id="editProfileStudentNo" required style="width: 100%;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="font-size: 0.8125rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display:block;">Status</label>
+                            <select class="form-input" id="editProfileStatus" style="width: 100%;">
+                                <option value="student">Student</option>
+                                <option value="alumni">Alumni / Graduate</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label class="form-label" style="font-size: 0.8125rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display:block;">Academic College</label>
+                        <select class="form-input" id="editProfileCollege" required style="width: 100%;">
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label class="form-label" style="font-size: 0.8125rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display:block;">Degree Program</label>
+                        <select class="form-input" id="editProfileProgram" required style="width: 100%;">
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.35rem;">
+                            <label class="form-label" style="font-size: 0.8125rem; font-weight: 600; color: var(--slate-700); display:block; margin: 0;">Specialized Skills</label>
+                            <span style="font-size: 0.75rem; color: var(--slate-500);">Select skills you excel at</span>
+                        </div>
+                        <div id="editProfileSkillsList" class="profile-skills-selector" style="display: flex; flex-wrap: wrap; gap: 0.5rem; max-height: 180px; overflow-y: auto; padding: 0.625rem; border: 1px solid var(--slate-200); border-radius: var(--radius-md); background: var(--slate-50);">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--slate-200);">
+                        <button type="button" class="btn-secondary" id="cancelEditProfileBtn">Cancel</button>
+                        <button type="submit" class="btn-primary" id="saveProfileBtn"><i class="fas fa-check"></i> Save & Update Recommendations</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Preview Modal -->
     <div class="modal" id="previewModal">
