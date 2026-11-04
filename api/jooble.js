@@ -25,14 +25,14 @@ export default async function handler(req, res) {
 
         // Jooble API endpoint for Philippines
         // Format: https://jooble.org/api/{API_KEY}/ph
-        const joobleEndpoint = `https://jooble.org/api/${apiKey}/ph`;
+        const joobleEndpoint = `https://jooble.org/api/${apiKey}`;
 
         // Build request body
         const requestBody = {
             keywords: keywords || '',
             location: location || 'Philippines',
             page: page || 1,
-            pagesize: 20,
+            pagesize: 40,
         };
 
         // Add optional filters
@@ -164,6 +164,22 @@ function inferJobType(job) {
     if (text.includes('contract') || text.includes('freelance')) return 'Contract';
     if (text.includes('intern') || text.includes('trainee')) return 'Internship';
     return 'Full-time';
+}
+
+
+// Clean HTML tags and entities from snippet
+function cleanSnippet(snippet) {
+    if (!snippet) return '';
+    return String(snippet)
+        .replace(/<[^>]*>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/\s+/g, ' ')
+        .trim();
 }
 
 // Extract requirements from snippet

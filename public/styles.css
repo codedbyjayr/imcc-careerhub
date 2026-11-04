@@ -3737,3 +3737,27 @@ button.job-tag.job-source-link {
     box-shadow: 0 4px 14px rgba(227, 43, 79, 0.08);
     transform: translateY(-2px);
 }
+
+
+/* Resume Upload Dragover & Action Styles */
+.upload-area.dragover {
+    border-color: var(--crimson) !important;
+    background: rgba(227, 43, 79, 0.05) !important;
+}
+
+.upload-area.dragover i {
+    color: var(--crimson) !important;
+    transform: scale(1.1);
+}
+
+.results-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.results-actions button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}

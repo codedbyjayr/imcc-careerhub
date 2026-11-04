@@ -176,3 +176,29 @@ Respond with this exact JSON structure:
 
     return await callGroq(prompt, systemPrompt, apiKey, 1000);
 }
+
+// Resume Optimization Function (Using Groq)
+async function optimizeResume(resumeText, targetRole, improvements, apiKey) {
+    const systemPrompt = "You are an expert executive resume writer and ATS specialist for IMCC (Iligan Medical Center College) students. Rewrite the provided resume text into a highly professional, ATS-optimized resume. Incorporate strong action verbs, standard headings (PROFESSIONAL SUMMARY, EDUCATION, TECHNICAL SKILLS, EXPERIENCE, CERTIFICATIONS), and quantifiable results. Respond with valid JSON only.";
+
+    const prompt = `Rewrite and optimize this resume for maximum ATS compatibility:
+
+Target Role: ${targetRole || 'Professional Role'}
+Identified Improvement Areas: ${Array.isArray(improvements) ? improvements.join('; ') : (improvements || 'None')}
+
+Original Resume Content:
+${resumeText}
+
+Respond with this exact JSON format:
+{
+  "optimized_resume": "<full rewritten resume in clean, plain text with standard uppercase headings and bullet points>",
+  "key_changes": [
+    "Transformed bullet points with strong action verbs and metrics",
+    "Added industry keywords tailored to target position",
+    "Optimized formatting and section hierarchy for ATS parsing"
+  ],
+  "estimated_new_score": 95
+}`;
+
+    return await callGroq(prompt, systemPrompt, apiKey, 2000);
+}
