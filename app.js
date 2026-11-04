@@ -503,12 +503,13 @@ async function handleLogin(e) {
         const { data, error } = await window.SupabaseDB.signIn(email, password);
         if (error) throw new Error(error);
 
-        const { data: profile, error: profileError } = await window.SupabaseDB.ensureUserProfile(data.user);
+        const { data: profile, error: profileError, needsProfile } = await window.SupabaseDB.ensureUserProfile(data.user);
         if (profileError) throw new Error(profileError);
-        if (profile.needsProfile) {
+        if (needsProfile) {
             showProfileCompletion(data.user);
             return;
         }
+        if (!profile) throw new Error('Unable to load your Career Hub profile. Please try again.');
 
         currentUser = toCurrentUser(profile, data.user);
         updateAuthUI();
@@ -2222,12 +2223,14 @@ async function init() {
     try {
         const authUser = await window.SupabaseDB.getCurrentUser();
         if (authUser) {
-            const { data: profile, error } = await window.SupabaseDB.ensureUserProfile(authUser);
+            const { data: profile, error, needsProfile } = await window.SupabaseDB.ensureUserProfile(authUser);
             if (error) {
                 showToast(error, 'fa-exclamation-circle');
-            } else if (profile.needsProfile) {
+            } else if (needsProfile) {
                 showProfileCompletion(authUser);
                 window.location.hash = 'login';
+            } else if (!profile) {
+                showToast('Unable to load your Career Hub profile. Please sign in again.', 'fa-exclamation-circle');
             } else {
                 currentUser = toCurrentUser(profile, authUser);
             }
