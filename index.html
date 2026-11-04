@@ -316,8 +316,8 @@
         <!-- Job Detail Page -->
         <div id="jobDetailPage" class="page">
             <div class="container">
-                <a href="#jobs" class="back-link">
-                    <i class="fas fa-arrow-left"></i> Back to all positions
+                <a href="javascript:void(0)" onclick="if(window.history.length > 1) { window.history.back(); } else { navigateTo('jobs'); }" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to positions
                 </a>
                 <div id="jobDetailContent">
                     <!-- Job details will be loaded here -->

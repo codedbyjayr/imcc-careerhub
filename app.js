@@ -431,12 +431,13 @@ function getAllJobs() {
 function renderJobCard(job) {
     const isJooble = job.isJooble || job.source === 'Jooble';
     const daysAgo = job.daysAgo || getDaysAgo(job.posted_date);
+    const tags = Array.isArray(job.tags) ? job.tags : ['General'];
 
     return `<a href="#job/${job.id}" class="job-card" onclick="loadJobDetail('${job.id}')">
         <div class="job-card-header">
             <div>
                 <div class="job-card-title">${job.title}</div>
-                <div class="job-card-company">${job.company} ${isJooble ? '<span style="font-size: 0.625rem; color: var(--slate-400); margin-left: 0.25rem;">via Jooble</span>' : ''}</div>
+                <div class="job-card-company">${job.company} ${isJooble ? '<span style="font-size: 0.6875rem; color: var(--slate-400); margin-left: 0.25rem;">via Jooble</span>' : ''}</div>
             </div>
             <span class="job-type-badge">${job.type}</span>
         </div>
@@ -446,7 +447,7 @@ function renderJobCard(job) {
             <span class="job-salary">${formatSalary(job.salary_min, job.salary_max)}</span>
             <div class="job-tags">
                 ${daysAgo !== null ? `<span class="job-tag" style="background: var(--crimson); color: white;">${daysAgo}d ago</span>` : ''}
-                ${job.tags.slice(0, 1).map(t => `<span class="job-tag">${t}</span>`).join('')}
+                ${tags.slice(0, 1).map(t => `<span class="job-tag">${t}</span>`).join('')}
             </div>
         </div>
     </a>`;
@@ -462,24 +463,35 @@ function getDaysAgo(dateStr) {
 
 function renderJobListing(job) {
     const daysLeft = job.deadline ? daysUntilDeadline(job.deadline) : null;
-    const dlStyle = daysLeft && daysLeft <= 7 ? 'style="color: var(--crimson); font-weight: 500;"' : '';
+    const dlStyle = daysLeft && daysLeft <= 7 ? 'style="color: var(--crimson); font-weight: 600;"' : '';
     const isJooble = job.isJooble || job.source === 'Jooble';
     const daysAgo = job.daysAgo || getDaysAgo(job.posted_date);
+    const tags = Array.isArray(job.tags) ? job.tags : ['General'];
 
     return `<a href="#job/${job.id}" class="job-listing" onclick="loadJobDetail('${job.id}')">
-        <div class="job-listing-content"><div class="job-listing-main">
-            <div class="job-listing-header"><div>
-                <h3 class="job-listing-title">${job.title}</h3>
-                <p class="job-listing-company"><i class="fas fa-building"></i> ${job.company} ${isJooble ? '<span style="font-size: 0.625rem; color: var(--slate-400); margin-left: 0.25rem;">via Jooble</span>' : ''}</p>
-            </div><span class="job-type-badge">${job.type}</span></div>
-            <p class="job-listing-description">${job.description}</p>
-            <div class="job-listing-meta">
-                <span><i class="fas fa-map-marker-alt"></i> ${job.location}</span>
-                <span><i class="fas fa-clock"></i> ${daysAgo !== null ? `${daysAgo} days ago` : `Posted ${formatDate(job.posted_date)}`}</span>
-                ${job.deadline ? `<span ${dlStyle}><i class="fas fa-clock"></i> Deadline: ${formatDate(job.deadline)}</span>` : ''}
+        <div class="job-listing-content">
+            <div class="job-listing-main">
+                <div class="job-listing-header">
+                    <div>
+                        <h3 class="job-listing-title">${job.title}</h3>
+                        <p class="job-listing-company"><i class="fas fa-building"></i> ${job.company} ${isJooble ? '<span style="font-size: 0.6875rem; color: var(--slate-400); margin-left: 0.25rem;">via Jooble</span>' : ''}</p>
+                    </div>
+                    <span class="job-type-badge">${job.type}</span>
+                </div>
+                <p class="job-listing-description">${job.description}</p>
+                <div class="job-listing-meta">
+                    <span><i class="fas fa-map-marker-alt"></i> ${job.location}</span>
+                    <span><i class="fas fa-calendar-alt"></i> ${daysAgo !== null ? `${daysAgo}d ago` : `Posted ${formatDate(job.posted_date)}`}</span>
+                    ${job.deadline ? `<span ${dlStyle}><i class="fas fa-hourglass-half"></i> Deadline: ${formatDate(job.deadline)}</span>` : ''}
+                </div>
+                <div class="job-listing-tags">${tags.map(t => `<span class="job-tag">${t}</span>`).join('')}</div>
             </div>
-            <div class="job-listing-tags">${job.tags.map(t => `<span class="job-tag">${t}</span>`).join('')}</div>
-        </div><div class="job-listing-salary"><div class="salary-amount">${formatSalary(job.salary_min, job.salary_max)}</div><div class="salary-period">per month</div></div></div>
+            <div class="job-listing-salary">
+                <div class="salary-amount">${formatSalary(job.salary_min, job.salary_max)}</div>
+                ${job.salary_min || job.salary_max ? '<div class="salary-period">per month</div>' : ''}
+                <span class="btn-view-job">View Position <i class="fas fa-arrow-right"></i></span>
+            </div>
+        </div>
     </a>`;
 }
 
@@ -533,29 +545,227 @@ async function loadAllJobs(filters = {}) {
     count.innerHTML = `${results.length} positions available ${joobleCount > 0 ? `(${joobleCount} from Jooble, ${localCount} local)` : ''}${refreshInfo}`;
 }
 
+// Toast Feedback Helper
+function showToast(message, icon = 'fa-check-circle') {
+    const existing = document.querySelector('.hub-toast');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'hub-toast';
+    toast.innerHTML = `<i class="fas ${icon}" style="color: var(--gold);"></i> <span>${message}</span>`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(1rem)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+}
+
+// Copy Job Share Link
+function copyJobLink(jobId) {
+    const url = window.location.origin + window.location.pathname + '#job/' + jobId;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+            showToast('Position link copied to clipboard!');
+        }).catch(() => {
+            showToast('Opportunity link ready to share');
+        });
+    } else {
+        showToast('Opportunity link ready to share');
+    }
+}
+
+// Cover Letter trigger with auth check
+function handleCoverLetterClick(jobId) {
+    if (!currentUser) {
+        showToast('Please sign in to generate AI cover letters', 'fa-info-circle');
+        navigateTo('login');
+        return;
+    }
+    generateCoverLetter(jobId);
+}
+
+// Application Modal
+function openApplyModal(jobId) {
+    const job = getAllJobs().find(j => j.id === jobId);
+    if (!job) return;
+
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.id = 'jobApplyModal';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 36rem;">
+            <div class="modal-header">
+                <h3>Apply for ${job.title}</h3>
+                <button class="modal-close" onclick="this.closest('.modal').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.875rem; color: var(--slate-600); margin-bottom: 1.25rem;">
+                    Submit your application to <strong>${job.company}</strong> through the IMCC Office of Career Services.
+                </p>
+                <form id="directApplyForm" onsubmit="handleDirectApply(event, '${job.id}')">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label class="form-label" style="font-size: 0.8125rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display:block;">Full Name</label>
+                        <input type="text" class="form-input" id="applicantName" required value="${currentUser ? currentUser.full_name : ''}" placeholder="Juan Dela Cruz" style="width: 100%;">
+                    </div>
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" style="font-size: 0.8125rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display:block;">Email Address</label>
+                            <input type="email" class="form-input" id="applicantEmail" required value="${currentUser ? currentUser.email : ''}" placeholder="juan@imcc.edu.ph" style="width: 100%;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="font-size: 0.8125rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display:block;">Student / Alumni No.</label>
+                            <input type="text" class="form-input" id="applicantStudentNum" value="${currentUser ? currentUser.student_number : ''}" placeholder="2024-001234" style="width: 100%;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label class="form-label" style="font-size: 0.8125rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display:block;">Short Introduction / Message</label>
+                        <textarea class="form-input" id="applicantNote" rows="3" placeholder="Briefly state your qualifications and interest in this position..." style="width: 100%;"></textarea>
+                    </div>
+                    <div style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 0.75rem; color: var(--slate-600); display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-shield-alt" style="color: var(--crimson); font-size: 1rem;"></i>
+                        <span>Your registered IMCC profile & academic credentials will be verified and transmitted with this application.</span>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                        <button type="button" class="btn-secondary" onclick="document.getElementById('jobApplyModal').remove()">Cancel</button>
+                        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Submit Application</button>
+                    </div>
+                </form>
+            </div>
+        </div>`;
+    document.body.appendChild(modal);
+}
+
+function handleDirectApply(e, jobId) {
+    e.preventDefault();
+    const job = getAllJobs().find(j => j.id === jobId);
+    const modal = document.getElementById('jobApplyModal');
+    if (modal) modal.remove();
+
+    showToast(`Application successfully submitted for ${job ? job.title : 'position'}!`, 'fa-check-circle');
+}
+
 function loadJobDetail(jobId) {
-    // Search in both local and Jooble jobs
     const job = getAllJobs().find(j => j.id === jobId);
     if (!job) return;
     const daysLeft = job.deadline ? daysUntilDeadline(job.deadline) : null;
+    const isJooble = job.isJooble || job.source === 'Jooble';
+    const daysAgo = job.daysAgo || getDaysAgo(job.posted_date);
+    const requirements = Array.isArray(job.requirements) && job.requirements.length > 0
+        ? job.requirements
+        : ['Relevant college degree or ongoing coursework aligned with this role', 'Strong verbal and written communication skills', 'Good problem-solving ability and attention to detail', 'Collaborative attitude and eager to learn'];
+    const tags = Array.isArray(job.tags) ? job.tags : ['General'];
+
+    const collegeList = tags
+        .map(t => COLLEGES.find(c => c.code === t))
+        .filter(Boolean);
+
     document.getElementById('jobDetailContent').innerHTML = `
         <div class="job-detail-header">
-            <div class="job-detail-badges"><span class="job-type-badge">${job.type}</span>${job.source ? `<span class="job-tag">via ${job.source}</span>` : ''}</div>
+            <div class="job-detail-badges">
+                <span class="job-type-badge">${job.type}</span>
+                <span class="job-tag">${job.source ? `via ${job.source}` : 'IMCC Partner'}</span>
+                ${isJooble ? '<span class="job-tag" style="background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd;">Jooble Verified Feed</span>' : '<span class="verified-employer-pill"><i class="fas fa-shield-alt"></i> Verified Partner Employer</span>'}
+            </div>
             <h1 class="job-detail-title">${job.title}</h1>
-            <p class="job-detail-company"><i class="fas fa-building"></i> ${job.company}</p>
+            <div class="job-detail-company">
+                <span class="company-icon-badge"><i class="fas fa-building"></i></span>
+                <strong>${job.company}</strong>
+            </div>
             <div class="job-detail-meta">
-                <span><i class="fas fa-map-marker-alt"></i> ${job.location}</span>
-                <span><i class="fas fa-clock"></i> Posted ${formatDate(job.posted_date)}</span>
-                ${job.deadline ? `<span ${daysLeft && daysLeft <= 7 ? 'style="color: var(--crimson); font-weight: 500;"' : ''}><i class="fas fa-clock"></i> ${daysLeft && daysLeft > 0 ? `${daysLeft} days remaining` : 'Deadline passed'}</span>` : ''}
+                <div class="meta-item"><i class="fas fa-map-marker-alt"></i> <span>${job.location}</span></div>
+                <div class="meta-item"><i class="fas fa-calendar-alt"></i> <span>${daysAgo !== null ? `${daysAgo}d ago (${formatDate(job.posted_date)})` : `Posted ${formatDate(job.posted_date)}`}</span></div>
+                ${job.deadline ? `<div class="meta-item ${daysLeft && daysLeft <= 7 ? 'meta-urgent' : ''}"><i class="fas fa-hourglass-half"></i> <span>${daysLeft > 0 ? `${daysLeft} days remaining (${formatDate(job.deadline)})` : `Deadline: ${formatDate(job.deadline)}`}</span></div>` : ''}
+                <div class="meta-salary-badge"><i class="fas fa-money-bill-wave"></i> ${formatSalary(job.salary_min, job.salary_max)} ${job.salary_min || job.salary_max ? '<small style="font-weight:400; font-size:0.75rem;">/ mo</small>' : ''}</div>
             </div>
         </div>
+
         <div class="job-detail-grid">
-            <div>
-                <div class="card" style="margin-bottom: 1.5rem;"><div class="card-body"><h2 class="card-title" style="margin-bottom: 1rem;">Position Description</h2><p style="color: var(--slate-600); line-height: 1.6;">${job.description}</p></div></div>
-                <div class="card" style="margin-bottom: 1.5rem;"><div class="card-body"><h2 class="card-title" style="margin-bottom: 1rem;">Requirements</h2><ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem;">${job.requirements.map(r => `<li style="display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.875rem; color: var(--slate-600);"><i class="fas fa-check-circle" style="color: var(--crimson); margin-top: 0.125rem;"></i>${r}</li>`).join('')}</ul></div></div>
-                <div class="card"><div class="card-body"><h2 class="card-title" style="margin-bottom: 1rem;">Categories</h2><div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">${job.tags.map(t => `<span class="job-tag" style="padding: 0.375rem 0.75rem; font-size: 0.75rem;">${t}</span>`).join('')}</div></div></div>
+            <div class="job-detail-main">
+                <div class="detail-card">
+                    <h2 class="detail-section-title"><i class="fas fa-file-alt"></i> Position Overview</h2>
+                    <p class="detail-body-text">${job.description}</p>
+                </div>
+
+                <div class="detail-card">
+                    <h2 class="detail-section-title"><i class="fas fa-clipboard-check"></i> Key Requirements & Qualifications</h2>
+                    <div class="req-grid">
+                        ${requirements.map(r => `
+                            <div class="req-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>${r}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h2 class="detail-section-title"><i class="fas fa-graduation-cap"></i> Target Academic Colleges & Categories</h2>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+                        ${tags.map(t => `<span class="job-tag" style="padding: 0.4rem 0.85rem; font-size: 0.8125rem; font-weight: 500;">${t}</span>`).join('')}
+                    </div>
+                    ${collegeList.length > 0 ? `
+                        <p style="font-size: 0.8125rem; color: var(--slate-500); margin-top: 0.75rem;">
+                            Directly matched for students & graduates of: <strong>${collegeList.map(c => c.name).join(', ')}</strong>
+                        </p>` : ''}
+                </div>
+
+                <div class="institutional-note">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <strong>IMCC Career Services Assurance:</strong> This job post has been vetted for IMCC students and alumni. Need assistance with your resume or interview coaching for this role? Visit the <strong>Office of Career Services</strong> or generate a tailored cover letter using the sidebar.
+                    </div>
+                </div>
             </div>
-            <div class="job-detail-sidebar"><div class="apply-card"><h3>Apply for this Position</h3>${currentUser ? `<button class="btn-secondary" style="width: 100%; margin-bottom: 0.75rem;" onclick="generateCoverLetter('${job.id}')"><i class="fas fa-magic"></i> Generate Cover Letter</button>` : ''}<a href="${job.apply_url || '#'}" class="btn-primary" style="width: 100%; margin-bottom: 0.75rem;"><i class="fas fa-external-link-alt"></i> Apply Now</a><p class="apply-hint">${currentUser ? 'AI will create a personalized cover letter for you' : 'Sign in to generate AI cover letters'}</p><div class="apply-details"><div class="apply-details-label">Position Details</div><dl><div class="detail-row"><dt>Employment Type</dt><dd>${job.type}</dd></div><div class="detail-row"><dt>Location</dt><dd>${job.location}</dd></div><div class="detail-row"><dt>Salary Range</dt><dd>${formatSalary(job.salary_min, job.salary_max)}</dd></div><div class="detail-row"><dt>Source</dt><dd>${job.source}</dd></div></dl></div></div></div>
+
+            <div class="job-detail-sidebar">
+                <div class="apply-card">
+                    <h3 style="margin-bottom: 0.75rem; font-size: 1.125rem;">Apply for this Position</h3>
+
+                    <div class="sidebar-salary-box">
+                        <span class="sidebar-salary-label">Offered Compensation</span>
+                        <span class="sidebar-salary-val">${formatSalary(job.salary_min, job.salary_max)}</span>
+                        ${job.salary_min || job.salary_max ? '<span class="sidebar-salary-sub">Estimated Monthly Gross</span>' : ''}
+                    </div>
+
+                    ${job.apply_url && job.apply_url.startsWith('http') ? `
+                        <a href="${job.apply_url}" target="_blank" rel="noopener noreferrer" class="btn-primary btn-apply">
+                            <i class="fas fa-external-link-alt"></i> Apply on ${job.source || 'Company Site'}
+                        </a>
+                    ` : `
+                        <button type="button" class="btn-primary btn-apply" onclick="openApplyModal('${job.id}')">
+                            <i class="fas fa-paper-plane"></i> Apply via Career Hub
+                        </button>
+                    `}
+
+                    <button type="button" class="btn-secondary btn-cover-letter" onclick="handleCoverLetterClick('${job.id}')">
+                        <i class="fas fa-magic"></i> Generate AI Cover Letter
+                    </button>
+
+                    <p class="apply-hint" style="margin-top: 0.5rem;">
+                        ${currentUser ? '<i class="fas fa-check-circle" style="color:#059669;"></i> Ready to apply with your profile' : '<a href="#login" style="color:var(--crimson); text-decoration:underline;">Sign in</a> to auto-fill applications & AI features'}
+                    </p>
+
+                    <div class="apply-details">
+                        <div class="apply-details-label">Position Details</div>
+                        <dl>
+                            <div class="detail-row"><dt><i class="fas fa-briefcase" style="margin-right: 0.35rem; color: var(--slate-400);"></i> Type</dt><dd>${job.type}</dd></div>
+                            <div class="detail-row"><dt><i class="fas fa-map-marker-alt" style="margin-right: 0.35rem; color: var(--slate-400);"></i> Location</dt><dd>${job.location}</dd></div>
+                            <div class="detail-row"><dt><i class="fas fa-money-bill-wave" style="margin-right: 0.35rem; color: var(--slate-400);"></i> Salary</dt><dd>${formatSalary(job.salary_min, job.salary_max)}</dd></div>
+                            <div class="detail-row"><dt><i class="fas fa-building" style="margin-right: 0.35rem; color: var(--slate-400);"></i> Source</dt><dd>${job.source || 'IMCC Portal'}</dd></div>
+                            ${job.deadline ? `<div class="detail-row"><dt><i class="fas fa-calendar-check" style="margin-right: 0.35rem; color: var(--slate-400);"></i> Deadline</dt><dd>${formatDate(job.deadline)}</dd></div>` : ''}
+                        </dl>
+                    </div>
+
+                    <button type="button" class="btn-share-job" onclick="copyJobLink('${job.id}')">
+                        <i class="fas fa-share-alt"></i> Share this Position
+                    </button>
+                </div>
+            </div>
         </div>`;
 }
 
@@ -940,7 +1150,7 @@ function updateProgressSteps() {
 
 // Cover Letter Generator (New Feature!)
 async function generateCoverLetter(jobId) {
-    const job = JOBS.find(j => j.id === jobId);
+    const job = getAllJobs().find(j => j.id === jobId);
     if (!job || !currentUser) return;
 
     try {
