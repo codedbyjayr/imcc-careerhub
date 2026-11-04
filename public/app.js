@@ -559,7 +559,13 @@ async function fetchJoobleJobs(filters = {}) {
         const response = await fetch(`/api/jooble?${params.toString()}`);
 
         if (!response.ok) {
-            throw new Error('Failed to fetch Jooble jobs');
+            // 404 means running locally without a dev server — not a real error
+            if (response.status === 404) {
+                console.warn('[CareerHub] Live job feed unavailable locally. Run "npm run dev" for live Jooble jobs. Using sample jobs.');
+            } else {
+                console.warn('[CareerHub] Jooble API returned', response.status, '— using sample jobs as fallback.');
+            }
+            return [];
         }
 
         const data = await response.json();
@@ -570,9 +576,15 @@ async function fetchJoobleJobs(filters = {}) {
             return joobleJobs;
         }
 
+        // API connected but returned no jobs (e.g. API key missing)
+        if (data.error) {
+            console.warn('[CareerHub] Jooble API:', data.error, '— using sample jobs.');
+        }
+
         return [];
     } catch (error) {
-        console.error('Jooble fetch error:', error);
+        // Network/fetch error (file:// protocol, no local server) — suppress red error
+        console.warn('[CareerHub] Jooble fetch skipped (no server):', error.message);
         return [];
     }
 }
