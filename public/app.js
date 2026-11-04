@@ -15,6 +15,13 @@ const COLLEGES = [
     { code: 'CHTM', name: 'College of Hospitality and Tourism Management' },
 ];
 
+// Helper for dynamic relative dates
+function getRelativeDateStr(daysOffset) {
+    const d = new Date();
+    d.setDate(d.getDate() + daysOffset);
+    return d.toISOString().split('T')[0];
+}
+
 const JOBS = [
     {
         id: '1', title: 'Junior Software Developer', company: 'Accenture Philippines',
@@ -22,7 +29,7 @@ const JOBS = [
         salary_min: 25000, salary_max: 40000,
         description: 'We are looking for a motivated Junior Software Developer to join our growing team. You will work on enterprise solutions for our global clients.',
         requirements: ['BS Computer Science or IT', 'Knowledge of Java/Python', 'Good communication skills', 'Fresh graduates welcome'],
-        posted_date: '2025-01-15', deadline: '2025-02-15', source: 'Company Website',
+        posted_date: getRelativeDateStr(-2), deadline: getRelativeDateStr(25), source: 'Company Website',
         tags: ['CCS', 'Technology', 'Entry Level']
     },
     {
@@ -31,7 +38,7 @@ const JOBS = [
         salary_min: 20000, salary_max: 35000,
         description: 'Join our nursing team providing quality patient care in one of the premier medical institutions in the Philippines.',
         requirements: ['BS Nursing graduate', 'Valid PRC license', 'BLS certification', 'Compassionate and detail-oriented'],
-        posted_date: '2025-01-12', deadline: '2025-02-28', source: 'JobStreet',
+        posted_date: getRelativeDateStr(-3), deadline: getRelativeDateStr(28), source: 'JobStreet',
         tags: ['CNM', 'Healthcare', 'Licensed']
     },
     {
@@ -40,7 +47,7 @@ const JOBS = [
         salary_min: 22000, salary_max: 35000,
         description: 'Support our marketing team in developing campaigns, managing social media, and coordinating events for our retail portfolio.',
         requirements: ['BS Business Administration or Marketing', 'Strong written and verbal communication', 'Proficient in MS Office and social media platforms', 'Creative and organized'],
-        posted_date: '2025-01-18', deadline: '2025-02-20', source: 'LinkedIn',
+        posted_date: getRelativeDateStr(-5), deadline: getRelativeDateStr(18), source: 'LinkedIn',
         tags: ['CBA', 'Marketing', 'Entry Level']
     },
     {
@@ -49,7 +56,7 @@ const JOBS = [
         salary_min: 15000, salary_max: 25000,
         description: 'We are seeking a part-time instructor for our Criminology program.',
         requirements: ["Master's degree in Criminology", 'LEO board passer preferred', 'Teaching experience is a plus'],
-        posted_date: '2025-01-20', deadline: '2025-03-01', source: 'Company Website',
+        posted_date: getRelativeDateStr(-1), deadline: getRelativeDateStr(30), source: 'Company Website',
         tags: ['CCJE', 'Education', 'Academic']
     },
     {
@@ -58,7 +65,7 @@ const JOBS = [
         salary_min: 18000, salary_max: 30000,
         description: 'Perform laboratory tests and analyses to support patient diagnosis and treatment.',
         requirements: ['BS Medical Technology graduate', 'Valid PRC license', 'Experience in clinical laboratory'],
-        posted_date: '2025-01-14', deadline: '2025-02-14', source: 'Indeed',
+        posted_date: getRelativeDateStr(-4), deadline: getRelativeDateStr(20), source: 'Indeed',
         tags: ['CMT', 'Healthcare', 'Licensed']
     },
     {
@@ -67,7 +74,7 @@ const JOBS = [
         salary_min: 20000, salary_max: 32000,
         description: 'Operate radiologic equipment to produce diagnostic images.',
         requirements: ['BS Radiologic Technology', 'Valid PRC license as RadTech', 'Knowledge of imaging equipment'],
-        posted_date: '2025-01-16', deadline: '2025-02-28', source: 'JobStreet',
+        posted_date: getRelativeDateStr(-6), deadline: getRelativeDateStr(24), source: 'JobStreet',
         tags: ['CRT', 'Healthcare', 'Licensed']
     },
     {
@@ -76,7 +83,7 @@ const JOBS = [
         salary_min: 16000, salary_max: 22000,
         description: 'Join our management trainee program in hotel operations and hospitality management.',
         requirements: ['BS Hospitality/Tourism Management', 'Excellent interpersonal skills', 'Fresh graduates welcome'],
-        posted_date: '2025-01-19', deadline: '2025-02-19', source: 'Company Website',
+        posted_date: getRelativeDateStr(-2), deadline: getRelativeDateStr(14), source: 'Company Website',
         tags: ['CHTM', 'Hospitality', 'Entry Level']
     },
     {
@@ -85,7 +92,7 @@ const JOBS = [
         salary_min: 30000, salary_max: 50000,
         description: 'Build modern web applications using React, Node.js, and cloud technologies.',
         requirements: ['BS Computer Science or IT', 'Proficient in React and Node.js', 'Portfolio of web projects'],
-        posted_date: '2025-01-17', deadline: '2025-02-17', source: 'LinkedIn',
+        posted_date: getRelativeDateStr(-3), deadline: getRelativeDateStr(22), source: 'LinkedIn',
         tags: ['CCS', 'Technology', 'Mid Level']
     },
     {
@@ -94,7 +101,7 @@ const JOBS = [
         salary_min: 18000, salary_max: 28000,
         description: 'Teach mathematics to senior high school students.',
         requirements: ['Bachelor of Secondary Education (Math)', 'Valid LET license', 'Passion for teaching'],
-        posted_date: '2025-01-13', deadline: '2025-02-13', source: 'Company Website',
+        posted_date: getRelativeDateStr(-7), deadline: getRelativeDateStr(15), source: 'Company Website',
         tags: ['CED', 'Education', 'Licensed']
     },
     {
@@ -103,7 +110,7 @@ const JOBS = [
         salary_min: 28000, salary_max: 45000,
         description: 'Analyze financial data and support decision-making for regional banking operations.',
         requirements: ['BS Accountancy or Finance', 'Strong analytical skills', 'CPA preferred'],
-        posted_date: '2025-01-21', deadline: '2025-03-01', source: 'JobStreet',
+        posted_date: getRelativeDateStr(-1), deadline: getRelativeDateStr(26), source: 'JobStreet',
         tags: ['CBA', 'Finance', 'Entry Level']
     },
     {
@@ -112,7 +119,7 @@ const JOBS = [
         salary_min: 25000, salary_max: 40000,
         description: 'Provide psychological assessments and counseling services.',
         requirements: ['BS Psychology with MA in Clinical Psychology', 'Valid PRC license', 'Clinical experience'],
-        posted_date: '2025-01-15', deadline: '2025-02-28', source: 'Indeed',
+        posted_date: getRelativeDateStr(-4), deadline: getRelativeDateStr(21), source: 'Indeed',
         tags: ['CAS', 'Healthcare', 'Licensed']
     },
     {
@@ -121,7 +128,7 @@ const JOBS = [
         salary_min: 18000, salary_max: 25000,
         description: 'Accurately input and manage data for multinational clients in a BPO environment.',
         requirements: ["Any bachelor's degree", 'Fast and accurate typing', 'Proficient in MS Office'],
-        posted_date: '2025-01-22', deadline: '2025-02-22', source: 'LinkedIn',
+        posted_date: getRelativeDateStr(-2), deadline: getRelativeDateStr(19), source: 'LinkedIn',
         tags: ['General', 'BPO', 'Entry Level']
     },
 ];
@@ -404,8 +411,13 @@ function filterExpiredJobs(jobs) {
 
 // Get all jobs (local + Jooble)
 function getAllJobs() {
-    const localJobs = filterExpiredJobs(JOBS);
     const jooble = filterExpiredJobs(joobleJobs);
+    let localJobs = filterExpiredJobs(JOBS);
+
+    // Resilient fallback: If no local jobs pass filter, always use curated JOBS
+    if (localJobs.length === 0) {
+        localJobs = JOBS;
+    }
 
     // Combine and sort by posted date (newest first)
     return [...jooble, ...localJobs].sort((a, b) => {

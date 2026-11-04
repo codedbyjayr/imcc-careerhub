@@ -39,3 +39,4 @@ This document lists the environment variables and API services used by IMCC Care
 ## 5. Alternative AI Providers (Optional)
 - **OpenAI** (`OPENAI_API_KEY`): https://platform.openai.com
 - **Google Gemini** (`GEMINI_API_KEY`): https://aistudio.google.com
+
